@@ -169,6 +169,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+       // read temp logic
        buf[0] = REG_TEMP;
        // ack message
        ret = HAL_I2C_Master_Receive(&hi2c2, TEMP_ADDR, buf, 1, HAL_MAX_DELAY);
@@ -190,8 +191,6 @@ int main(void)
     		   temp_c = val * 0.0625;
     		   // convert temp to decimal
     		   temp_c *= 100;
-    		   sprintf((char*)buf, "%u.%02u \r\n",
-    				   ((unsigned int)temp_c / 100), ((unsigned int)temp_c % 100));
 
     	   }
        }
