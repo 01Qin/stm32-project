@@ -147,16 +147,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  //Find addresses
-    printf("Scan slaves on i2c2:\r\n");
-    uint8_t dummy = 0;
-    HAL_StatusTypeDef retValue = 0;
-    for(int i=1; i<128; i++){
-        retValue = HAL_I2C_Master_Transmit(&hi2c2, i<<1, &dummy, 0, 10);
-        if(HAL_BUSY == retValue) printf("0x%02X - Busy\r\n", i);
-        if(HAL_OK == retValue) printf("0x%02X - OK\r\n", i);
-    }
-
   while (1)
   {
 
