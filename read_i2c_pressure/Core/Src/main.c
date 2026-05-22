@@ -54,10 +54,10 @@ TIM_HandleTypeDef htim15;
 
 /* USER CODE BEGIN PV */
 // static const uint8_t HUM_ADDR = 0x45 << 1;
-// static const uint8_t MOT_ADDR = 0x19 << 1;
-// static const uint8_t DIS_ADDR = 0x3C << 1;
-static const uint8_t TEMP_ADDR = 0x49 << 1;
-static const uint8_t REG_TEMP = 0x00;
+static const uint8_t PRESS_ADDR = 0x19 << 1;
+// static const uint8_t DISPLAY_ADDR = 0x3C << 1;
+//static const uint8_t TEMP_ADDR = 0x49 << 1;
+//static const uint8_t REG_TEMP = 0x00;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
