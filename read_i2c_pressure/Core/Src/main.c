@@ -52,12 +52,13 @@ RTC_HandleTypeDef hrtc;
 
 TIM_HandleTypeDef htim15;
 
+int32_t pRaw;
+
 /* USER CODE BEGIN PV */
 // static const uint8_t HUM_ADDR = 0x45 << 1;
 static const uint8_t PRESS_ADDR = 0x19 << 1;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
 //static const uint8_t TEMP_ADDR = 0x49 << 1;
-//static const uint8_t REG_TEMP = 0x00;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -86,9 +87,9 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
     HAL_StatusTypeDef ret = 0;
-	uint8_t buf[12];
+	uint16_t buf[12];
 	// save raw data
-	int16_t val;
+	int32_t pRaw;
 	float temp_c;
   /* USER CODE END 1 */
 
@@ -171,20 +172,20 @@ int main(void)
        // read temp logic
        buf[0] = REG_TEMP;
        // ack message
-       ret = HAL_I2C_Master_Receive(&hi2c2, TEMP_ADDR, buf, 1, HAL_MAX_DELAY);
+       ret = HAL_I2C_Master_Receive(&hi2c2, PRESS_ADDR, buf, 1, HAL_MAX_DELAY);
        if (ret != HAL_OK){
     	   strcpy((char*)buf, "Error Tx\r\n");
        } else {
-    	   // read 2 bytes from the temp register
-    	   ret = HAL_I2C_Master_Receive(&hi2c2, TEMP_ADDR, buf, 2, HAL_MAX_DELAY);
+    	   // read 2 bytes from the register
+    	   ret = HAL_I2C_Master_Receive(&hi2c2, PRESS_ADDR, buf, 3, HAL_MAX_DELAY);
     	   if (ret != HAL_OK) {
     		   strcpy((char*)buf, "Error Rx\r\n");
     	   } else {
     		   // save raw data
-    		   val = ((int16_t)buf[0] << 4) | buf[1] >> 4;
+    		pRaw =((int16_t)buf[0] << 12) |(buf[1] << 4) | buf[2] >> 4;
     		   // convert to 2's complement
-    		   if (val > 0x7FF){
-    			   val |= 0x7FF;
+    		   if (pRaw > 0x7FF){
+    			   pRaw |= 0x7FF;
     		   }
     		   // concert temp to float value
     		   temp_c = val * 0.0625;
@@ -491,6 +492,62 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+static TrimRead(){
+	uint8_t trimdata[9];
+
+	// Pressure coefficients
+	dig_P1 = (uint16_t)(trimdata[7] << 8 | trimdata[6]);
+	dig_P2 = (int16_t)(trimdata[9] << 8 | trimdata[8]);
+	dig_P3 = (int16_t)(trimdata[11] << 8 | trimdata[10]);
+	dig_P4 = (int16_t)(trimdata[13] << 8 | trimdata[12]);
+	dig_P5 = (int16_t)(trimdata[15] << 8 | trimdata[14]);
+	dig_P6 = (int16_t)(trimdata[17] << 8 | trimdata[16]);
+	dig_P7 = (int16_t)(trimdata[19] << 8 | trimdata[18]);
+	dig_P8 = (int16_t)(trimdata[21] << 8 | trimdata[20]);
+	dig_P9 = (int16_t)(trimdata[23] << 8 | trimdata[22]);
+
+	return 0;
+}
+
+static uint32_t BMP280_compensate_P_int64(int32_t adc_P)
+{
+	int64_t var1, var2, p;
+	var1 = ((int64_t)t_fine) - 128000;
+	var2 = var1 * var1 * (int64_t)dig_P6;
+	var2 = var2 + ((var1*(int64_t)dig_P5)<<17);
+	var2 = var2 + (((int64_t)dig_P4)<<35);
+	var1 = ((var1 * var1 * (int64_t)dig_P3)>>8) + ((var1 * (int64_t)dig_P2)<<12);
+	var1 = (((((int64_t)1)<<47)+var1))*((int64_t)dig_P1)>>33;
+	if (var1 == 0)
+	{
+		return 0; // avoid exception caused by division by zero
+	}
+	p = 1048576-adc_P;
+	p = (((p<<31)-var2)*3125)/var1;
+	var1 = (((int64_t)dig_P9) * (p>>13) * (p>>13)) >> 25;
+	var2 = (((int64_t)dig_P8) * p) >> 19;
+	p = ((p + var1 + var2) >> 8) + (((int64_t)dig_P7)<<4);
+	return (uint32_t)p;
+}
+
+void BME280_Measure(float *pressure)
+{
+    if (BMEReadRaw() == 0)
+    {
+        if (pRaw == 0x800000) *pressure = 0; // pressure disabled
+        else
+        {
+            *pressure = (BMP280_compensate_P_int64(pRaw)) / 256.0f;
+            // SUPPORT_32BIT
+            // *pressure = (BME280_compensate_P_int32(pRaw));  // in Pa
+        }
+    }
+    else
+    {
+        // if the device is detached
+        *pressure = 0;
+    }
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header */
