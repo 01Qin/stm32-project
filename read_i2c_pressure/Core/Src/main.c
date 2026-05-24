@@ -91,16 +91,16 @@ TIM_HandleTypeDef htim15;
 
 
 /* USER CODE BEGIN PV */
-// static const uint8_t HUM_ADDR = 0x45 << 1;
-static const uint8_t PRESS_ADDR = 0x19 << 1;
+// static const uint8_t HUM_ADDR = 0x19 << 1;
+//static const uint8_t PRESS_ADDR = 0x45 << 1;
+static const uint8_t PRESS_ADDR = 0x76 << 1;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
 //static const uint8_t TEMP_ADDR = 0x49 << 1;
 int32_t p_raw;
 float Pressure;
 int16_t  dig_P1, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
 int32_t t_fine;
-uint8_t chip_id;
-
+HAL_StatusTypeDef ret = 0;
 
 /* USER CODE END PV */
 
@@ -131,12 +131,13 @@ static void MX_NVIC_Init(void);
  * @filter is the IIR filter coefficients
  *         IIR is used to avoid the short term fluctuations
  */
-static trim_data();
+static int trim_read();
+static int BMP280_read_data();
 static uint32_t BMP280_compensate_P_int64(int32_t adc_P);
-float BMP280_measure(float *pressure);
+void BMP280_measure(float *pressure);
 int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter);
 void BMP280_wakeup();
-void BMP280_read_data();
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -151,7 +152,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-    HAL_StatusTypeDef ret = 0;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -231,6 +232,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
        BMP280_measure(&Pressure);
+       printf("Pressure is %.2f \r\n", Pressure);
        HAL_Delay(1000);
   }
   /* USER CODE END 3 */
@@ -531,7 +533,7 @@ static void MX_GPIO_Init(void)
 
 
 static int trim_read(){
-	uint8_t trimdata[32];
+	uint8_t trimdata[32] ={0};
 
 	// Pressure coefficients
 	dig_P1 = (uint16_t)(trimdata[7] << 8 | trimdata[6]);
@@ -589,23 +591,19 @@ int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter){
 	return 0;
 }
 
-void BMP280_read_data() {
+static int BMP280_read_data() {
 
 	uint8_t buf[8];
 
 	if (trim_read() != 0){
 		return 1;
 	} else {
- 	   ret = HAL_I2C_Master_Receive(&hi2c2, PRESS_ADDR, buf, 8, HAL_MAX_DELAY);
- 	   if (ret != HAL_OK) {
- 		   strcpy((char*)buf, "Error Rx\r\n");
- 	   } else {
+ 	   HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, PRESS_MSB_REG, 1, buf, 8, HAL_MAX_DELAY);
  		  p_raw = (buf[0]<<12)|(buf[1]<<4)|(buf[2]>>4);
  	   }
-	}
-
-
+	return 0;
 }
+
 
 static uint32_t BMP280_compensate_P_int64(int32_t adc_P)
 {
@@ -645,7 +643,7 @@ void BMP280_wakeup() {
 }
 
 
-float BMP280_measure(float *pressure)
+void BMP280_measure(float *pressure)
 {
     if (BMP280_read_data() == 0)
     {
@@ -662,6 +660,7 @@ float BMP280_measure(float *pressure)
         // if the device is detached
         *pressure = 0;
     }
+
 }
 /* USER CODE END 4 */
 
