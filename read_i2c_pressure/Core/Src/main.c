@@ -64,7 +64,6 @@
 #define T_SB_4000   0x07
 
 // REGISTERS DEFINITIONS
-#define ID_REG      	0xD0
 #define RESET_REG  		0xE0
 #define STATUS_REG      0xF3
 #define CTRL_MEAS_REG   0xF4
@@ -89,17 +88,17 @@ RTC_HandleTypeDef hrtc;
 
 TIM_HandleTypeDef htim15;
 
-int32_t p_raw;
-float Pressure;
-int16_t  dig_P1, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
-int32_t t_fine;
-uint8_t chip_id;
 
 /* USER CODE BEGIN PV */
 // static const uint8_t HUM_ADDR = 0x45 << 1;
 static const uint8_t PRESS_ADDR = 0x19 << 1;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
 //static const uint8_t TEMP_ADDR = 0x49 << 1;
+int32_t p_raw;
+float Pressure;
+int16_t  dig_P1, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
+int32_t t_fine;
+uint8_t chip_id;
 
 
 /* USER CODE END PV */
@@ -133,7 +132,7 @@ static void MX_NVIC_Init(void);
  */
 static trim_data();
 static uint32_t BMP280_compensate_P_int64(int32_t adc_P);
-void BMP280_measure(float *pressure);
+float BMP280_measure(float *pressure);
 int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter);
 void BMP280_wakeup();
 void BMP280_read_data();
@@ -230,7 +229,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       BMP280_Measure(&Pressure);
+       BMP280_measure(&Pressure);
        HAL_Delay(1000);
   }
   /* USER CODE END 3 */
@@ -530,7 +529,7 @@ static void MX_GPIO_Init(void)
 
 
 
-static trim_read(){
+static int trim_read(){
 	uint8_t trimdata[32];
 
 	// Pressure coefficients
@@ -555,7 +554,38 @@ int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter){
 	uint8_t datawr = 0;
 	uint8_t datacheck = 0;
 
+	// reset device
+	datawr = 0xB6;
+	ret = HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, RESET_REG, 1, &datawr, 1, HAL_MAX_DELAY);
+	if (ret != HAL_OK){
+		return 2;
+	}
+	HAL_Delay(100);
 
+	// write the standby time and iir filter coefficient to 0xF5
+	datawr = (t_sb << 5) | (filter << 2);
+	ret = HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, CONFIG_REG, 1, &datawr, 1, HAL_MAX_DELAY);
+	if (ret != HAL_OK){
+		return 3;
+	}
+	HAL_Delay(100);
+	HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, CONFIG_REG, 1, &datacheck, 1, HAL_MAX_DELAY);
+	if(datacheck != datawr){
+		return 4;
+	}
+
+	// write the pressure oversampling with mode to 0xF4
+	datawr = (osrs_p << 2) | mode;
+	ret = HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, CTRL_MEAS_REG, 1, &datawr, 1, HAL_MAX_DELAY);
+	if (ret != HAL_OK){
+		return 5;
+	}
+	HAL_Delay(100);
+	HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, CTRL_MEAS_REG, 1, &datacheck, 1, HAL_MAX_DELAY);
+	if(datacheck != datawr){
+		return 6;
+	}
+	return 0;
 }
 
 void BMP280_read_data() {
@@ -601,7 +631,20 @@ static uint32_t BMP280_compensate_P_int64(int32_t adc_P)
 	return (uint32_t)p;
 }
 
-void BMP280_measure(float *pressure)
+void BMP280_wakeup() {
+	uint8_t datawr = 0;
+	HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, CTRL_MEAS_REG, 1, &datawr, 1, HAL_MAX_DELAY);
+
+	// modify the data with the forced mode
+	datawr = datawr | MODE_FORCED;
+
+	// write the new data to the register
+	HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, CTRL_MEAS_REG, 1, &datawr, 1, HAL_MAX_DELAY);
+	HAL_Delay(100);
+}
+
+
+float BMP280_measure(float *pressure)
 {
     if (BMP280_read_data() == 0)
     {
