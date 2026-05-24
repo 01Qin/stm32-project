@@ -92,11 +92,10 @@ TIM_HandleTypeDef htim15;
 
 /* USER CODE BEGIN PV */
 // static const uint8_t HUM_ADDR = 0x19 << 1;
-//static const uint8_t PRESS_ADDR = 0x45 << 1;
-static const uint8_t PRESS_ADDR = 0x76 << 1;
+static const uint8_t PRESS_ADDR = 0x45 << 1;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
-//static const uint8_t TEMP_ADDR = 0x49 << 1;
-int32_t p_raw;
+static const uint8_t TEMP_ADDR = 0x49 << 1;
+int32_t p_raw, t_raw;
 float Pressure;
 int16_t  dig_P1, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
 int32_t t_fine;
@@ -132,10 +131,10 @@ static void MX_NVIC_Init(void);
  *         IIR is used to avoid the short term fluctuations
  */
 static int trim_read();
-static int BMP280_read_data();
+static int BMP280_read_press();
 static uint32_t BMP280_compensate_P_int64(int32_t adc_P);
 void BMP280_measure(float *pressure);
-int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter);
+int BMP280_config ();
 void BMP280_wakeup();
 
 /* USER CODE END PFP */
@@ -205,7 +204,7 @@ int main(void)
 
   /* -- Sample board code to switch on leds ---- */
   BSP_LED_On(LED_GREEN);
-
+  BMP280_config();
   /* USER CODE END BSP */
 
   /* Infinite loop */
@@ -232,7 +231,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
        BMP280_measure(&Pressure);
-       printf("Pressure is %.2f \r\n", Pressure);
+       printf("Pressure is: %.2f Pa\r\n", Pressure);
        HAL_Delay(1000);
   }
   /* USER CODE END 3 */
@@ -552,53 +551,25 @@ static int trim_read(){
 	return 0;
 }
 
-int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter){
-	if (trim_read() != 0){
-		return 1;
-	}
-
-	uint8_t datawr = 0;
-	uint8_t datacheck = 0;
-
-	// reset device
-	datawr = 0xB6;
-	ret = HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, RESET_REG, 1, &datawr, 1, HAL_MAX_DELAY);
-	if (ret != HAL_OK){
-		return 2;
-	}
-	HAL_Delay(100);
+int BMP280_config (){
+	uint8_t datawr, datacheck;
+	trim_read();
 
 	// write the standby time and iir filter coefficient to 0xF5
-	datawr = (t_sb << 5) | (filter << 2);
-	ret = HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, CONFIG_REG, 1, &datawr, 1, HAL_MAX_DELAY);
-	if (ret != HAL_OK){
-		return 3;
-	}
-	HAL_Delay(100);
-	HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, CONFIG_REG, 1, &datacheck, 1, HAL_MAX_DELAY);
-	if(datacheck != datawr){
-		return 4;
-	}
+	datawr = (T_SB_125 << 5) | (IIR_4 << 2);
+	HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, CONFIG_REG, 1, &datawr, 1, HAL_MAX_DELAY);
 
 	// write the pressure oversampling with mode to 0xF4
-	datawr = (osrs_p << 2) | mode;
-	ret = HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, CTRL_MEAS_REG, 1, &datawr, 1, HAL_MAX_DELAY);
-	if (ret != HAL_OK){
-		return 5;
-	}
-	HAL_Delay(100);
-	HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, CTRL_MEAS_REG, 1, &datacheck, 1, HAL_MAX_DELAY);
-	if(datacheck != datawr){
-		return 6;
-	}
+	datacheck = (OSRS_4 << 2) | MODE_NORMAL;
+	HAL_I2C_Mem_Write(&hi2c2, PRESS_ADDR, CTRL_MEAS_REG, 1, &datacheck, 1, HAL_MAX_DELAY);
 	return 0;
 }
 
-static int BMP280_read_data() {
+static int BMP280_read_press() {
 
 	uint8_t buf[3];
 
-	if (HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, PRESS_MSB_REG, 1, buf, 8, HAL_MAX_DELAY) != HAL_OK){
+	if (HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, PRESS_MSB_REG, 1, buf, 3, HAL_MAX_DELAY) != HAL_OK){
 		return 1;
  	   }
 	p_raw = (buf[0]<<12)|(buf[1]<<4)|(buf[2]>>4);
@@ -606,7 +577,7 @@ static int BMP280_read_data() {
 }
 
 
-static uint32_t BMP280_compensate_P_int64(int32_t adc_P)
+uint32_t BMP280_compensate_P_int64(int32_t adc_P)
 {
 	int64_t var1, var2, p;
 	var1 = ((int64_t)t_fine) - 128000;
@@ -621,11 +592,12 @@ static uint32_t BMP280_compensate_P_int64(int32_t adc_P)
 		return 0; // avoid exception caused by division by zero
 	}
 
-	p = 1048576-adc_P;
+	p = 1048576 - adc_P;
 
-	p = (((p<<31)-var2)*3125)/var1;
+	p = (((p<<31) - var2) * 3125) / var1;
 	var1 = (((int64_t)dig_P9) * (p>>13) * (p>>13)) >> 25;
 	var2 = (((int64_t)dig_P8) * p) >> 19;
+
 	p = ((p + var1 + var2) >> 8) + (((int64_t)dig_P7)<<4);
 
 	return (uint32_t)p;
@@ -646,21 +618,8 @@ void BMP280_wakeup() {
 
 void BMP280_measure(float *pressure)
 {
-    if (BMP280_read_data() == 0)
-    {
-        if (p_raw == 0x800000) *pressure = 0; // pressure disabled
-        else
-        {
-            *pressure = (BMP280_compensate_P_int64(p_raw)) / 256.0f;
-            // SUPPORT_32BIT
-            // *pressure = (BME280_compensate_P_int32(pRaw));  // in Pa
-        }
-    }
-    else
-    {
-        // if the device is detached
-        *pressure = 0;
-    }
+    BMP280_read_press();
+    *pressure = (BMP280_compensate_P_int64(p_raw)) / 256.0f;
 
 }
 /* USER CODE END 4 */

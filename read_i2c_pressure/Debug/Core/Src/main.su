@@ -7,9 +7,9 @@
 ../Core/Src/main.c:463:13:MX_TIM15_Init	40	static
 ../Core/Src/main.c:509:13:MX_GPIO_Init	40	static
 ../Core/Src/main.c:535:12:trim_read	48	static
-../Core/Src/main.c:555:5:BMP280_config	48	static
-../Core/Src/main.c:597:12:BMP280_read_data	32	static
-../Core/Src/main.c:611:17:BMP280_compensate_P_int64	328	static
-../Core/Src/main.c:636:6:BMP280_wakeup	32	static
-../Core/Src/main.c:649:6:BMP280_measure	16	static
-../Core/Src/main.c:701:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:555:5:BMP280_config	32	static
+../Core/Src/main.c:569:12:BMP280_read_press	32	static
+../Core/Src/main.c:581:10:BMP280_compensate_P_int64	328	static
+../Core/Src/main.c:607:6:BMP280_wakeup	32	static
+../Core/Src/main.c:620:6:BMP280_measure	16	static
+../Core/Src/main.c:659:6:Error_Handler	4	static,ignoring_inline_asm
