@@ -533,8 +533,11 @@ static void MX_GPIO_Init(void)
 
 
 static int trim_read(){
-	uint8_t trimdata[32] ={0};
+	uint8_t trimdata[24] ={0};
 
+	// read calibration registers 0x88 - 0x9f
+	if (HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, 0x88, 1, trimdata, 24, HAL_MAX_DELAY) != HAL_OK)
+	        return 1;
 	// Pressure coefficients
 	dig_P1 = (uint16_t)(trimdata[7] << 8 | trimdata[6]);
 	dig_P2 = (int16_t)(trimdata[9] << 8 | trimdata[8]);
@@ -593,14 +596,12 @@ int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter){
 
 static int BMP280_read_data() {
 
-	uint8_t buf[8];
+	uint8_t buf[3];
 
-	if (trim_read() != 0){
+	if (HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, PRESS_MSB_REG, 1, buf, 8, HAL_MAX_DELAY) != HAL_OK){
 		return 1;
-	} else {
- 	   HAL_I2C_Mem_Read(&hi2c2, PRESS_ADDR, PRESS_MSB_REG, 1, buf, 8, HAL_MAX_DELAY);
- 		  p_raw = (buf[0]<<12)|(buf[1]<<4)|(buf[2]>>4);
  	   }
+	p_raw = (buf[0]<<12)|(buf[1]<<4)|(buf[2]>>4);
 	return 0;
 }
 

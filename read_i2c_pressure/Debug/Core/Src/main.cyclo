@@ -6,10 +6,10 @@
 ../Core/Src/main.c:426:13:MX_RTC_Init	2
 ../Core/Src/main.c:463:13:MX_TIM15_Init	4
 ../Core/Src/main.c:509:13:MX_GPIO_Init	1
-../Core/Src/main.c:535:12:trim_read	1
-../Core/Src/main.c:552:5:BMP280_config	7
-../Core/Src/main.c:594:12:BMP280_read_data	2
-../Core/Src/main.c:608:17:BMP280_compensate_P_int64	2
-../Core/Src/main.c:633:6:BMP280_wakeup	1
-../Core/Src/main.c:646:6:BMP280_measure	3
-../Core/Src/main.c:698:6:Error_Handler	1
+../Core/Src/main.c:535:12:trim_read	2
+../Core/Src/main.c:555:5:BMP280_config	7
+../Core/Src/main.c:597:12:BMP280_read_data	2
+../Core/Src/main.c:611:17:BMP280_compensate_P_int64	2
+../Core/Src/main.c:636:6:BMP280_wakeup	1
+../Core/Src/main.c:649:6:BMP280_measure	3
+../Core/Src/main.c:701:6:Error_Handler	1
