@@ -61,8 +61,8 @@ all: main-build
 main-build: Blinky001.elf secondary-outputs
 
 # Tool invocations
-Blinky001.elf Blinky001.map: $(OBJS) $(USER_OBJS) C:\ST\Projects\Blinky001\STM32G431KBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Blinky001.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\ST\Projects\Blinky001\STM32G431KBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Blinky001.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Blinky001.elf Blinky001.map: $(OBJS) $(USER_OBJS) C:\ST\Projects\stm32-project\Blinky001\STM32G431KBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Blinky001.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\ST\Projects\stm32-project\Blinky001\STM32G431KBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Blinky001.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -33,6 +33,43 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
+// Oversampling definitions
+#define OSRS_OFF    	0x00
+#define OSRS_1      	0x01
+#define OSRS_2      	0x02
+#define OSRS_4      	0x03
+#define OSRS_8      	0x04
+#define OSRS_16     	0x05
+
+// MODE Definitions
+#define MODE_SLEEP      0x00
+#define MODE_FORCED     0x01
+#define MODE_NORMAL     0x03
+
+// IIR Filter Coefficients
+#define IIR_OFF     	0x00
+#define IIR_2       	0x01
+#define IIR_4       	0x02
+#define IIR_8       	0x03
+#define IIR_16      	0x04
+
+// Standby time
+#define T_SB_05     0x00
+#define T_SB_625     0x01
+#define T_SB_125     0x02
+#define T_SB_250     0x03
+#define T_SB_500     0x04
+#define T_SB_1000     0x05
+#define T_SB_2000   0x06
+#define T_SB_4000   0x07
+
+// REGISTERS DEFINITIONS
+#define ID_REG      	0xD0
+#define RESET_REG  		0xE0
+#define STATUS_REG      0xF3
+#define CTRL_MEAS_REG   0xF4
+#define CONFIG_REG      0xF5
+#define PRESS_MSB_REG   0xF7
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -52,13 +89,19 @@ RTC_HandleTypeDef hrtc;
 
 TIM_HandleTypeDef htim15;
 
-int32_t pRaw;
+int32_t p_raw;
+float Pressure;
+int16_t  dig_P1, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
+int32_t t_fine;
+uint8_t chip_id;
 
 /* USER CODE BEGIN PV */
 // static const uint8_t HUM_ADDR = 0x45 << 1;
 static const uint8_t PRESS_ADDR = 0x19 << 1;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
 //static const uint8_t TEMP_ADDR = 0x49 << 1;
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,11 +114,33 @@ static void MX_TIM15_Init(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
+/* Configuration for the BME280
+
+ * @osrs is the oversampling to improve the accuracy
+ *       if osrs is set to OSRS_OFF, the respective measurement will be skipped
+ *       It can be set to OSRS_1, OSRS_2, OSRS_4, etc.
+ *
+ * @mode can be used to set the mode for the device
+ *       MODE_SLEEP will put the device in sleep
+ *       MODE_FORCED device goes back to sleep after one measurement.
+ *       MODE_NORMAL device performs measurement in the normal mode.
+ *
+ * @t_sb is the standby time. The time sensor waits before performing another measurement
+ *       It is used along with the normal mode.
+ *
+ * @filter is the IIR filter coefficients
+ *         IIR is used to avoid the short term fluctuations
+ */
+static trim_data();
+static uint32_t BMP280_compensate_P_int64(int32_t adc_P);
+void BMP280_measure(float *pressure);
+int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter);
+void BMP280_wakeup();
+void BMP280_read_data();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /**
@@ -87,10 +152,6 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
     HAL_StatusTypeDef ret = 0;
-	uint16_t buf[12];
-	// save raw data
-	int32_t pRaw;
-	float temp_c;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -169,32 +230,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       // read temp logic
-       buf[0] = REG_TEMP;
-       // ack message
-       ret = HAL_I2C_Master_Receive(&hi2c2, PRESS_ADDR, buf, 1, HAL_MAX_DELAY);
-       if (ret != HAL_OK){
-    	   strcpy((char*)buf, "Error Tx\r\n");
-       } else {
-    	   // read 2 bytes from the register
-    	   ret = HAL_I2C_Master_Receive(&hi2c2, PRESS_ADDR, buf, 3, HAL_MAX_DELAY);
-    	   if (ret != HAL_OK) {
-    		   strcpy((char*)buf, "Error Rx\r\n");
-    	   } else {
-    		   // save raw data
-    		pRaw =((int16_t)buf[0] << 12) |(buf[1] << 4) | buf[2] >> 4;
-    		   // convert to 2's complement
-    		   if (pRaw > 0x7FF){
-    			   pRaw |= 0x7FF;
-    		   }
-    		   // concert temp to float value
-    		   temp_c = val * 0.0625;
-    		   // convert temp to decimal
-    		   temp_c *= 100;
-
-    	   }
-       }
-       printf("%u.%02u \r\n", (unsigned int)temp_c / 100, (unsigned int)temp_c % 100);
+       BMP280_Measure(&Pressure);
        HAL_Delay(1000);
   }
   /* USER CODE END 3 */
@@ -492,8 +528,10 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-static TrimRead(){
-	uint8_t trimdata[9];
+
+
+static trim_read(){
+	uint8_t trimdata[32];
 
 	// Pressure coefficients
 	dig_P1 = (uint16_t)(trimdata[7] << 8 | trimdata[6]);
@@ -509,6 +547,35 @@ static TrimRead(){
 	return 0;
 }
 
+int BMP280_config (uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter){
+	if (trim_read() != 0){
+		return 1;
+	}
+
+	uint8_t datawr = 0;
+	uint8_t datacheck = 0;
+
+
+}
+
+void BMP280_read_data() {
+
+	uint8_t buf[8];
+
+	if (trim_read() != 0){
+		return 1;
+	} else {
+ 	   ret = HAL_I2C_Master_Receive(&hi2c2, PRESS_ADDR, buf, 8, HAL_MAX_DELAY);
+ 	   if (ret != HAL_OK) {
+ 		   strcpy((char*)buf, "Error Rx\r\n");
+ 	   } else {
+ 		  p_raw = (buf[0]<<12)|(buf[1]<<4)|(buf[2]>>4);
+ 	   }
+	}
+
+
+}
+
 static uint32_t BMP280_compensate_P_int64(int32_t adc_P)
 {
 	int64_t var1, var2, p;
@@ -518,26 +585,30 @@ static uint32_t BMP280_compensate_P_int64(int32_t adc_P)
 	var2 = var2 + (((int64_t)dig_P4)<<35);
 	var1 = ((var1 * var1 * (int64_t)dig_P3)>>8) + ((var1 * (int64_t)dig_P2)<<12);
 	var1 = (((((int64_t)1)<<47)+var1))*((int64_t)dig_P1)>>33;
+
 	if (var1 == 0)
 	{
 		return 0; // avoid exception caused by division by zero
 	}
+
 	p = 1048576-adc_P;
+
 	p = (((p<<31)-var2)*3125)/var1;
 	var1 = (((int64_t)dig_P9) * (p>>13) * (p>>13)) >> 25;
 	var2 = (((int64_t)dig_P8) * p) >> 19;
 	p = ((p + var1 + var2) >> 8) + (((int64_t)dig_P7)<<4);
+
 	return (uint32_t)p;
 }
 
-void BME280_Measure(float *pressure)
+void BMP280_measure(float *pressure)
 {
-    if (BMEReadRaw() == 0)
+    if (BMP280_read_data() == 0)
     {
-        if (pRaw == 0x800000) *pressure = 0; // pressure disabled
+        if (p_raw == 0x800000) *pressure = 0; // pressure disabled
         else
         {
-            *pressure = (BMP280_compensate_P_int64(pRaw)) / 256.0f;
+            *pressure = (BMP280_compensate_P_int64(p_raw)) / 256.0f;
             // SUPPORT_32BIT
             // *pressure = (BME280_compensate_P_int32(pRaw));  // in Pa
         }
