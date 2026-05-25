@@ -100,7 +100,7 @@ TIM_HandleTypeDef htim15;
 
 int32_t p_raw, t_raw;
 float Pressure, Temp;
-int16_t   dig_T2, dig_T3, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
+int16_t dig_T2, dig_T3, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
 uint16_t dig_T1, dig_P1;
 int32_t t_fine;
 uint8_t chip_id;
@@ -142,8 +142,8 @@ static int32_t BMP280_compensate_T(int32_t adc_T);
 void BMP280_measure(float *pressure, float *temp);
 int BMP280_config(uint8_t osrs_t, uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter);
 void BMP280_wakeup();
-void BMP280_PrintCalibration(void);
-void BMP280_CheckID(void);
+//void BMP280_PrintCalibration(void);
+//void BMP280_CheckID(void);
 
 /* USER CODE END PFP */
 
@@ -212,7 +212,7 @@ int main(void)
 
   /* -- Sample board code to switch on leds ---- */
   BSP_LED_On(LED_GREEN);
-  BMP280_config(OSRS_1, OSRS_4, MODE_NORMAL, T_SB_125, IIR_4);
+  BMP280_config(OSRS_2, OSRS_16, MODE_NORMAL, T_SB_05, IIR_16);
   /* USER CODE END BSP */
 
   /* Infinite loop */
@@ -229,10 +229,9 @@ int main(void)
 //    }
 //    uint8_t bufferI2c[10] = {0};
 
-  BMP280_CheckID();
-  trim_read();
-  BMP280_PrintCalibration();
-float Temp, Pressure;
+//  BMP280_CheckID();
+//  trim_read();
+//  BMP280_PrintCalibration();
 
   while (1)
   {
@@ -571,9 +570,18 @@ static int trim_read(){
 }
 
 int BMP280_config (uint8_t osrs_t, uint8_t osrs_p, uint8_t mode, uint8_t t_sb, uint8_t filter){
+
+	trim_read();
+
 	uint8_t datawr;
 	uint8_t datacheck = 0;
-	trim_read();
+
+	// reset the device
+	datawr = 0xB6;
+	if (HAL_I2C_Mem_Write(&hi2c2, BMP280_ADDR, RESET_REG, 1, &datawr, 1, HAL_MAX_DELAY) != HAL_OK) {
+		return 1;
+	}
+	HAL_Delay(100);
 
 	// write the standby time and iir filter coefficient to 0xF5
 	datawr = (t_sb << 5) | (filter << 2);
@@ -593,15 +601,14 @@ static int BMP280_read_raw() {
 
 	// check the chip id
 	HAL_I2C_Mem_Read(&hi2c2, BMP280_ADDR, ID_REG, 1, &chip_id, 1, HAL_MAX_DELAY);
-
+		if (chip_id == 0x58){
 		// calculate the raw data
 		HAL_I2C_Mem_Read(&hi2c2, BMP280_ADDR, PRESS_MSB_REG, 1, buf, 6, HAL_MAX_DELAY);
 		p_raw = (buf[0]<<12)|(buf[1]<<4)|(buf[2]>>4);
 		t_raw = (buf[3]<<12)|(buf[4]<<4)|(buf[5]>>4);
 		return 0;
-
-	return 0;
-
+		}
+		else return -1;
 }
 
 
@@ -692,7 +699,7 @@ void BMP280_measure(float *pressure, float *temp)
 	if (BMP280_read_raw() == 0){
 
 	*temp = BMP280_compensate_T(t_raw) / 100.0f;
-    *pressure = (BMP280_compensate_P_int32(p_raw)) / 256.0f;
+    *pressure = (BMP280_compensate_P_int32(p_raw));
 	} else {
 		*temp = 0;
 		*pressure = 0;
@@ -700,32 +707,32 @@ void BMP280_measure(float *pressure, float *temp)
 
 }
 
-void BMP280_PrintCalibration(void)
-{
-    printf("dig_T1 = %u\r\n", dig_T1);
-    printf("dig_T2 = %d\r\n", dig_T2);
-    printf("dig_T3 = %d\r\n", dig_T3);
-
-    printf("dig_P1 = %u\r\n", dig_P1);
-    printf("dig_P2 = %d\r\n", dig_P2);
-    printf("dig_P3 = %d\r\n", dig_P3);
-    printf("dig_P4 = %d\r\n", dig_P4);
-    printf("dig_P5 = %d\r\n", dig_P5);
-    printf("dig_P6 = %d\r\n", dig_P6);
-    printf("dig_P7 = %d\r\n", dig_P7);
-    printf("dig_P8 = %d\r\n", dig_P8);
-    printf("dig_P9 = %d\r\n", dig_P9);
-}
-
-void BMP280_CheckID(void)
-{
-    uint8_t id = 0;
-
-    if (HAL_I2C_Mem_Read(&hi2c2, BMP280_ADDR, 0xD0, 1, &id, 1, HAL_MAX_DELAY) == HAL_OK)
-        printf("BMP280 ID register = 0x%02X\r\n", id);
-    else
-        printf("I2C read failed at address 0x%02X\r\n", BMP280_ADDR);
-}
+//void BMP280_PrintCalibration(void)
+//{
+//    printf("dig_T1 = %u\r\n", dig_T1);
+//    printf("dig_T2 = %d\r\n", dig_T2);
+//    printf("dig_T3 = %d\r\n", dig_T3);
+//
+//    printf("dig_P1 = %u\r\n", dig_P1);
+//    printf("dig_P2 = %d\r\n", dig_P2);
+//    printf("dig_P3 = %d\r\n", dig_P3);
+//    printf("dig_P4 = %d\r\n", dig_P4);
+//    printf("dig_P5 = %d\r\n", dig_P5);
+//    printf("dig_P6 = %d\r\n", dig_P6);
+//    printf("dig_P7 = %d\r\n", dig_P7);
+//    printf("dig_P8 = %d\r\n", dig_P8);
+//    printf("dig_P9 = %d\r\n", dig_P9);
+//}
+//
+//void BMP280_CheckID(void)
+//{
+//    uint8_t id = 0;
+//
+//    if (HAL_I2C_Mem_Read(&hi2c2, BMP280_ADDR, 0xD0, 1, &id, 1, HAL_MAX_DELAY) == HAL_OK)
+//        printf("BMP280 ID register = 0x%02X\r\n", id);
+//    else
+//        printf("I2C read failed at address 0x%02X\r\n", BMP280_ADDR);
+//}
 
 /* USER CODE END 4 */
 
