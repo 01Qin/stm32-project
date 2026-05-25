@@ -243,8 +243,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
        BMP280_measure(&Pressure, &Temp);
+
        printf("Temperature: %.2f C,\r\nPressure: %.2f Pa\r\n", Temp, Pressure);
-       HAL_Delay(1000);
+       HAL_Delay(30000); // print every 30sec
   }
   /* USER CODE END 3 */
 }

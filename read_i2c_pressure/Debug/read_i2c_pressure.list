@@ -1345,6 +1345,7 @@ int main(void)
  8000fa4:	4911      	ldr	r1, [pc, #68]	@ (8000fec <main+0xc8>)
  8000fa6:	4812      	ldr	r0, [pc, #72]	@ (8000ff0 <main+0xcc>)
  8000fa8:	f000 fc5e 	bl	8001868 <BMP280_measure>
+
        printf("Temperature: %.2f C,\r\nPressure: %.2f Pa\r\n", Temp, Pressure);
  8000fac:	4b0f      	ldr	r3, [pc, #60]	@ (8000fec <main+0xc8>)
  8000fae:	681b      	ldr	r3, [r3, #0]
@@ -1363,8 +1364,8 @@ int main(void)
  8000fce:	462b      	mov	r3, r5
  8000fd0:	4808      	ldr	r0, [pc, #32]	@ (8000ff4 <main+0xd0>)
  8000fd2:	f007 fa9f 	bl	8008514 <iprintf>
-       HAL_Delay(1000);
- 8000fd6:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
+       HAL_Delay(30000);
+ 8000fd6:	f247 5030 	movw	r0, #30000	@ 0x7530
  8000fda:	f001 f8a3 	bl	8002124 <HAL_Delay>
        BSP_LED_Toggle(LED_GREEN);
  8000fde:	bf00      	nop
