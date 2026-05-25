@@ -26,8 +26,8 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-uint16_t adc_val, ref_adc, ts_cal1, ts_cal2;
-float vdd, temp,avg_temp;
+uint16_t adc_val, ref_adc, ts_ref, ts_cal1, ts_cal2;
+float vdd, temp, avg_temp;
 float alpha = 0.075;
 
 
@@ -38,7 +38,7 @@ float alpha = 0.075;
 /* USER CODE BEGIN PD */
 #define TS_CAL1 ((uint16_t * ) 0x1FFF75A8)
 #define TS_CAL2 ((uint16_t * ) 0x1FFF75CA)
-#define VREFINT_CAL  ((uint16_t * ) 0x1FFF75AA)
+#define VREFINT_CAL ((uint16_t * ) 0x1FFF75AA)
 
 /* USER CODE END PD */
 
@@ -156,6 +156,25 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    HAL_ADC_Start(&hadc1);
+    HAL_ADC_PollForConversion(&hadc1, 10);
+    adc_val = HAL_ADC_GetValue(&hadc1);
+
+    HAL_ADC_PollForConversion(&hadc1, 10);
+    ref_adc = HAL_ADC_GetValue(&hadc1);
+
+    HAL_ADC_Stop(&hadc1);
+
+    ts_ref = *VREFINT_CAL;
+    ts_cal1 = *TS_CAL1;
+    ts_cal2 = *TS_CAL2;
+
+    vdd=((float)(ts_ref*3.0f)/(float)ref_adc);
+    temp = ((float)(adc_val*(vdd/3.0f)-ts_cal1))*(110.0f-30.0f)/((float)(ts_cal2-ts_cal1))+30.0f;
+    avg_temp=alpha*temp+(1.0f-alpha)*avg_temp;
+
+    printf("Temperature: %.2f", avg_temp);
+    HAL_Delay(10000);
   }
   /* USER CODE END 3 */
 }
