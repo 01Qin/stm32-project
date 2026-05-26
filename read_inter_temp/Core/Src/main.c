@@ -173,7 +173,7 @@ int main(void)
     temp = ((float)(adc_val*(vdd/3.0f)-ts_cal1))*(110.0f-30.0f)/((float)(ts_cal2-ts_cal1))+30.0f;
     avg_temp=alpha*temp+(1.0f-alpha)*avg_temp;
 
-    printf("Temperature: %.2f", avg_temp);
+    printf("Temperature: %.2f C\n\r", avg_temp);
     HAL_Delay(10000);
   }
   /* USER CODE END 3 */

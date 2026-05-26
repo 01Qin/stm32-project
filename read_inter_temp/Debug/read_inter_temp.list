@@ -7,23 +7,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00009c98  080001e0  080001e0  000011e0  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       000003d4  08009e78  08009e78  0000ae78  2**3
+  2 .rodata       000003dc  08009e78  08009e78  0000ae78  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  0800a24c  0800a24c  0000c1e0  2**0
+  3 .ARM.extab    00000000  0800a254  0800a254  0000c1e0  2**0
                   CONTENTS, READONLY
-  4 .ARM          00000008  0800a24c  0800a24c  0000b24c  2**2
+  4 .ARM          00000008  0800a254  0800a254  0000b254  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  0800a254  0800a254  0000c1e0  2**0
+  5 .preinit_array 00000000  0800a25c  0800a25c  0000c1e0  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  0800a254  0800a254  0000b254  2**2
+  6 .init_array   00000004  0800a25c  0800a25c  0000b25c  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  7 .fini_array   00000004  0800a258  0800a258  0000b258  2**2
+  7 .fini_array   00000004  0800a260  0800a260  0000b260  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  8 .data         000001e0  20000000  0800a25c  0000c000  2**2
+  8 .data         000001e0  20000000  0800a264  0000c000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000364  200001e0  0800a43c  0000c1e0  2**2
+  9 .bss          00000364  200001e0  0800a444  0000c1e0  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  20000544  0800a43c  0000c544  2**0
+ 10 ._user_heap_stack 00000604  20000544  0800a444  0000c544  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  0000c1e0  2**0
                   CONTENTS, READONLY
@@ -1440,7 +1440,7 @@ int main(void)
  8001094:	4b18      	ldr	r3, [pc, #96]	@ (80010f8 <main+0x1d4>)
  8001096:	edc3 7a00 	vstr	s15, [r3]
 
-    printf("Temperature: %.2f", avg_temp);
+    printf("Temperature: %.2f C\n\r", avg_temp);
  800109a:	4b17      	ldr	r3, [pc, #92]	@ (80010f8 <main+0x1d4>)
  800109c:	681b      	ldr	r3, [r3, #0]
  800109e:	4618      	mov	r0, r3
@@ -2805,7 +2805,7 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80019bc:	20008000 	.word	0x20008000
  80019c0:	20000000 	.word	0x20000000
  80019c4:	200001e0 	.word	0x200001e0
- 80019c8:	0800a25c 	.word	0x0800a25c
+ 80019c8:	0800a264 	.word	0x0800a264
  80019cc:	200001e0 	.word	0x200001e0
  80019d0:	20000544 	.word	0x20000544
 
@@ -10144,7 +10144,7 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8005ae0:	40022000 	.word	0x40022000
  8005ae4:	40021000 	.word	0x40021000
  8005ae8:	04c4b400 	.word	0x04c4b400
- 8005aec:	08009ea8 	.word	0x08009ea8
+ 8005aec:	08009eac 	.word	0x08009eac
  8005af0:	20000004 	.word	0x20000004
  8005af4:	20000010 	.word	0x20000010
 
@@ -10259,7 +10259,7 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8005bf4:	4618      	mov	r0, r3
  8005bf6:	bd80      	pop	{r7, pc}
  8005bf8:	40021000 	.word	0x40021000
- 8005bfc:	08009eb8 	.word	0x08009eb8
+ 8005bfc:	08009ebc 	.word	0x08009ebc
 
 08005c00 <HAL_RCC_GetPCLK2Freq>:
  8005c00:	b580      	push	{r7, lr}
@@ -10277,7 +10277,7 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8005c20:	4618      	mov	r0, r3
  8005c22:	bd80      	pop	{r7, pc}
  8005c24:	40021000 	.word	0x40021000
- 8005c28:	08009eb8 	.word	0x08009eb8
+ 8005c28:	08009ebc 	.word	0x08009ebc
 
 08005c2c <RCC_GetSysClockFreqFromPLLSource>:
  8005c2c:	b480      	push	{r7}
@@ -12501,7 +12501,7 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80070bc:	46bd      	mov	sp, r7
  80070be:	e8bd 8fb0 	ldmia.w	sp!, {r4, r5, r7, r8, r9, sl, fp, pc}
  80070c2:	bf00      	nop
- 80070c4:	08009ec0 	.word	0x08009ec0
+ 80070c4:	08009ec4 	.word	0x08009ec4
  80070c8:	00f42400 	.word	0x00f42400
 
 080070cc <UART_AdvFeatureConfig>:
@@ -13401,11 +13401,11 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8007908:	e7ee      	b.n	80078e8 <_printf_float+0x2a0>
  800790a:	bf00      	nop
  800790c:	7fefffff 	.word	0x7fefffff
- 8007910:	08009edc 	.word	0x08009edc
- 8007914:	08009ed8 	.word	0x08009ed8
- 8007918:	08009ee4 	.word	0x08009ee4
- 800791c:	08009ee0 	.word	0x08009ee0
- 8007920:	08009ee8 	.word	0x08009ee8
+ 8007910:	08009ee0 	.word	0x08009ee0
+ 8007914:	08009edc 	.word	0x08009edc
+ 8007918:	08009ee8 	.word	0x08009ee8
+ 800791c:	08009ee4 	.word	0x08009ee4
+ 8007920:	08009eec 	.word	0x08009eec
  8007924:	6da3      	ldr	r3, [r4, #88]	@ 0x58
  8007926:	f8dd a028 	ldr.w	sl, [sp, #40]	@ 0x28
  800792a:	4553      	cmp	r3, sl
@@ -13888,8 +13888,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8007db0:	f104 0619 	add.w	r6, r4, #25
  8007db4:	e7f5      	b.n	8007da2 <_printf_i+0x22e>
  8007db6:	bf00      	nop
- 8007db8:	08009eea 	.word	0x08009eea
- 8007dbc:	08009efb 	.word	0x08009efb
+ 8007db8:	08009eee 	.word	0x08009eee
+ 8007dbc:	08009eff 	.word	0x08009eff
 
 08007dc0 <std>:
  8007dc0:	2300      	movs	r3, #0
@@ -14248,10 +14248,10 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80080d6:	4798      	blx	r3
  80080d8:	3601      	adds	r6, #1
  80080da:	e7f2      	b.n	80080c2 <__libc_init_array+0x1e>
- 80080dc:	0800a254 	.word	0x0800a254
- 80080e0:	0800a254 	.word	0x0800a254
- 80080e4:	0800a254 	.word	0x0800a254
- 80080e8:	0800a258 	.word	0x0800a258
+ 80080dc:	0800a25c 	.word	0x0800a25c
+ 80080e0:	0800a25c 	.word	0x0800a25c
+ 80080e4:	0800a25c 	.word	0x0800a25c
+ 80080e8:	0800a260 	.word	0x0800a260
 
 080080ec <__retarget_lock_init_recursive>:
  80080ec:	4770      	bx	lr
@@ -14651,16 +14651,16 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80084d4:	3fc68a28 	.word	0x3fc68a28
  80084d8:	509f79fb 	.word	0x509f79fb
  80084dc:	3fd34413 	.word	0x3fd34413
- 80084e0:	08009f19 	.word	0x08009f19
- 80084e4:	08009f30 	.word	0x08009f30
+ 80084e0:	08009f1d 	.word	0x08009f1d
+ 80084e4:	08009f34 	.word	0x08009f34
  80084e8:	7ff00000 	.word	0x7ff00000
- 80084ec:	08009f15 	.word	0x08009f15
- 80084f0:	08009f0c 	.word	0x08009f0c
- 80084f4:	08009ee9 	.word	0x08009ee9
- 80084f8:	08009ee8 	.word	0x08009ee8
+ 80084ec:	08009f19 	.word	0x08009f19
+ 80084f0:	08009f10 	.word	0x08009f10
+ 80084f4:	08009eed 	.word	0x08009eed
+ 80084f8:	08009eec 	.word	0x08009eec
  80084fc:	3ff80000 	.word	0x3ff80000
- 8008500:	0800a080 	.word	0x0800a080
- 8008504:	08009f88 	.word	0x08009f88
+ 8008500:	0800a088 	.word	0x0800a088
+ 8008504:	08009f8c 	.word	0x08009f8c
  8008508:	f8d9 301c 	ldr.w	r3, [r9, #28]
  800850c:	9a00      	ldr	r2, [sp, #0]
  800850e:	601a      	str	r2, [r3, #0]
@@ -14909,8 +14909,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  800879a:	4682      	mov	sl, r0
  800879c:	468b      	mov	fp, r1
  800879e:	e7c6      	b.n	800872e <_dtoa_r+0x526>
- 80087a0:	0800a080 	.word	0x0800a080
- 80087a4:	0800a058 	.word	0x0800a058
+ 80087a0:	0800a088 	.word	0x0800a088
+ 80087a4:	0800a060 	.word	0x0800a060
  80087a8:	3ff00000 	.word	0x3ff00000
  80087ac:	40240000 	.word	0x40240000
  80087b0:	401c0000 	.word	0x401c0000
@@ -15538,8 +15538,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8008db0:	f000 f966 	bl	8009080 <__multadd>
  8008db4:	9001      	str	r0, [sp, #4]
  8008db6:	e7ea      	b.n	8008d8e <_dtoa_r+0xb86>
- 8008db8:	08009f88 	.word	0x08009f88
- 8008dbc:	08009f0c 	.word	0x08009f0c
+ 8008db8:	08009f8c 	.word	0x08009f8c
+ 8008dbc:	08009f10 	.word	0x08009f10
 
 08008dc0 <_free_r>:
  8008dc0:	b538      	push	{r3, r4, r5, lr}
@@ -15821,8 +15821,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  800902c:	d0e9      	beq.n	8009002 <_Balloc+0x42>
  800902e:	e9c0 6401 	strd	r6, r4, [r0, #4]
  8009032:	e7ee      	b.n	8009012 <_Balloc+0x52>
- 8009034:	08009f19 	.word	0x08009f19
- 8009038:	08009f99 	.word	0x08009f99
+ 8009034:	08009f1d 	.word	0x08009f1d
+ 8009038:	08009f9d 	.word	0x08009f9d
 
 0800903c <_Bfree>:
  800903c:	b570      	push	{r4, r5, r6, lr}
@@ -15850,8 +15850,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8009070:	6021      	str	r1, [r4, #0]
  8009072:	f843 4022 	str.w	r4, [r3, r2, lsl #2]
  8009076:	bd70      	pop	{r4, r5, r6, pc}
- 8009078:	08009f19 	.word	0x08009f19
- 800907c:	08009f99 	.word	0x08009f99
+ 8009078:	08009f1d 	.word	0x08009f1d
+ 800907c:	08009f9d 	.word	0x08009f9d
 
 08009080 <__multadd>:
  8009080:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
@@ -15905,8 +15905,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80090fc:	6125      	str	r5, [r4, #16]
  80090fe:	4620      	mov	r0, r4
  8009100:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
- 8009104:	08009f88 	.word	0x08009f88
- 8009108:	08009f99 	.word	0x08009f99
+ 8009104:	08009f8c 	.word	0x08009f8c
+ 8009108:	08009f9d 	.word	0x08009f9d
 
 0800910c <__hi0bits>:
  800910c:	f5b0 3f80 	cmp.w	r0, #65536	@ 0x10000
@@ -15996,8 +15996,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80091c2:	6103      	str	r3, [r0, #16]
  80091c4:	bd10      	pop	{r4, pc}
  80091c6:	bf00      	nop
- 80091c8:	08009f88 	.word	0x08009f88
- 80091cc:	08009f99 	.word	0x08009f99
+ 80091c8:	08009f8c 	.word	0x08009f8c
+ 80091cc:	08009f9d 	.word	0x08009f9d
 
 080091d0 <__multiply>:
  80091d0:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
@@ -16118,8 +16118,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8009316:	3e01      	subs	r6, #1
  8009318:	e799      	b.n	800924e <__multiply+0x7e>
  800931a:	bf00      	nop
- 800931c:	08009f88 	.word	0x08009f88
- 8009320:	08009f99 	.word	0x08009f99
+ 800931c:	08009f8c 	.word	0x08009f8c
+ 8009320:	08009f9d 	.word	0x08009f9d
 
 08009324 <__pow5mult>:
  8009324:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
@@ -16189,9 +16189,9 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80093c8:	4628      	mov	r0, r5
  80093ca:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
  80093ce:	bf00      	nop
- 80093d0:	0800a04c 	.word	0x0800a04c
- 80093d4:	08009f19 	.word	0x08009f19
- 80093d8:	08009f99 	.word	0x08009f99
+ 80093d0:	0800a050 	.word	0x0800a050
+ 80093d4:	08009f1d 	.word	0x08009f1d
+ 80093d8:	08009f9d 	.word	0x08009f9d
 
 080093dc <__lshift>:
  80093dc:	e92d 4ff8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, sl, fp, lr}
@@ -16271,8 +16271,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80094aa:	d8f8      	bhi.n	800949e <__lshift+0xc2>
  80094ac:	e7e9      	b.n	8009482 <__lshift+0xa6>
  80094ae:	bf00      	nop
- 80094b0:	08009f88 	.word	0x08009f88
- 80094b4:	08009f99 	.word	0x08009f99
+ 80094b0:	08009f8c 	.word	0x08009f8c
+ 80094b4:	08009f9d 	.word	0x08009f9d
 
 080094b8 <__mcmp>:
  80094b8:	690a      	ldr	r2, [r1, #16]
@@ -16409,8 +16409,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8009612:	e7da      	b.n	80095ca <__mdiff+0xda>
  8009614:	3f01      	subs	r7, #1
  8009616:	e7e6      	b.n	80095e6 <__mdiff+0xf6>
- 8009618:	08009f88 	.word	0x08009f88
- 800961c:	08009f99 	.word	0x08009f99
+ 8009618:	08009f8c 	.word	0x08009f8c
+ 800961c:	08009f9d 	.word	0x08009f9d
 
 08009620 <__d2b>:
  8009620:	e92d 43f7 	stmdb	sp!, {r0, r1, r2, r4, r5, r6, r7, r8, r9, lr}
@@ -16477,8 +16477,8 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  80096be:	f7ff fd25 	bl	800910c <__hi0bits>
  80096c2:	ebc0 1042 	rsb	r0, r0, r2, lsl #5
  80096c6:	e7e5      	b.n	8009694 <__d2b+0x74>
- 80096c8:	08009f88 	.word	0x08009f88
- 80096cc:	08009f99 	.word	0x08009f99
+ 80096c8:	08009f8c 	.word	0x08009f8c
+ 80096cc:	08009f9d 	.word	0x08009f9d
 
 080096d0 <__sfputc_r>:
  80096d0:	6893      	ldr	r3, [r2, #8]
@@ -16743,11 +16743,11 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8009930:	f7fe f920 	bl	8007b74 <_printf_i>
  8009934:	e7e5      	b.n	8009902 <_vfiprintf_r+0x1de>
  8009936:	bf00      	nop
- 8009938:	08009ff2 	.word	0x08009ff2
- 800993c:	08009ffc 	.word	0x08009ffc
+ 8009938:	08009ff6 	.word	0x08009ff6
+ 800993c:	0800a000 	.word	0x0800a000
  8009940:	08007649 	.word	0x08007649
  8009944:	080096ff 	.word	0x080096ff
- 8009948:	08009ff8 	.word	0x08009ff8
+ 8009948:	08009ffc 	.word	0x08009ffc
 
 0800994c <__sflush_r>:
  800994c:	f9b1 200c 	ldrsh.w	r2, [r1, #12]
@@ -17085,9 +17085,9 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  8009c28:	e7f3      	b.n	8009c12 <__assert_func+0x12>
  8009c2a:	bf00      	nop
  8009c2c:	20000024 	.word	0x20000024
- 8009c30:	0800a00d 	.word	0x0800a00d
- 8009c34:	0800a01a 	.word	0x0800a01a
- 8009c38:	0800a048 	.word	0x0800a048
+ 8009c30:	0800a011 	.word	0x0800a011
+ 8009c34:	0800a01e 	.word	0x0800a01e
+ 8009c38:	0800a04c 	.word	0x0800a04c
 
 08009c3c <_calloc_r>:
  8009c3c:	b570      	push	{r4, r5, r6, lr}
