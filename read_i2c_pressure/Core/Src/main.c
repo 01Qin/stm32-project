@@ -218,17 +218,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  printf("Scanning I2C bus...\r\n");
-
-  uint8_t dummy = 0;
-
-  for (uint8_t addr = 1; addr < 128; addr++)
-  {
-      if (HAL_I2C_Master_Transmit(&hi2c2, addr << 1, &dummy, 1, 10) == HAL_OK)
-      {
-          printf("Found device at 0x%02X\r\n", addr);
-      }
-  }
 
 //    uint8_t bufferI2c[10] = {0};
 
