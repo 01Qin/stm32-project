@@ -36,7 +36,7 @@
 
 #define HAL_MODULE_ENABLED
 
-  /*#define HAL_ADC_MODULE_ENABLED   */
+  #define HAL_ADC_MODULE_ENABLED
 /*#define HAL_COMP_MODULE_ENABLED   */
 /*#define HAL_CORDIC_MODULE_ENABLED   */
 /*#define HAL_CRC_MODULE_ENABLED   */
@@ -56,13 +56,13 @@
 /*#define HAL_PCD_MODULE_ENABLED   */
 /*#define HAL_QSPI_MODULE_ENABLED   */
 /*#define HAL_RNG_MODULE_ENABLED   */
-/*#define HAL_RTC_MODULE_ENABLED   */
+#define HAL_RTC_MODULE_ENABLED
 /*#define HAL_SAI_MODULE_ENABLED   */
 /*#define HAL_SMARTCARD_MODULE_ENABLED   */
 /*#define HAL_SMBUS_MODULE_ENABLED   */
 /*#define HAL_SPI_MODULE_ENABLED   */
 /*#define HAL_SRAM_MODULE_ENABLED   */
-/*#define HAL_TIM_MODULE_ENABLED   */
+#define HAL_TIM_MODULE_ENABLED
 #define HAL_UART_MODULE_ENABLED
 /*#define HAL_USART_MODULE_ENABLED   */
 /*#define HAL_WWDG_MODULE_ENABLED   */
@@ -183,7 +183,7 @@ The real value may vary depending on the variations in voltage and temperature.*
 #define  VDD_VALUE                   (3300UL) /*!< Value of VDD in mv */
 #define  TICK_INT_PRIORITY           (0UL)    /*!< tick interrupt priority (lowest by default)  */
 #define  USE_RTOS                     0U
-#define  PREFETCH_ENABLE              0U
+#define  PREFETCH_ENABLE              1U
 #define  INSTRUCTION_CACHE_ENABLE     1U
 #define  DATA_CACHE_ENABLE            1U
 
@@ -192,7 +192,7 @@ The real value may vary depending on the variations in voltage and temperature.*
   * @brief Uncomment the line below to expanse the "assert_param" macro in the
   *        HAL drivers code
   */
- #define USE_FULL_ASSERT    1U
+/* #define USE_FULL_ASSERT    1U */
 
 /* ################## SPI peripheral configuration ########################## */
 
