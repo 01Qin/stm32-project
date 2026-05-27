@@ -117,7 +117,7 @@ static void MX_TIM15_Init(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
-/* Configuration for the BME280
+/* Configuration for the BMP280
 
  * @osrs is the oversampling to improve the accuracy
  *       if osrs is set to OSRS_OFF, the respective measurement will be skipped
