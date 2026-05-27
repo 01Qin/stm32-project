@@ -69,7 +69,6 @@
 ///* MKI109V3: Vdd and Vddio power supply values */
 //#define PWM_3V3 915
 
-#if defined(NUCLEO_G431)
 /* NUCLEO_G431: Define communication interface */
 #define SENSOR_BUS hi2c2
 
@@ -77,18 +76,16 @@
 ///* DISCOVERY_SPC584B: Define communication interface */
 //#define SENSOR_BUS I2CD1
 
-#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include <stdio.h>
 #include "lis3dh_reg.h"
 
-#if defined(NUCLEO_G431)
-#include "stm32f4xx_hal.h"
-#include "usart.h"
-#include "gpio.h"
-#include "i2c.h"
+#include "stm32g4xx_hal.h"
+#include "stm32g4xx_hal_usart.h"
+#include "stm32g4xx_hal_gpio.h"
+#include "stm32g4xx_hal_i2c.h"
 //
 //#elif defined(STEVAL_MKI109V3)
 //#include "stm32f4xx_hal.h"
@@ -99,7 +96,6 @@
 //
 //#elif defined(SPC584B_DIS)
 //#include "components.h"
-#endif
 
 /* Private macro -------------------------------------------------------------*/
 
@@ -108,6 +104,8 @@ static uint8_t whoamI;
 static uint8_t tx_buffer[1000];
 
 /* Extern variables ----------------------------------------------------------*/
+extern I2C_HandleTypeDef hi2c2;
+extern UART_HandleTypeDef huart2;
 
 /* Private functions ---------------------------------------------------------*/
 /*
@@ -122,7 +120,8 @@ static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
                              uint16_t len);
 static void tx_com( uint8_t *tx_buffer, uint16_t len );
 static void platform_delay(uint32_t ms);
-static void platform_init(void);
+void lis3dh_wake_up(void);
+//static void platform_init(void);
 
 /* Main Example --------------------------------------------------------------*/
 void lis3dh_wake_up(void)
@@ -137,7 +136,7 @@ void lis3dh_wake_up(void)
   dev_ctx.mdelay = platform_delay;
   dev_ctx.handle = &SENSOR_BUS;
   /* Initialize platform specific hardware */
-  platform_init();
+//  platform_init();
   /*  Check device ID */
   lis3dh_device_id_get(&dev_ctx, &whoamI);
 
@@ -210,7 +209,6 @@ void lis3dh_wake_up(void)
 static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
                               uint16_t len)
 {
-#if defined(NUCLEO_G431)
   /* Write multiple command */
   reg |= 0x80;
   HAL_I2C_Mem_Write(handle, LIS3DH_I2C_ADD_L, reg,

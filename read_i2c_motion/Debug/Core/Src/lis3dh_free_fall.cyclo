@@ -1,0 +1,5 @@
+../Core/Src/lis3dh_free_fall.c:129:6:lis3dh_freefall	3
+../Core/Src/lis3dh_free_fall.c:201:16:platform_write	1
+../Core/Src/lis3dh_free_fall.c:234:16:platform_read	1
+../Core/Src/lis3dh_free_fall.c:264:13:tx_com	1
+../Core/Src/lis3dh_free_fall.c:279:13:platform_delay	1

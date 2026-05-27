@@ -1,0 +1,5 @@
+../Core/Src/lis3dh_multi_read_fifo.c:128:6:lis3dh_read_fifo	4
+../Core/Src/lis3dh_multi_read_fifo.c:201:16:platform_write	1
+../Core/Src/lis3dh_multi_read_fifo.c:234:16:platform_read	1
+../Core/Src/lis3dh_multi_read_fifo.c:264:13:tx_com	1
+../Core/Src/lis3dh_multi_read_fifo.c:281:13:platform_delay	1

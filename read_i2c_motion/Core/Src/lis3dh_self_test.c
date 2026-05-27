@@ -53,7 +53,7 @@
  */
 
 //#define STEVAL_MKI109V3  /* little endian */
-//#define NUCLEO_F401RE    /* little endian */
+#define NUCLEO_G431    /* little endian */
 //#define SPC584B_DIS      /* big endian */
 
 /* ATTENTION: By default the driver is little endian. If you need switch
@@ -62,43 +62,43 @@
  */
 
 
-#if defined(STEVAL_MKI109V3)
-/* MKI109V3: Define communication interface */
-#define SENSOR_BUS hspi2
-/* MKI109V3: Vdd and Vddio power supply values */
-#define PWM_3V3 915
+//#if defined(STEVAL_MKI109V3)
+///* MKI109V3: Define communication interface */
+//#define SENSOR_BUS hspi2
+///* MKI109V3: Vdd and Vddio power supply values */
+//#define PWM_3V3 915
 
-#elif defined(NUCLEO_F401RE)
+//#elif defined(NUCLEO_G431)
 /* NUCLEO_F401RE: Define communication interface */
-#define SENSOR_BUS hi2c1
+#define SENSOR_BUS hi2c2
 
-#elif defined(SPC584B_DIS)
-/* DISCOVERY_SPC584B: Define communication interface */
-#define SENSOR_BUS I2CD1
-
-#endif
+//#elif defined(SPC584B_DIS)
+///* DISCOVERY_SPC584B: Define communication interface */
+//#define SENSOR_BUS I2CD1
+//
+//#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
 #include <stdio.h>
 #include "lis3dh_reg.h"
 
-#if defined(NUCLEO_F401RE)
-#include "stm32f4xx_hal.h"
-#include "usart.h"
-#include "gpio.h"
-#include "i2c.h"
+//#if defined(NUCLEO_F401RE)
+#include "stm32g4xx_hal.h"
+#include "stm32g4xx_hal_usart.h"
+#include "stm32g4xx_hal_gpio.h"
+#include "stm32g4xx_hal_i2c.h"
 
-#elif defined(STEVAL_MKI109V3)
-#include "stm32f4xx_hal.h"
-#include "usbd_cdc_if.h"
-#include "gpio.h"
-#include "spi.h"
-#include "tim.h"
-
-#elif defined(SPC584B_DIS)
-#include "components.h"
-#endif
+//#elif defined(STEVAL_MKI109V3)
+//#include "stm32f4xx_hal.h"
+//#include "usbd_cdc_if.h"
+//#include "gpio.h"
+//#include "spi.h"
+//#include "tim.h"
+//
+//#elif defined(SPC584B_DIS)
+//#include "components.h"
+//#endif
 
 /* Private macro -------------------------------------------------------------*/
 /* Self test limits converted from 10bit right-aligned to 16bit left-aligned. */
@@ -116,7 +116,8 @@ static float_t min_st_limit_mg;
 
 
 /* Extern variables ----------------------------------------------------------*/
-
+extern I2C_HandleTypeDef hi2c2;
+extern UART_HandleTypeDef huart2;
 /* Private functions ---------------------------------------------------------*/
 /*
  *   WARNING:
@@ -130,7 +131,7 @@ static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
                              uint16_t len);
 static void tx_com(uint8_t *tx_buffer, uint16_t len);
 static void platform_delay(uint32_t ms);
-static void platform_init(void);
+//static void platform_init(void);
 
 /* Main Example --------------------------------------------------------------*/
 void lis3dh_self_test(void)
@@ -144,7 +145,7 @@ void lis3dh_self_test(void)
   dev_ctx.mdelay = platform_delay;
   dev_ctx.handle = &SENSOR_BUS;
   /* Initialize platform specific hardware */
-  platform_init();
+//  platform_init();
   /* Wait sensor boot time */
   platform_delay(5);
   /* Check device ID */
@@ -278,22 +279,22 @@ void lis3dh_self_test(void)
 static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
                               uint16_t len)
 {
-#if defined(NUCLEO_F401RE)
+#if defined(NUCLEO_G431)
   /* Write multiple command */
   reg |= 0x80;
   HAL_I2C_Mem_Write(handle, LIS3DH_I2C_ADD_L, reg,
                     I2C_MEMADD_SIZE_8BIT, (uint8_t*) bufp, len, 1000);
-#elif defined(STEVAL_MKI109V3)
-  /* Write multiple command */
-  reg |= 0x40;
-  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_RESET);
-  HAL_SPI_Transmit(handle, &reg, 1, 1000);
-  HAL_SPI_Transmit(handle, (uint8_t*) bufp, len, 1000);
-  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_SET);
-#elif defined(SPC584B_DIS)
-  /* Write multiple command */
-  reg |= 0x80;
-  i2c_lld_write(handle,  LIS3DH_I2C_ADD_L & 0xFE, reg, (uint8_t*) bufp, len);
+//#elif defined(STEVAL_MKI109V3)
+//  /* Write multiple command */
+//  reg |= 0x40;
+//  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_RESET);
+//  HAL_SPI_Transmit(handle, &reg, 1, 1000);
+//  HAL_SPI_Transmit(handle, (uint8_t*) bufp, len, 1000);
+//  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_SET);
+//#elif defined(SPC584B_DIS)
+//  /* Write multiple command */
+//  reg |= 0x80;
+//  i2c_lld_write(handle,  LIS3DH_I2C_ADD_L & 0xFE, reg, (uint8_t*) bufp, len);
 #endif
   return 0;
 }
@@ -311,22 +312,22 @@ static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
 static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
                              uint16_t len)
 {
-#if defined(NUCLEO_F401RE)
+#if defined(NUCLEO_G431)
   /* Read multiple command */
   reg |= 0x80;
   HAL_I2C_Mem_Read(handle, LIS3DH_I2C_ADD_L, reg,
                    I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
-#elif defined(STEVAL_MKI109V3)
-  /* Read multiple command */
-  reg |= 0xC0;
-  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_RESET);
-  HAL_SPI_Transmit(handle, &reg, 1, 1000);
-  HAL_SPI_Receive(handle, bufp, len, 1000);
-  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_SET);
-#elif defined(SPC584B_DIS)
-  /* Read multiple command */
-  reg |= 0x80;
-  i2c_lld_read(handle, LIS3DH_I2C_ADD_L & 0xFE, reg, bufp, len);
+//#elif defined(STEVAL_MKI109V3)
+//  /* Read multiple command */
+//  reg |= 0xC0;
+//  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_RESET);
+//  HAL_SPI_Transmit(handle, &reg, 1, 1000);
+//  HAL_SPI_Receive(handle, bufp, len, 1000);
+//  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_SET);
+//#elif defined(SPC584B_DIS)
+//  /* Read multiple command */
+//  reg |= 0x80;
+//  i2c_lld_read(handle, LIS3DH_I2C_ADD_L & 0xFE, reg, bufp, len);
 #endif
   return 0;
 }
@@ -340,12 +341,12 @@ static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
  */
 static void tx_com(uint8_t *tx_buffer, uint16_t len)
 {
-#if defined(NUCLEO_F401RE)
+#if defined(NUCLEO_G431)
   HAL_UART_Transmit(&huart2, tx_buffer, len, 1000);
-#elif defined(STEVAL_MKI109V3)
-  CDC_Transmit_FS(tx_buffer, len);
-#elif defined(SPC584B_DIS)
-  sd_lld_write(&SD2, tx_buffer, len);
+//#elif defined(STEVAL_MKI109V3)
+//  CDC_Transmit_FS(tx_buffer, len);
+//#elif defined(SPC584B_DIS)
+//  sd_lld_write(&SD2, tx_buffer, len);
 #endif
 }
 
@@ -357,25 +358,25 @@ static void tx_com(uint8_t *tx_buffer, uint16_t len)
  */
 static void platform_delay(uint32_t ms)
 {
-#if defined(NUCLEO_F401RE) | defined(STEVAL_MKI109V3)
+#if defined(NUCLEO_G431)
   HAL_Delay(ms);
-#elif defined(SPC584B_DIS)
-  osalThreadDelayMilliseconds(ms);
+//#elif defined(SPC584B_DIS)
+//  osalThreadDelayMilliseconds(ms);
 #endif
 }
 
 /*
  * @brief  platform specific initialization (platform dependent)
  */
-static void platform_init(void)
-{
-#if defined(STEVAL_MKI109V3)
-  TIM3->CCR1 = PWM_3V3;
-  TIM3->CCR2 = PWM_3V3;
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-  HAL_Delay(1000);
-#endif
-}
+//static void platform_init(void)
+//{
+//#if defined(STEVAL_MKI109V3)
+//  TIM3->CCR1 = PWM_3V3;
+//  TIM3->CCR2 = PWM_3V3;
+//  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+//  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+//  HAL_Delay(1000);
+//#endif
+//}
 
 

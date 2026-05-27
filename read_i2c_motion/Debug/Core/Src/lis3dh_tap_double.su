@@ -1,0 +1,5 @@
+../Core/Src/lis3dh_tap_double.c:129:6:lis3dh_double_tap	56	static
+../Core/Src/lis3dh_tap_double.c:205:16:platform_write	40	static
+../Core/Src/lis3dh_tap_double.c:238:16:platform_read	40	static
+../Core/Src/lis3dh_tap_double.c:268:13:tx_com	16	static
+../Core/Src/lis3dh_tap_double.c:285:13:platform_delay	16	static

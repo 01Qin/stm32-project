@@ -45,6 +45,8 @@
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
+int32_t lis3dh_acceleration_raw_get(const stmdev_ctx_t *ctx, int16_t *val);
+
 int32_t __weak lis3dh_read_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t *data,
                                uint16_t len)
 {
