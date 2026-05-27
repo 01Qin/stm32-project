@@ -93,12 +93,12 @@ RTC_HandleTypeDef hrtc;
 TIM_HandleTypeDef htim15;
 
 /* USER CODE BEGIN PV */
-// static const uint8_t HUM_ADDR = 0x45 << 1;
-// static const uint8_t PRESS_ADDR = 0x19 << 1;
+// static const uint8_t _ADDR = 0x45 << 1;
+// static const uint8_t MOTION_ADDR = 0x19 << 1;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
 // static const uint8_t TEMP_ADDR = 0x49 << 1;
 // static const uint8_t BMP280_ADDR 0x77 << 1
-// static const uint8_t MOTION_ADDR 0x38 << 1
+// static const uint8_t _ADDR 0x38 << 1
 int32_t p_raw, t_raw;
 float Pressure, Temp;
 int16_t dig_T2, dig_T3, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
