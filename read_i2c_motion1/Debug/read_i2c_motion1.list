@@ -39,13 +39,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_line   0001e2cc  00000000  00000000  00052935  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000e7881  00000000  00000000  00070c01  2**0
+ 18 .debug_str    000e77fe  00000000  00000000  00070c01  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  00158482  2**0
+ 19 .comment      00000043  00000000  00000000  001583ff  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00007a3c  00000000  00000000  001584c8  2**2
+ 20 .debug_frame  00007a3c  00000000  00000000  00158444  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000059  00000000  00000000  0015ff04  2**0
+ 21 .debug_line_str 00000059  00000000  00000000  0015fe80  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1227,9 +1227,9 @@ Disassembly of section .text:
 
 08000f24 <lis3dh_init>:
 
-#define I2C_READ_BIT   (1)
-#define I2C_WRITE_BIT  (0)
-#define TIMEOUT_MS     (50)
+#define I2C_READ_BIT   1
+#define I2C_WRITE_BIT  0
+#define TIMEOUT_MS     50
 
 HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t *buf, uint16_t bufsize) {
  8000f24:	b580      	push	{r7, lr}
@@ -1245,7 +1245,7 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
  8000f32:	68fb      	ldr	r3, [r7, #12]
  8000f34:	68ba      	ldr	r2, [r7, #8]
  8000f36:	601a      	str	r2, [r3, #0]
-	lis3dh->i2c_addr = LIS3DH_ADDR << 1;
+	lis3dh->i2c_addr = LIS3DH_ADDR;
  8000f38:	68fb      	ldr	r3, [r7, #12]
  8000f3a:	2232      	movs	r2, #50	@ 0x32
  8000f3c:	809a      	strh	r2, [r3, #4]

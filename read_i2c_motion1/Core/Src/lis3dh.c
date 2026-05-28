@@ -7,15 +7,15 @@
 
 #include "lis3dh.h"
 
-#define I2C_READ_BIT   (1)
-#define I2C_WRITE_BIT  (0)
-#define TIMEOUT_MS     (50)
+#define I2C_READ_BIT   1
+#define I2C_WRITE_BIT  0
+#define TIMEOUT_MS     50
 
 HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t *buf, uint16_t bufsize) {
 	HAL_StatusTypeDef status;
 
 	lis3dh->i2c = i2c;
-	lis3dh->i2c_addr = LIS3DH_ADDR << 1;
+	lis3dh->i2c_addr = LIS3DH_ADDR;
 	lis3dh->buf = buf;
 	lis3dh->bufsize = bufsize;
 
