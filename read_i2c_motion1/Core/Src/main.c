@@ -199,7 +199,7 @@ int main(void)
     	  }
       }
 
-       HAL_Delay(500); // print every 3sec
+       HAL_Delay(50000); // print every 3sec
   }
   /* USER CODE END 3 */
 }

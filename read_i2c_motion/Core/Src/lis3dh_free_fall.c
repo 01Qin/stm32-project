@@ -6,46 +6,6 @@ aZ/*
  *          from sensor.
  *
  ******************************************************************************
- * @attention
- *
- * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
- * All rights reserved.</center></h2>
- *
- * This software component is licensed by ST under BSD 3-Clause license,
- * the "License"; You may not use this file except in compliance with the
- * License. You may obtain a copy of the License at:
- *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
- */
-
-/*
- * This example was developed using the following STMicroelectronics
- * evaluation boards:
- *
- * - STEVAL_MKI109V3 + STEVAL-MKI105V1
- * - NUCLEO_F401RE + STEVAL-MKI105V1
- * - DISCOVERY_SPC584B + STEVAL-MKI105V1
- *
- * and STM32CubeMX tool with STM32CubeF4 MCU Package
- *
- * Used interfaces:
- *
- * STEVAL_MKI109V3    - Host side:   USB (Virtual COM)
- *                    - Sensor side: SPI(Default) / I2C(supported)
- *
- * NUCLEO_STM32F401RE - Host side: UART(COM) to USB bridge
- *                    - Sensor side: I2C(Default) / SPI(supported)
- *
- * DISCOVERY_SPC584B  - Host side: UART(COM) to USB bridge
- *                    - Sensor side: I2C(Default) / SPI(supported)
- *
- * If you need to run this example on a different hardware platform a
- * modification of the functions: `platform_write`, `platform_read`,
- * `tx_com` and 'platform_init' is required.
- *
- */
-
 /* STMicroelectronics evaluation boards definition
  *
  * Please uncomment ONLY the evaluation boards in use.
@@ -62,22 +22,8 @@ aZ/*
  *            header file of the driver (_reg.h).
  */
 
-
-//#if defined(STEVAL_MKI109V3)
-///* MKI109V3: Define communication interface */
-//#define SENSOR_BUS hspi2
-///* MKI109V3: Vdd and Vddio power supply values */
-//#define PWM_3V3 915
-
-
 /* NUCLEO_G431: Define communication interface */
 #define SENSOR_BUS hi2c2
-
-
-//#elif defined(SPC584B_DIS)
-///* DISCOVERY_SPC584B: Define communication interface */
-//#define SENSOR_BUS I2CD2
-
 
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
@@ -88,17 +34,6 @@ aZ/*
 #include "stm32g4xx_hal_usart.h"
 #include "stm32g4xx_hal_gpio.h"
 #include "stm32g4xx_hal_i2c.h"
-
-//#elif defined(STEVAL_MKI109V3)
-//#include "stm32f4xx_hal.h"
-//#include "usbd_cdc_if.h"
-//#include "gpio.h"
-//#include "spi.h"
-//#include "tim.h"
-
-//#elif defined(SPC584B_DIS)
-//#include "components.h"
-
 
 /* Private macro -------------------------------------------------------------*/
 
@@ -123,7 +58,6 @@ static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
                              uint16_t len);
 static void tx_com( uint8_t *tx_buffer, uint16_t len );
 static void platform_delay(uint32_t ms);
-//static void platform_init(void);
 
 /* Main Example --------------------------------------------------------------*/
 void lis3dh_freefall(void)
@@ -136,8 +70,7 @@ void lis3dh_freefall(void)
   dev_ctx.read_reg = platform_read;
   dev_ctx.mdelay = platform_delay;
   dev_ctx.handle = &SENSOR_BUS;
-  /* Initialize platform specific hardware */
-//  platform_init();
+
   /* Check device ID */
   lis3dh_device_id_get(&dev_ctx, &whoamI);
 
@@ -201,23 +134,10 @@ void lis3dh_freefall(void)
 static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
                               uint16_t len)
 {
-#if defined(NUCLEO_G431)
   /* Write multiple command */
   reg |= 0x80;
   HAL_I2C_Mem_Write(handle, LIS3DH_I2C_ADD_L, reg,
                     I2C_MEMADD_SIZE_8BIT, (uint8_t*) bufp, len, 1000);
-//#elif defined(STEVAL_MKI109V3)
-//  /* Write multiple command */
-//  reg |= 0x40;
-//  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_RESET);
-//  HAL_SPI_Transmit(handle, &reg, 1, 1000);
-//  HAL_SPI_Transmit(handle, (uint8_t*) bufp, len, 1000);
-//  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_SET);
-//#elif defined(SPC584B_DIS)
-  /* Write multiple command */
-//  reg |= 0x80;
-//  i2c_lld_write(handle,  LIS3DH_I2C_ADD_L & 0xFE, reg, (uint8_t*) bufp, len);
-#endif
   return 0;
 }
 
@@ -234,23 +154,10 @@ static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
 static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
                              uint16_t len)
 {
-#if defined(NUCLEO_G431)
   /* Read multiple command */
   reg |= 0x80;
   HAL_I2C_Mem_Read(handle, LIS3DH_I2C_ADD_L, reg,
                    I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
-//#elif defined(STEVAL_MKI109V3)
-//  /* Read multiple command */
-//  reg |= 0xC0;
-//  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_RESET);
-//  HAL_SPI_Transmit(handle, &reg, 1, 1000);
-//  HAL_SPI_Receive(handle, bufp, len, 1000);
-//  HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_SET);
-//#elif defined(SPC584B_DIS)
-//  /* Read multiple command */
-//  reg |= 0x80;
-//  i2c_lld_read(handle, LIS3DH_I2C_ADD_L & 0xFE, reg, bufp, len);
-#endif
   return 0;
 }
 
@@ -264,37 +171,10 @@ static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
 static void tx_com(uint8_t *tx_buffer, uint16_t len)
 {
   HAL_UART_Transmit(&huart2, tx_buffer, len, 1000);
-//#elif defined(STEVAL_MKI109V3)
-//  CDC_Transmit_FS(tx_buffer, len);
-//#elif defined(SPC584B_DIS)
-//  sd_lld_write(&SD2, tx_buffer, len);
 }
 
-/*
- * @brief  platform specific delay (platform dependent)
- *
- * @param  ms        delay in ms
- *
- */
 static void platform_delay(uint32_t ms)
 {
-#if defined(NUCLEO_G431)
   HAL_Delay(ms);
-//#elif defined(SPC584B_DIS)
-//  osalThreadDelayMilliseconds(ms);
-#endif
-}
 
-/*
- * @brief  platform specific initialization (platform dependent)
- */
-//static void platform_init(void)
-//{
-//#if defined(STEVAL_MKI109V3)
-//  TIM3->CCR1 = PWM_3V3;
-//  TIM3->CCR2 = PWM_3V3;
-//  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-//  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-//  platform_delay(1000);
-//#endif
-//}
+}

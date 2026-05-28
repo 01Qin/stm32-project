@@ -1788,8 +1788,8 @@ int main(void)
     	  }
       }
 
-       HAL_Delay(500); // print every 3sec
- 8001294:	f44f 70fa 	mov.w	r0, #500	@ 0x1f4
+       HAL_Delay(50000); // print every 3sec
+ 8001294:	f24c 3050 	movw	r0, #50000	@ 0xc350
  8001298:	f000 fe10 	bl	8001ebc <HAL_Delay>
        BSP_LED_Toggle(LED_GREEN);
  800129c:	e7a4      	b.n	80011e8 <main+0x98>
