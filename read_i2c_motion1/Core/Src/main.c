@@ -4,17 +4,7 @@
   * @file           : main.c
   * @brief          : Main program body
   ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -77,35 +67,6 @@ static void MX_TIM15_Init(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
-/* Configuration for the BMP280
-
- * @osrs is the oversampling to improve the accuracy
- *       if osrs is set to OSRS_OFF, the respective measurement will be skipped
- *       It can be set to OSRS_1, OSRS_2, OSRS_4, etc.
- *
- * @mode can be used to set the mode for the device
- *       MODE_SLEEP will put the device in sleep
- *       MODE_FORCED device goes back to sleep after one measurement.
- *       MODE_NORMAL device performs measurement in the normal mode.
- *
- * @t_sb is the standby time. The time sensor waits before performing another measurement
- *       It is used along with the normal mode.
- *
- * @filter is the IIR filter coefficients
- *         IIR is used to avoid the short term fluctuations
- */
-
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
 int main(void)
 {
 
@@ -169,7 +130,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-
     uint8_t xyz_buf[6] = {0};
     lis3dh_t lis3dh;
     status = lis3dh_init(&lis3dh, &hi2c2, xyz_buf, 6);
@@ -194,15 +154,26 @@ int main(void)
     		  float y_mg = lis3dh.y / 16.0f;
     		  float z_mg = lis3dh.z / 16.0f;
     		  printf("X = %.2f, Y = %.2f, Z = %.2f\r\n", x_mg, y_mg, z_mg);
+
+    		  }
     	  } else {
-    		  printf("Status error: %d\r\n", status);
+    		  lis3dh_freefall_detected(&lis3dh);
+    		  printf("Alarm: freefall detected\r\n");
+
+    		    // Clear latched interrupt
+    		    lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
+
+    		    // Re‑enable measurement after event
+    		    lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
+
     	  }
+
+      HAL_Delay(500); // print every 3sec
       }
 
-       HAL_Delay(50000); // print every 3sec
   }
   /* USER CODE END 3 */
-}
+
 
 /**
   * @brief System Clock Configuration

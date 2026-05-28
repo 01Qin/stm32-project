@@ -117,6 +117,10 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 
 bool lis3dh_xyz_available(lis3dh_t *lis3dh);
 
+bool lis3dh_freefall_detected(lis3dh_t *lis3dh);
+
+HAL_StatusTypeDef lis3dh_enable_freefall(lis3dh_t *lis3dh);
+
 HAL_StatusTypeDef lis3dh_read(lis3dh_t *lis3dh, uint16_t reg, uint16_t bufsize);
 
 HAL_StatusTypeDef lis3dh_write(lis3dh_t *lis3dh, uint16_t reg, uint8_t data);

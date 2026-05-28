@@ -38,9 +38,50 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 	status = lis3dh_write(lis3dh, REG_CTRL_REG4, 0x88);
 	if (status != HAL_OK) return status;
 
+	status = lis3dh_enable_freefall(lis3dh);
+	if (status != HAL_OK) return status;
+
 	// Enable temp sensor.
 	status = lis3dh_write(lis3dh, REG_TEMP_CFG_REG, 0x80);
 	return status;
+}
+
+HAL_StatusTypeDef lis3dh_enable_freefall(lis3dh_t *lis3dh){
+
+	HAL_StatusTypeDef status;
+	int32_t ret;
+
+//	INT1_CFG: AOI=1, XLIE=1, YLIE=1, ZLIE=1
+	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x95);
+	if (status != HAL_OK) return status;
+
+	// INT1_THS: threshold ~350 mg (0x16)
+	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x16);
+	if (status != HAL_OK) return status;
+
+	// INT1_DURATION: ~30 ms (0x02)
+	status = lis3dh_write(lis3dh, REG_INT1_DURATION, 0x02);
+	if (status != HAL_OK) return status;
+
+	// enable ia1 interrrupt on INT1 pin
+	status = lis3dh_read(lis3dh, REG_CTRL_REG3, 1);
+	if (status != HAL_OK) return status;
+
+	ret = lis3dh->buf[0];
+	ret |= 0x40;
+	status = lis3dh_write(lis3dh, REG_CTRL_REG3, ret);
+	if (status != HAL_OK) return status;
+
+	// Latch interrupt
+	status = lis3dh_read(lis3dh, REG_CTRL_REG5, 1);
+	if (status != HAL_OK) return status;
+
+	ret = lis3dh->buf[0];
+	ret |= 0x08;
+	status = lis3dh_write(lis3dh, REG_CTRL_REG5, ret);
+	if (status != HAL_OK) return status;
+
+	return HAL_OK;
 }
 
 bool lis3dh_xyz_available(lis3dh_t *lis3dh) {
@@ -52,6 +93,23 @@ bool lis3dh_xyz_available(lis3dh_t *lis3dh) {
 	if (status != HAL_OK) return false;
 
 	return (lis3dh->buf[0] & 2) > 0;
+}
+
+bool lis3dh_freefall_detected(lis3dh_t *lis3dh){
+
+	HAL_StatusTypeDef status;
+
+	status = lis3dh_read(lis3dh, REG_INT1_SRC, 1);
+	if (status != HAL_OK) return false;
+
+	uint8_t src = lis3dh->buf[0];
+
+	if ((src & 0x40) == 0){
+		return false;
+	}
+	return (src & 0x3F) == 0;
+
+
 }
 
 HAL_StatusTypeDef lis3dh_read(lis3dh_t* lis3dh, uint16_t reg, uint16_t bufsize) {
