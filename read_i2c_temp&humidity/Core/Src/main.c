@@ -60,7 +60,7 @@ TIM_HandleTypeDef htim15;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
 // static const uint8_t TEMP_ADDR = 0x49 << 1;
 // static const uint8_t BMP280_ADDR 0x77 << 1
-// static const uint8_t _ADDR 0x38 << 1
+// static const uint8_t TEMP_HUMIDITY_ADDR 0x38 << 1
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -88,12 +88,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-    HAL_StatusTypeDef ret = 0;
-    HAL_StatusTypeDef retValue = 0;
-	uint8_t buf[12];
-	// save raw data
-	int16_t val;
-	float temp_c;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -162,33 +157,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       // read temp logic
-       buf[0] = REG_TEMP;
-       // ack message
-       ret = HAL_I2C_Master_Receive(&hi2c2, TEMP_ADDR, buf, 1, HAL_MAX_DELAY);
-       if (ret != HAL_OK){
-    	   strcpy((char*)buf, "Error Tx\r\n");
-       } else {
-    	   // read 2 bytes from the temp register
-    	   ret = HAL_I2C_Master_Receive(&hi2c2, TEMP_ADDR, buf, 2, HAL_MAX_DELAY);
-    	   if (ret != HAL_OK) {
-    		   strcpy((char*)buf, "Error Rx\r\n");
-    	   } else {
-    		   // save raw data
-    		   val = ((int16_t)buf[0] << 4) | buf[1] >> 4;
-    		   // convert to 2's complement
-    		   if (val > 0x7FF){
-    			   val |= 0x7FF;
-    		   }
-    		   // concert temp to float value
-    		   temp_c = val * 0.0625;
-    		   // convert temp to decimal
-    		   temp_c *= 100;
 
-    	   }
-       }
-       printf("%u.%02u \r\n", (unsigned int)temp_c / 100, (unsigned int)temp_c % 100);
-       HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
