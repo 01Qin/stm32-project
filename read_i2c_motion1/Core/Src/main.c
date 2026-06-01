@@ -167,6 +167,9 @@ int main(void)
     		    lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
 
     	  }
+      if (lis3dh_tap_detected(&lis3dh)){
+    	  printf("Alarm: tap detected\r\n");
+      }
 
       HAL_Delay(500); // print every 3sec
       }
