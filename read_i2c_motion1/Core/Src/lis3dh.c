@@ -90,10 +90,9 @@ HAL_StatusTypeDef lis3dh_enable_freefall(lis3dh_t *lis3dh){
 HAL_StatusTypeDef lis3dh_enable_tap(lis3dh_t *lis3dh){
 
 	HAL_StatusTypeDef status;
-	int32_t ret;
 
 //	enable tap on x, y, z (CLICK_CFG)
-	status = lis3dh_write(lis3dh, CLICK_CFG, 0x15);
+	status = lis3dh_write(lis3dh, REG_CLICK_CFG, 0x15);
 	if (status != HAL_OK) return status;
 
 	// CLICK_THS: threshold ~0.28 mg (0x12)
