@@ -52,7 +52,7 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 HAL_StatusTypeDef lis3dh_enable_freefall(lis3dh_t *lis3dh){
 
 	HAL_StatusTypeDef status;
-	int32_t ret;
+	uint8_t ret;
 
 //	INT1_CFG: AOI=1, XLIE=1, YLIE=1, ZLIE=1
 	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x95);
@@ -104,7 +104,9 @@ HAL_StatusTypeDef lis3dh_enable_tap(lis3dh_t *lis3dh){
 	if (status != HAL_OK) return status;
 
 	// enable CLICK interrupt on INT1 pin
-	status = lis3dh_write(lis3dh, REG_CTRL_REG3, 0x80);
+	lis3dh_read(lis3dh, REG_CTRL_REG3, 1);
+	uint8_t val = lis3dh->buf[0] | 0x80;
+	status = lis3dh_write(lis3dh, REG_CTRL_REG3, val);
 	if (status != HAL_OK) return status;
 
 	return HAL_OK;
@@ -118,7 +120,7 @@ bool lis3dh_xyz_available(lis3dh_t *lis3dh) {
 	status = lis3dh_read(lis3dh, REG_STATUS_REG, 1);
 	if (status != HAL_OK) return false;
 
-	return (lis3dh->buf[0] & 2) > 0;
+	return (lis3dh->buf[0] & 0x08) > 0;
 }
 
 bool lis3dh_freefall_detected(lis3dh_t *lis3dh){
