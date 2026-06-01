@@ -2008,7 +2008,7 @@ int main(void)
  80013e0:	4618      	mov	r0, r3
  80013e2:	f7ff febb 	bl	800115c <lis3dh_read>
 
-    		    // Re‑enable measurement after event
+    		    // Re-enable measurement after event
     		    lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
  80013e6:	1d3b      	adds	r3, r7, #4
  80013e8:	2297      	movs	r2, #151	@ 0x97

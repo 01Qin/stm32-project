@@ -41,6 +41,9 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 	status = lis3dh_enable_freefall(lis3dh);
 	if (status != HAL_OK) return status;
 
+	status = lis3dh_enable_tap(lis3dh);
+	if (status != HAL_OK) return status;
+
 	// Enable temp sensor.
 	status = lis3dh_write(lis3dh, REG_TEMP_CFG_REG, 0x80);
 	return status;
@@ -84,6 +87,30 @@ HAL_StatusTypeDef lis3dh_enable_freefall(lis3dh_t *lis3dh){
 	return HAL_OK;
 }
 
+HAL_StatusTypeDef lis3dh_enable_tap(lis3dh_t *lis3dh){
+
+	HAL_StatusTypeDef status;
+	int32_t ret;
+
+//	enable tap on x, y, z (CLICK_CFG)
+	status = lis3dh_write(lis3dh, CLICK_CFG, 0x15);
+	if (status != HAL_OK) return status;
+
+	// CLICK_THS: threshold ~0.28 mg (0x12)
+	status = lis3dh_write(lis3dh, REG_CLICK_THS, 0x12);
+	if (status != HAL_OK) return status;
+
+	// TIME_LIMIT: ~120 ms (0x33)
+	status = lis3dh_write(lis3dh, REG_TIME_LIMIT, 0x33);
+	if (status != HAL_OK) return status;
+
+	// enable CLICK interrupt on INT1 pin
+	status = lis3dh_write(lis3dh, REG_CTRL_REG3, 0x80);
+	if (status != HAL_OK) return status;
+
+	return HAL_OK;
+}
+
 bool lis3dh_xyz_available(lis3dh_t *lis3dh) {
 	/*
 	 * Read STATUS_REG bit 2 (ZYXDA): New X, Y, Z data available.
@@ -111,6 +138,21 @@ bool lis3dh_freefall_detected(lis3dh_t *lis3dh){
 
 
 }
+
+bool lis3dh_tap_detected(lis3dh_t *lis3dh){
+
+	HAL_StatusTypeDef status;
+
+	status = lis3dh_read(lis3dh, REG_CLICK_SRC, 1);
+	if (status != HAL_OK) return false;
+
+	uint8_t src = lis3dh->buf[0];
+
+	return (src & 0x40) != 0;
+
+
+}
+
 
 HAL_StatusTypeDef lis3dh_read(lis3dh_t* lis3dh, uint16_t reg, uint16_t bufsize) {
 	if (bufsize > lis3dh->bufsize) return HAL_ERROR;

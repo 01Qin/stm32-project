@@ -163,7 +163,7 @@ int main(void)
     		    // Clear latched interrupt
     		    lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
 
-    		    // Re‑enable measurement after event
+    		    // Re-enable measurement after event
     		    lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
 
     	  }
