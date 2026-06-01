@@ -85,7 +85,7 @@ typedef struct lis3dh {
 /**
  * TEMP_CFG_REG
  */
-#define TEMP_EN                 1 << 8 // Temp sensor enable. Default: 0
+#define TEMP_EN                 1 << 6 // Temp sensor enable. Default: 0
 #define ADC_EN                  1 << 7 // ADC enable. Default: 0
 
 /**
