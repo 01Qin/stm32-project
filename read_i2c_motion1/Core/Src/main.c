@@ -20,6 +20,7 @@
 
 /* USER CODE END PTD */
 
+
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
@@ -90,6 +91,7 @@ int main(void)
 
   /* USER CODE END SysInit */
 
+
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C2_Init();
@@ -135,8 +137,12 @@ int main(void)
     status = lis3dh_init(&lis3dh, &hi2c2, xyz_buf, 6);
 
     if (status != HAL_OK){
+    	printf("lis3dh_init failed, status = %d\r\n", status);
     	return 1;
     }
+
+
+
 
   while (1)
   {
@@ -147,46 +153,49 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      if (lis3dh_xyz_available(&lis3dh)){
+       if (lis3dh_xyz_available(&lis3dh)){
 
-    	  status = lis3dh_get_xyz(&lis3dh);
+     	  status = lis3dh_get_xyz(&lis3dh);
 
-    	  if (status == HAL_OK){
-    		  float x_mg = lis3dh.x / 16.0f;
-    		  float y_mg = lis3dh.y / 16.0f;
-    		  float z_mg = lis3dh.z / 16.0f;
-    		  printf("X = %.2f, Y = %.2f, Z = %.2f\r\n", x_mg, y_mg, z_mg);
-    	  }
-      }
-
-      if (lis3dh_freefall_detected(&lis3dh)){
-
-    	printf("Alarm: freefall detected\r\n");
-
-		// Clear latched interrupt
-		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
-
-		// Re-enable measurement after event
-    	lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
-    	}
-
-      if (lis3dh_tap_detected(&lis3dh)){
+     	  if (status == HAL_OK){
+     		  float x_mg = lis3dh.x / 16.0f;
+     		  float y_mg = lis3dh.y / 16.0f;
+     		  float z_mg = lis3dh.z / 16.0f;
+     		  printf("X = %.2f, Y = %.2f, Z = %.2f\r\n", x_mg, y_mg, z_mg);
+     	  }
 
 
-		printf("Alarm: tap detected\r\n");
-		// Clear click interrupt
-		lis3dh_read(&lis3dh, REG_CLICK_SRC, 1);
-		// Clear int1 interrupt
-		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
+       if (lis3dh_freefall_detected(&lis3dh)){
 
-		// Re-enable measurement after event
-		lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
-    	}
+           	printf("Alarm: free-fall detected\r\n");
+
+       		// Clear latched interrupt
+       		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
+
+       		// Re-enable measurement after event
+           	lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
+           	}
+
+       if (lis3dh_tap_detected(&lis3dh)){
+
+
+       		printf("Alarm: tap detected\r\n");
+       		// Clear click interrupt
+       		lis3dh_read(&lis3dh, REG_CLICK_SRC, 1);
+       		// Clear int1 interrupt
+       		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
+
+       		// Re-enable measurement after event
+       		lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
+           	}
+       }
+
 
     HAL_Delay(500); // print every 3sec
   }
-
 }
+
+
 
   /* USER CODE END 3 */
 
