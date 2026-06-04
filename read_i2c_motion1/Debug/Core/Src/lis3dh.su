@@ -1,10 +1,8 @@
 ../Core/Src/lis3dh.c:14:19:lis3dh_init	32	static
-../Core/Src/lis3dh.c:52:19:lis3dh_enable_freefall	24	static
 ../Core/Src/lis3dh.c:90:19:lis3dh_enable_tap	24	static
-../Core/Src/lis3dh.c:115:6:lis3dh_xyz_available	24	static
-../Core/Src/lis3dh.c:126:6:lis3dh_freefall_detected	24	static
-../Core/Src/lis3dh.c:143:6:lis3dh_tap_detected	24	static
-../Core/Src/lis3dh.c:158:19:lis3dh_read	40	static
-../Core/Src/lis3dh.c:164:19:lis3dh_write	32	static
-../Core/Src/lis3dh.c:168:19:lis3dh_get_xyz	40	static
-../Core/Src/lis3dh.c:194:19:lis3dh_get_temp	16	static
+../Core/Src/lis3dh.c:116:6:lis3dh_xyz_available	24	static
+../Core/Src/lis3dh.c:144:6:lis3dh_tap_detected	24	static
+../Core/Src/lis3dh.c:161:19:lis3dh_read	40	static
+../Core/Src/lis3dh.c:167:19:lis3dh_write	32	static
+../Core/Src/lis3dh.c:171:19:lis3dh_get_xyz	40	static
+../Core/Src/lis3dh.c:197:19:lis3dh_get_temp	16	static
