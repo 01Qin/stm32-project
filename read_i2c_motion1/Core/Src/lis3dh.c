@@ -121,7 +121,7 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 	HAL_StatusTypeDef status;
 
 	//	INT1_CFG: AOI=1, XLIE=1, YLIE=1, ZLIE=1 (disable z)
-	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x0A);
+	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x2A);
 	if (status != HAL_OK) return status;
 
 	uint8_t src = lis3dh->buf[0];
