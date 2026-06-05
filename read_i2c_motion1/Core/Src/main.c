@@ -153,18 +153,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       bool tap = lis3dh_tap_detected(&lis3dh);
+       bool tap = lis3dh_hit_detected(&lis3dh);
 
 	   if (tap){
 
-   		printf("Alarm: tap detected\r\n");
+   		printf("Alarm: hit detected\r\n");
 //       		// Clear click interrupt
 //       		lis3dh_read(&lis3dh, REG_CLICK_SRC, 1);
 //       		// Clear int1 interrupt
 //       		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
 //
-//       		// Re-enable measurement after event
-//       		lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
+       		// Re-enable measurement after event
+       		lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
        	}
 
        if (lis3dh_xyz_available(&lis3dh)){

@@ -113,28 +113,38 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 //	return status;
 //}
 
-HAL_StatusTypeDef lis3dh_tap(lis3dh_t *lis3dh){
+HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 
 	HAL_StatusTypeDef status;
 
-//	enable tap on x, y, z (CLICK_CFG 0x15)
-	status = lis3dh_write(lis3dh, REG_CLICK_CFG, 0x15);
+	//	INT1_CFG: AOI=1, XLIE=1, YLIE=1, ZLIE=1
+	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x0A);
 	if (status != HAL_OK) return status;
 
-	// CLICK_THS: threshold ~0.28 mg (0x12)
-	status = lis3dh_write(lis3dh, REG_CLICK_THS, 0x12);
+	// INT1_THS: threshold ~0.28 mg (0x12)
+	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x40);
 	if (status != HAL_OK) return status;
 
 	// TIME_LIMIT: ~120 ms (0x33)
-	status = lis3dh_write(lis3dh, REG_TIME_LIMIT, 0x33);
+
+	status = lis3dh_write(lis3dh, REG_INT1_DURATION, 0x05);
 	if (status != HAL_OK) return status;
 
 	lis3dh_write(lis3dh, REG_TIME_LATENCY, 0x20);
 
+
+//
+//	uint8_t val = lis3dh->buf[0] | 0x40;
+//	status = lis3dh_write(lis3dh, REG_CTRL_REG3, val);
+
+	// latch interrupt
+	lis3dh_read(lis3dh, REG_CTRL_REG5, 0xF1);
+//
+//	val = lis3dh->buf[0] | 0x80;
+//	status = lis3dh_write(lis3dh, REG_CTRL_REG5, val);
+
 	// enable CLICK interrupt on INT1 pin
-	lis3dh_read(lis3dh, REG_CTRL_REG3, 1);
-	uint8_t val = lis3dh->buf[0] | 0x80;
-	status = lis3dh_write(lis3dh, REG_CTRL_REG3, val);
+	lis3dh_read(lis3dh, REG_CTRL_REG3, 0x60);
 
 	return status;
 }
@@ -172,16 +182,16 @@ bool lis3dh_tap_detected(lis3dh_t *lis3dh){
 
 	HAL_StatusTypeDef status;
 
-	status = lis3dh_read(lis3dh, REG_CLICK_SRC, 1);
+	status = lis3dh_read(lis3dh, REG_INT1_SRC, 1);
 	if (status != HAL_OK) return false;
 
 	uint8_t src = lis3dh->buf[0];
 
-	if (src & 0x40){
-	return true;
+	if (!(src & 0x40)){
+	return false;
 	}
 
-	return false;
+	return (src & 0x3F) != 0;
 }
 
 

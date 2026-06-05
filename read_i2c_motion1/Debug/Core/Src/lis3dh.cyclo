@@ -1,8 +1,8 @@
 ../Core/Src/lis3dh.c:14:19:lis3dh_init	6
 ../Core/Src/lis3dh.c:116:19:lis3dh_tap	4
-../Core/Src/lis3dh.c:143:6:lis3dh_xyz_available	2
-../Core/Src/lis3dh.c:171:6:lis3dh_tap_detected	3
-../Core/Src/lis3dh.c:188:19:lis3dh_read	2
-../Core/Src/lis3dh.c:194:19:lis3dh_write	1
-../Core/Src/lis3dh.c:198:19:lis3dh_get_xyz	3
-../Core/Src/lis3dh.c:224:19:lis3dh_get_temp	1
+../Core/Src/lis3dh.c:153:6:lis3dh_xyz_available	2
+../Core/Src/lis3dh.c:181:6:lis3dh_tap_detected	3
+../Core/Src/lis3dh.c:198:19:lis3dh_read	2
+../Core/Src/lis3dh.c:204:19:lis3dh_write	1
+../Core/Src/lis3dh.c:208:19:lis3dh_get_xyz	3
+../Core/Src/lis3dh.c:234:19:lis3dh_get_temp	1
