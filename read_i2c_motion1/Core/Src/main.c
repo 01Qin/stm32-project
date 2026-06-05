@@ -153,36 +153,48 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       bool tap = lis3dh_hit_detected(&lis3dh);
+       bool hit = lis3dh_hit_detected(&lis3dh);
 
-	   if (tap){
+	   if (hit){
+		   lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
+		   uint8_t src = lis3dh.buf[0];
 
-   		printf("Alarm: hit detected\r\n");
+		   // read XYZ at the exact moment of the hit
+		   lis3dh_get_xyz(&lis3dh);
+		   float x_mg = lis3dh.x / 16.0f;
+		   float y_mg = lis3dh.y / 16.0f;
+		   float z_mg = lis3dh.z / 16.0f;
+		   printf("\n");
+		   printf("Alarm: hit detected! SRC=0x%02X\r\n", src);
+		   printf("\n");
+		   printf("Hit XYZ: X=%.2f, Y=%.2f, Z=%.2f\r\n", x_mg, y_mg, z_mg);
+
 //       		// Clear click interrupt
 //       		lis3dh_read(&lis3dh, REG_CLICK_SRC, 1);
 //       		// Clear int1 interrupt
 //       		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
 
 //
-       		// Re-enable measurement after event
-       		lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
-       	}
+//       		// Re-enable measurement after event
+//       		lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
+       	} else {
 
        if (lis3dh_xyz_available(&lis3dh)){
 
      	  status = lis3dh_get_xyz(&lis3dh);
+//
+//     	 printf("%d\r\n", status);
 
-     	 printf("%d\r\n", status);
 
-     	  if (status == HAL_OK){
      		  float x_mg = lis3dh.x / 16.0f;
      		  float y_mg = lis3dh.y / 16.0f;
      		  float z_mg = lis3dh.z / 16.0f;
+     		  printf("\n");
      		  printf("X = %.2f, Y = %.2f, Z = %.2f\r\n", x_mg, y_mg, z_mg);
      	  }
 
      	  HAL_Delay(50);
-
+       	}
 //
 //       if (lis3dh_freefall_detected(&lis3dh)){
 //
@@ -198,11 +210,12 @@ int main(void)
 
 
 
-       }
+
 
     HAL_Delay(500); // print every 3sec
   }
 }
+
 
 
 
