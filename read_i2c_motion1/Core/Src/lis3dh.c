@@ -25,6 +25,7 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 	status = HAL_I2C_IsDeviceReady(lis3dh->i2c, lis3dh->i2c_addr, 1, TIMEOUT_MS);
 	if (status != HAL_OK) return status;
 
+
     /* Confirm the device identifies itself as expected. */
 	status = lis3dh_read(lis3dh, REG_WHO_AM_I, 1);
 	if (status != HAL_OK) return status;
@@ -41,12 +42,11 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 //	status = lis3dh_enable_freefall(lis3dh);
 //	if (status != HAL_OK) return status;
 
-	status = lis3dh_enable_tap(lis3dh);
-	if (status != HAL_OK) return status;
+//	status = lis3dh_enable_tap(lis3dh);
+//	if (status != HAL_OK) return status;
 
-	// Enable temp sensor.
-	status = lis3dh_write(lis3dh, REG_TEMP_CFG_REG, 0x80);
-	return status;
+	status = lis3dh_tap(lis3dh);
+
 }
 
 //HAL_StatusTypeDef lis3dh_enable_freefall(lis3dh_t *lis3dh){
@@ -87,20 +87,46 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 //	return HAL_OK;
 //}
 
-HAL_StatusTypeDef lis3dh_enable_tap(lis3dh_t *lis3dh){
+//HAL_StatusTypeDef lis3dh_enable_tap(lis3dh_t *lis3dh){
+//
+//	HAL_StatusTypeDef status;
+//
+////	enable tap on z (CLICK_CFG 0x15)
+//	status = lis3dh_write(lis3dh, REG_CLICK_CFG, 0x15);
+//	if (status != HAL_OK) return status;
+//
+//	// CLICK_THS: threshold ~0.28 mg (0x12)
+//	status = lis3dh_write(lis3dh, REG_CLICK_THS, 0x10);
+//	if (status != HAL_OK) return status;
+//
+//	// TIME_LIMIT: ~120 ms (0x33)
+//	status = lis3dh_write(lis3dh, REG_TIME_LIMIT, 0x20);
+//	if (status != HAL_OK) return status;
+//
+//	lis3dh_write(lis3dh, REG_TIME_LATENCY, 0x20);
+//
+//	// enable CLICK interrupt on INT1 pin
+//	lis3dh_read(lis3dh, REG_CTRL_REG3, 1);
+//	uint8_t val = lis3dh->buf[0] | 0x80;
+//	status = lis3dh_write(lis3dh, REG_CTRL_REG3, val);
+//
+//	return status;
+//}
+
+HAL_StatusTypeDef lis3dh_tap(lis3dh_t *lis3dh){
 
 	HAL_StatusTypeDef status;
 
-//	enable tap on z (CLICK_CFG 0x15)
+//	enable tap on x, y, z (CLICK_CFG 0x15)
 	status = lis3dh_write(lis3dh, REG_CLICK_CFG, 0x15);
 	if (status != HAL_OK) return status;
 
 	// CLICK_THS: threshold ~0.28 mg (0x12)
-	status = lis3dh_write(lis3dh, REG_CLICK_THS, 0x10);
+	status = lis3dh_write(lis3dh, REG_CLICK_THS, 0x12);
 	if (status != HAL_OK) return status;
 
 	// TIME_LIMIT: ~120 ms (0x33)
-	status = lis3dh_write(lis3dh, REG_TIME_LIMIT, 0x20);
+	status = lis3dh_write(lis3dh, REG_TIME_LIMIT, 0x33);
 	if (status != HAL_OK) return status;
 
 	lis3dh_write(lis3dh, REG_TIME_LATENCY, 0x20);
@@ -112,6 +138,7 @@ HAL_StatusTypeDef lis3dh_enable_tap(lis3dh_t *lis3dh){
 
 	return status;
 }
+
 
 bool lis3dh_xyz_available(lis3dh_t *lis3dh) {
 	/*
