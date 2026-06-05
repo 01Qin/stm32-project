@@ -6,6 +6,7 @@
  */
 
 #include "lis3dh.h"
+#include <stdio.h>
 
 //#define I2C_READ_BIT   1
 #define I2C_WRITE_BIT  0
@@ -45,7 +46,9 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 //	status = lis3dh_enable_tap(lis3dh);
 //	if (status != HAL_OK) return status;
 
-	status = lis3dh_tap(lis3dh);
+	status = lis3dh_hit(lis3dh);
+
+	return HAL_OK;
 
 }
 
@@ -117,12 +120,16 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 
 	HAL_StatusTypeDef status;
 
-	//	INT1_CFG: AOI=1, XLIE=1, YLIE=1, ZLIE=1
+	//	INT1_CFG: AOI=1, XLIE=1, YLIE=1, ZLIE=1 (disable z)
 	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x0A);
 	if (status != HAL_OK) return status;
 
+	uint8_t src = lis3dh->buf[0];
+	printf("INT1_SRC = 0x%02X\r\n", src);
+
+
 	// INT1_THS: threshold ~0.28 mg (0x12)
-	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x40);
+	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x40); // ~1g
 	if (status != HAL_OK) return status;
 
 	// TIME_LIMIT: ~120 ms (0x33)
@@ -178,7 +185,7 @@ bool lis3dh_xyz_available(lis3dh_t *lis3dh) {
 //
 //}
 
-bool lis3dh_tap_detected(lis3dh_t *lis3dh){
+bool lis3dh_hit_detected(lis3dh_t *lis3dh){
 
 	HAL_StatusTypeDef status;
 

@@ -123,7 +123,7 @@ bool lis3dh_xyz_available(lis3dh_t *lis3dh);
 
 //bool lis3dh_freefall_detected(lis3dh_t *lis3dh);
 
-bool lis3dh_tap_detected(lis3dh_t *lis3dh);
+bool lis3dh_hit_detected(lis3dh_t *lis3dh);
 
 //HAL_StatusTypeDef lis3dh_enable_freefall(lis3dh_t *lis3dh);
 
