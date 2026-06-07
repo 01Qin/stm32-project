@@ -114,6 +114,16 @@ typedef struct lis3dh {
 #define INT1_WTM                1 << 2 // FIFO watermark interrupt on INT1. Default: 0
 #define INT1_OVERRUN            1 << 1 // FIFO overrun interrupt on INT1. Default: 0
 
+#define CHECK_WRITE(reg, value) \
+    do { \
+        HAL_StatusTypeDef s = lis3dh_write(lis3dh, reg, value); \
+        if (s != HAL_OK) { \
+            printf("ERROR: write to %s (0x%02X) failed, status=%d, I2C error=0x%08lX\n", \
+                   #reg, reg, s, lis3dh->i2c->ErrorCode); \
+            return s; \
+        } \
+    } while (0)
+
 
 HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t *buf, uint16_t bufsize);
 

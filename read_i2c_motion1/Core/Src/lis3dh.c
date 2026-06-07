@@ -24,21 +24,47 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 	HAL_Delay(LID3DH_POWER_UP_MS);
 
 	status = HAL_I2C_IsDeviceReady(lis3dh->i2c, lis3dh->i2c_addr, 1, TIMEOUT_MS);
-	if (status != HAL_OK) return status;
+	if (status != HAL_OK) {
+	    printf("ERROR: Device 0x%02X not ready, status=%d, I2C error=0x%08lX\n",
+	           lis3dh->i2c_addr, status, lis3dh->i2c->ErrorCode);
+		return status;
+	}
 
 
     /* Confirm the device identifies itself as expected. */
 	status = lis3dh_read(lis3dh, REG_WHO_AM_I, 1);
-	if (status != HAL_OK) return status;
-	if (lis3dh->buf[0] != LIS3DH_DEVICE_ID) return HAL_ERROR;
+	if (status != HAL_OK) {
+	    printf("ERROR: Failed to read WHO_AM_I, status=%d, I2C error=0x%08lX\n",
+	           status,
+	           lis3dh->i2c->ErrorCode);
+		return status;
+	}
+	if (lis3dh->buf[0] != LIS3DH_DEVICE_ID) {
+	    printf("ERROR: WHO_AM_I mismatch: expected 0x%02X, got 0x%02X\n",
+	           LIS3DH_DEVICE_ID,
+	           lis3dh->buf[0]);
+		return HAL_ERROR;
+	}
 
 	// Set power mode to operational; Enable all axes; Normal operation.
 	status = lis3dh_write(lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
-	if (status != HAL_OK) return status;
+	if (status != HAL_OK) {
+	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
+	           DATA_RATE_NORM_1kHz344 | 0x07,
+	           status,
+	           lis3dh->i2c->ErrorCode);
+		return status;
+	}
 
 	// High resolution; BDU enabled.
 	status = lis3dh_write(lis3dh, REG_CTRL_REG4, 0x88);
-	if (status != HAL_OK) return status;
+	if (status != HAL_OK) {
+	    printf("ERROR: Failed to write REG_CTRL_REG4 (0x%02X), status=%d, I2C error=0x%08lX\n",
+	           0x88,
+	           status,
+	           lis3dh->i2c->ErrorCode);
+		return status;
+	}
 
 //	status = lis3dh_enable_freefall(lis3dh);
 //	if (status != HAL_OK) return status;
@@ -134,8 +160,6 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 	// INT1_THS: threshold ~0.28 mg (0x12)
 	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x40); // ~1g
 	if (status != HAL_OK){
-		printf("ERROR: Failed to write REG_INT1_THS (0x40), status=%d, I2C error=0x%08lX\n",
-		           status, lis3dh->i2c->ErrorCode);
 		return status;
 	}
 
