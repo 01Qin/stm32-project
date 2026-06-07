@@ -10,10 +10,11 @@
 
 #include <stdbool.h>
 #include "stm32g4xx_hal.h"
+#include "stm32g4xx_hal_i2c.h"
 
 typedef struct lis3dh {
 	/* The HAL I2C_HandleTypeDef. */
-	void* i2c;
+	 I2C_HandleTypeDef* i2c;
 
 	/* The 7-bit i2c address. */
 	uint16_t i2c_addr;
@@ -112,6 +113,7 @@ typedef struct lis3dh {
 #define INT1_321DA              1 << 3 // 321DA interrupt on INT1. Default: 0
 #define INT1_WTM                1 << 2 // FIFO watermark interrupt on INT1. Default: 0
 #define INT1_OVERRUN            1 << 1 // FIFO overrun interrupt on INT1. Default: 0
+
 
 HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t *buf, uint16_t bufsize);
 
