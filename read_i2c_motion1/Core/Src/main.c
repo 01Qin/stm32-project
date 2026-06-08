@@ -138,20 +138,11 @@ int main(void)
 
     if (status != HAL_OK){
     	printf("lis3dh_init failed, status = %d\r\n", status);
+
+
     	return 1;
     }
 
-    printf("I2C2 clock enabled: %d\n", __HAL_RCC_I2C2_IS_CLK_ENABLED());
-    printf("I2C2->ISR = 0x%08lX\n", I2C2->ISR);
-    printf("ISR = 0x%08lX\n", I2C2->ISR);
-
-    printf("I2C freeze detected. ISR=0x%08lX, ERR=0x%08lX\n",
-           I2C2->ISR, hi2c2.ErrorCode);
-
-    __HAL_RCC_I2C2_FORCE_RESET();
-    __HAL_RCC_I2C2_RELEASE_RESET();
-
-    MX_I2C2_Init();   // reinitialize the bus
 
 
 
@@ -168,7 +159,7 @@ int main(void)
        bool hit = lis3dh_hit_detected(&lis3dh);
 
 	   if (hit){
-		   lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
+		   lis3dh_read(&lis3dh, REG_INT1_SRC, 1); // clear interrupt
 		   uint8_t src = lis3dh.buf[0];
 
 		   // read XYZ at the exact moment of the hit
@@ -184,9 +175,9 @@ int main(void)
 //       		// Clear click interrupt
 //       		lis3dh_read(&lis3dh, REG_CLICK_SRC, 1);
        		// Clear int1 interrupt
-       		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
-
-
+//       		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
+//
+//
        		// Re-enable measurement after event
        		lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
        	} else {

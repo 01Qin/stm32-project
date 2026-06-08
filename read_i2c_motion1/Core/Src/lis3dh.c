@@ -12,6 +12,7 @@
 #define I2C_WRITE_BIT  0
 #define TIMEOUT_MS     100
 
+
 HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t *buf, uint16_t bufsize) {
 	HAL_StatusTypeDef status;
 
@@ -150,6 +151,7 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x2A);
 	if (status != HAL_OK) {
 		CHECK_WRITE(REG_INT1_CFG, 0x2A);
+
 		return status;
 	}
 
@@ -176,13 +178,13 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 //	status = lis3dh_write(lis3dh, REG_CTRL_REG3, val);
 
 	// latch interrupt
-	lis3dh_read(lis3dh, REG_CTRL_REG5, 0xF1);
+	lis3dh_read(lis3dh, REG_CTRL_REG5, 1);
 //
 //	val = lis3dh->buf[0] | 0x80;
 //	status = lis3dh_write(lis3dh, REG_CTRL_REG5, val);
 
 	// enable CLICK interrupt on INT1 pin
-	lis3dh_read(lis3dh, REG_CTRL_REG3, 0x60);
+	lis3dh_read(lis3dh, REG_CTRL_REG3, 1);
 
 	return status;
 }
@@ -236,11 +238,16 @@ bool lis3dh_hit_detected(lis3dh_t *lis3dh){
 HAL_StatusTypeDef lis3dh_read(lis3dh_t* lis3dh, uint16_t reg, uint16_t bufsize) {
 	if (bufsize > lis3dh->bufsize) return HAL_ERROR;
 
-	return HAL_I2C_Mem_Read(lis3dh->i2c, lis3dh->i2c_addr, reg, 1, lis3dh->buf, bufsize, TIMEOUT_MS);
+	HAL_StatusTypeDef status = HAL_I2C_Mem_Read(lis3dh->i2c, lis3dh->i2c_addr, reg, 1, lis3dh->buf, bufsize, TIMEOUT_MS);
+
+
+	return status;
 }
 
 HAL_StatusTypeDef lis3dh_write(lis3dh_t* lis3dh, uint16_t reg, uint8_t data) {
-	return HAL_I2C_Mem_Write(lis3dh->i2c, lis3dh->i2c_addr, reg, 1, &data, 1, TIMEOUT_MS);
+	HAL_StatusTypeDef status = HAL_I2C_Mem_Write(lis3dh->i2c, lis3dh->i2c_addr, reg, 1, &data, 1, TIMEOUT_MS);
+
+	return status;
 }
 
 HAL_StatusTypeDef lis3dh_get_xyz(lis3dh_t* lis3dh) {
