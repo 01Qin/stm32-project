@@ -35,7 +35,7 @@ typedef struct lis3dh {
  */
 #define LID3DH_POWER_UP_MS      10
 
-#define LIS3DH_ADDR             0x19 << 1  // 7-bit I2C address. If SA0 is pulled high, address is 0x19.
+#define LIS3DH_ADDR             0x18 << 1  // 7-bit I2C address. If SA0 is pulled high, address is 0x19.
 
 #define LIS3DH_DEVICE_ID        0x33  // Contents of WHO_AM_I register.
 

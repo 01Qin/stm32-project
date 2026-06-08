@@ -10,7 +10,7 @@
 
 //#define I2C_READ_BIT   1
 #define I2C_WRITE_BIT  0
-#define TIMEOUT_MS     50
+#define TIMEOUT_MS     100
 
 HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t *buf, uint16_t bufsize) {
 	HAL_StatusTypeDef status;
