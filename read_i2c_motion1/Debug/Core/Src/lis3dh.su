@@ -1,8 +1,8 @@
-../Core/Src/lis3dh.c:16:19:lis3dh_init	32	static
-../Core/Src/lis3dh.c:146:19:lis3dh_hit	32	static
-../Core/Src/lis3dh.c:193:6:lis3dh_xyz_available	24	static
-../Core/Src/lis3dh.c:221:6:lis3dh_hit_detected	24	static
-../Core/Src/lis3dh.c:238:19:lis3dh_read	48	static
-../Core/Src/lis3dh.c:247:19:lis3dh_write	40	static
-../Core/Src/lis3dh.c:253:19:lis3dh_get_xyz	40	static
-../Core/Src/lis3dh.c:279:19:lis3dh_get_temp	16	static
+../Core/Src/lis3dh.c:19:19:lis3dh_init	32	static
+../Core/Src/lis3dh.c:149:19:lis3dh_hit	32	static
+../Core/Src/lis3dh.c:200:6:lis3dh_xyz_available	24	static
+../Core/Src/lis3dh.c:228:6:lis3dh_hit_detected	24	static
+../Core/Src/lis3dh.c:253:19:lis3dh_read	48	static
+../Core/Src/lis3dh.c:262:19:lis3dh_write	40	static
+../Core/Src/lis3dh.c:268:19:lis3dh_get_xyz	40	static
+../Core/Src/lis3dh.c:294:19:lis3dh_get_temp	16	static
