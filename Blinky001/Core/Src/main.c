@@ -18,88 +18,36 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "i2c.h"
-#include "gpio.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
 
 COM_InitTypeDef BspCOMInit;
 
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_NVIC_Init(void);
-static void MX_GPIO_Init(void);
-/* USER CODE BEGIN PFP */
+//static void MX_GPIO_Init(void);
+void delay(uint32_t delay_val);
+void GPIO_Config(void);
 
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
-//	int i =0;
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
-  /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_I2C1_Init();
+//  MX_GPIO_Init();
+//  MX_I2C1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
-  /* USER CODE BEGIN 2 */
 
-  /* USER CODE END 2 */
-
-  /* Initialize leds */
   BSP_LED_Init(LED_GREEN);
 
   /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
@@ -118,28 +66,38 @@ int main(void)
   /* -- Sample board code to send message over COM1 port ---- */
   printf("Welcome to STM32 world !\n\r");
 
-  /* -- Sample board code to switch on leds ---- */
+
 //  BSP_LED_On(LED_GREEN);
 
-  /* USER CODE END BSP */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-
+  GPIO_Config();
   while (1)
   {
+	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+	  delay(50000);
 
-/* -- Sample board code to toggle leds ---- */
-
-
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
   }
-  /* USER CODE END 3 */
+
 
 }
 
+void GPIO_Config(void){
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	GPIO_InitTypeDef GPIOB_Init = {};
+
+	GPIOB_Init.Pin = GPIO_PIN_0;
+	GPIOB_Init.Mode = GPIO_MODE_OUTPUT_PP;
+
+	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
+}
+
+void delay(uint32_t delay_val){
+	uint32_t i;
+
+	for (i = 0; i < delay_val; i++){
+
+	}
+}
 /**
   * @brief System Clock Configuration
   * @retval None
