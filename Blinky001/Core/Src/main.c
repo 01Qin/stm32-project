@@ -73,8 +73,8 @@ int main(void)
   GPIO_Config();
   while (1)
   {
-	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-	  delay(50000);
+	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
+	  delay(500);
 
   }
 
@@ -85,7 +85,7 @@ void GPIO_Config(void){
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	GPIO_InitTypeDef GPIOB_Init = {};
 
-	GPIOB_Init.Pin = GPIO_PIN_0;
+	GPIOB_Init.Pin = GPIO_PIN_8;
 	GPIOB_Init.Mode = GPIO_MODE_OUTPUT_PP;
 
 	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
