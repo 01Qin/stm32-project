@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 
-#define I2C_READ_BIT   1
+//#define I2C_READ_BIT   1
 #define I2C_WRITE_BIT  0
 #define TIMEOUT_MS     100
 
@@ -78,7 +78,7 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 
 	status = lis3dh_hit(lis3dh);
 
-	return HAL_OK;
+	return status;
 
 }
 
@@ -151,9 +151,9 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 	HAL_StatusTypeDef status;
 
 	//	INT1_CFG: AOI=1, XLIE=1, YLIE=1, ZLIE=1 ()
-	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0xAA);
+	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0xAA); // AOI + XHIE + YHIE + ZHIE
 	if (status != HAL_OK) {
-		CHECK_WRITE(REG_INT1_CFG, 0x2A);
+		CHECK_WRITE(REG_INT1_CFG, 0xAA);
 
 		return status;
 	}
@@ -165,10 +165,10 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 	// INT1_THS: threshold ~0.28 mg (0x12)
 	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x40); // ~1g
 	if (status != HAL_OK){
-	    __HAL_RCC_I2C2_FORCE_RESET();
-	    __HAL_RCC_I2C2_RELEASE_RESET();
-	    MX_I2C2_Init();
-	    printf("I2C initialized.\r\n");
+//	    __HAL_RCC_I2C2_FORCE_RESET();
+//	    __HAL_RCC_I2C2_RELEASE_RESET();
+//	    MX_I2C2_Init();
+//	    printf("I2C initialized.\r\n");
 		return status;
 	}
 
@@ -177,9 +177,10 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 	status = lis3dh_write(lis3dh, REG_INT1_DURATION, 0x05);
 	if (status != HAL_OK) return status;
 
-	lis3dh_write(lis3dh, REG_TIME_LATENCY, 0x20);
+//	lis3dh_write(lis3dh, REG_TIME_LATENCY, 0x20);
 
-
+	// enable CLICK interrupt on INT1 pin
+	lis3dh_read(lis3dh, REG_CTRL_REG3, 1);
 
 	uint8_t val = lis3dh->buf[0] | 0x40;
 	status = lis3dh_write(lis3dh, REG_CTRL_REG3, val);
@@ -187,12 +188,11 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 	// latch interrupt
 	lis3dh_read(lis3dh, REG_CTRL_REG5, 1);
 //
-//	val = lis3dh->buf[0] | 0x80;
-//	status = lis3dh_write(lis3dh, REG_CTRL_REG5, val);
+	val = lis3dh->buf[0] | 0x80;
+	status = lis3dh_write(lis3dh, REG_CTRL_REG5, val);
 
-	// enable CLICK interrupt on INT1 pin
-	lis3dh_read(lis3dh, REG_CTRL_REG3, 1);
-
+//	clear any pending interrupt
+	status = lis3dh_read(lis3dh, REG_INT1_SRC, 1);
 	return status;
 }
 
@@ -253,7 +253,7 @@ bool lis3dh_hit_detected(lis3dh_t *lis3dh){
 HAL_StatusTypeDef lis3dh_read(lis3dh_t* lis3dh, uint16_t reg, uint16_t bufsize) {
 	if (bufsize > lis3dh->bufsize) return HAL_ERROR;
 
-	HAL_StatusTypeDef status = HAL_I2C_Mem_Read(lis3dh->i2c, lis3dh->i2c_addr | I2C_READ_BIT, reg, 1, lis3dh->buf, bufsize, TIMEOUT_MS);
+	HAL_StatusTypeDef status = HAL_I2C_Mem_Read(lis3dh->i2c, lis3dh->i2c_addr, reg, 1, lis3dh->buf, bufsize, TIMEOUT_MS);
 
 
 	return status;
@@ -269,7 +269,7 @@ HAL_StatusTypeDef lis3dh_get_xyz(lis3dh_t* lis3dh) {
 	if (lis3dh->bufsize < 6) return HAL_ERROR;
 	HAL_StatusTypeDef status = HAL_I2C_Mem_Read(
 			lis3dh->i2c,
-			lis3dh->i2c_addr | I2C_READ_BIT,
+			lis3dh->i2c_addr,
 			REG_OUT_XYZ_BASE | 0x80,          // Progressively read 6 buffers.
 			1,
 			lis3dh->buf,

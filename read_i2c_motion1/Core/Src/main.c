@@ -167,7 +167,7 @@ int main(void)
        printf("hit %d\r\n", hit);
 
 	   if (hit){
-		   lis3dh_read(&lis3dh, REG_INT1_SRC, 1); // clear interrupt
+//		   lis3dh_read(&lis3dh, REG_INT1_SRC, 1); // clear interrupt
 		   uint8_t src = lis3dh.buf[0];
 
 		   // read XYZ at the exact moment of the hit
