@@ -82,6 +82,8 @@ int main(void)
 
 }
 
+
+// GPIO  configuration
 void GPIO_Config(void){
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	GPIO_InitTypeDef GPIOB_Init = {};
@@ -92,13 +94,7 @@ void GPIO_Config(void){
 	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
 }
 
-void delay(uint32_t delay_val){
-	uint32_t i;
 
-	for (i = 0; i < delay_val; i++){
-
-	}
-}
 /**
   * @brief System Clock Configuration
   * @retval None
