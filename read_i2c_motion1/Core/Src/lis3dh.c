@@ -163,7 +163,7 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 
 
 	// INT1_THS: threshold ~0.28 mg (0x12)
-	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x40); // ~1g
+	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x3A); //  58 * 16mg = 928 mg
 	if (status != HAL_OK){
 //	    __HAL_RCC_I2C2_FORCE_RESET();
 //	    __HAL_RCC_I2C2_RELEASE_RESET();

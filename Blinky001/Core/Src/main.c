@@ -73,7 +73,7 @@ int main(void)
   GPIO_Config();
   while (1)
   {
-	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
+	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_0);
 	  delay(500);
 
   }
@@ -82,13 +82,13 @@ int main(void)
 }
 
 void GPIO_Config(void){
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitTypeDef GPIOB_Init = {};
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	GPIO_InitTypeDef GPIOA_Init = {};
 
-	GPIOB_Init.Pin = GPIO_PIN_8;
-	GPIOB_Init.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIOA_Init.Pin = GPIO_PIN_0;
+	GPIOA_Init.Mode = GPIO_MODE_OUTPUT_PP;
 
-	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
+	HAL_GPIO_Init(GPIOA, &GPIOA_Init);
 }
 
 void delay(uint32_t delay_val){
@@ -160,7 +160,7 @@ static void MX_NVIC_Init(void)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	if (GPIO_Pin == GPIO_PIN_0){
 //		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_0);
 		printf("But_press\r\n");
 	} else {
 		__NOP();
