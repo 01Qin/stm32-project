@@ -4733,7 +4733,7 @@ LOAD C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.exte
                 0x00000909       0x22 C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.win32_1.0.100.202602081740/tools/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\libgcc.a(_dvmd_tls.o)
  .ARM.attributes
                 0x0000092b       0x22 C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.win32_1.0.100.202602081740/tools/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard/crtn.o
-OUTPUT(Blinky001.elf elf32-littlearm)
+OUTPUT(Blinky_button.elf elf32-littlearm)
 LOAD linker stubs
 LOAD C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.win32_1.0.100.202602081740/tools/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc.a
 LOAD C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.win32_1.0.100.202602081740/tools/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a
@@ -4954,22 +4954,22 @@ LOAD C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_line    0x00007dde     0x1366 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
  .debug_line    0x00009144     0x3924 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
 
-.debug_str      0x00000000    0xba3b1
- .debug_str     0x00000000    0xba3b1 ./Core/Src/main.o
-                              0xb5ef1 (size before relaxing)
- .debug_str     0x000ba3b1    0xb55ee ./Core/Src/stm32g4xx_hal_msp.o
- .debug_str     0x000ba3b1    0xb553b ./Core/Src/stm32g4xx_it.o
- .debug_str     0x000ba3b1     0x995f ./Core/Src/syscalls.o
- .debug_str     0x000ba3b1     0x7709 ./Core/Src/sysmem.o
- .debug_str     0x000ba3b1    0xb1856 ./Core/Src/system_stm32g4xx.o
- .debug_str     0x000ba3b1       0x71 ./Core/Startup/startup_stm32g431kbtx.o
- .debug_str     0x000ba3b1    0xb27d5 ./Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo.o
- .debug_str     0x000ba3b1    0xb23b5 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_str     0x000ba3b1    0xb2073 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_str     0x000ba3b1    0xb1a01 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_str     0x000ba3b1    0xb1d52 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_str     0x000ba3b1    0xb1f71 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
- .debug_str     0x000ba3b1    0xb281f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
+.debug_str      0x00000000    0xba3e2
+ .debug_str     0x00000000    0xba3e2 ./Core/Src/main.o
+                              0xb5ef5 (size before relaxing)
+ .debug_str     0x000ba3e2    0xb55f2 ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_str     0x000ba3e2    0xb553f ./Core/Src/stm32g4xx_it.o
+ .debug_str     0x000ba3e2     0x995f ./Core/Src/syscalls.o
+ .debug_str     0x000ba3e2     0x7709 ./Core/Src/sysmem.o
+ .debug_str     0x000ba3e2    0xb1856 ./Core/Src/system_stm32g4xx.o
+ .debug_str     0x000ba3e2       0x71 ./Core/Startup/startup_stm32g431kbtx.o
+ .debug_str     0x000ba3e2    0xb27d5 ./Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo.o
+ .debug_str     0x000ba3e2    0xb23b5 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_str     0x000ba3e2    0xb2073 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_str     0x000ba3e2    0xb1a01 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_str     0x000ba3e2    0xb1d52 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_str     0x000ba3e2    0xb1f71 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+ .debug_str     0x000ba3e2    0xb281f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
 
 .comment        0x00000000       0x43
  .comment       0x00000000       0x43 ./Core/Src/main.o

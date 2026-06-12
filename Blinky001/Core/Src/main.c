@@ -18,19 +18,17 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32g431xx.h"
-
 
 
 COM_InitTypeDef BspCOMInit;
-
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_NVIC_Init(void);
 //static void MX_GPIO_Init(void);
-void delay(uint32_t delay_val);
+
 void GPIO_Config(void);
+
 
 int main(void)
 {

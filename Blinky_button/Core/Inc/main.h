@@ -52,8 +52,12 @@ extern "C" {
 
 /* USER CODE END EM */
 
-/* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_NVIC_Init(void);
+//static void MX_GPIO_Init(void);
+void GPIO_Config(void);
+void Error_Handler();
 
 /* USER CODE BEGIN EFP */
 
