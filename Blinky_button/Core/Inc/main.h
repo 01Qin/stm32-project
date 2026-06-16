@@ -55,7 +55,7 @@ extern "C" {
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_NVIC_Init(void);
-//static void MX_GPIO_Init(void);
+static void MX_GPIO_Init(void);
 void GPIO_Config(void);
 void Error_Handler();
 
