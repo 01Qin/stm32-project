@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "OLED.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +59,7 @@ TIM_HandleTypeDef htim15;
 // static const uint8_t TEMP_ADDR = 0x49 << 1;
 // static const uint8_t BMP280_ADDR 0x77 << 1
 // static const uint8_t TEMP_HUMIDITY_ADDR 0x38 << 1
+//int dummy = 0;
 
 /* USER CODE END PV */
 
@@ -174,6 +175,17 @@ int main(void)
       }
   }
 
+  //Display Initialisation
+  HAL_Delay(100);
+  OLED_Init(Display);
+  HAL_Delay(10);
+  OLED_CLS(Display);
+  HAL_Delay(10);
+  OLED_P8x16Str(Display, 0, 4, "MaKE sOme FuN!;)");
+  HAL_Delay(2000);
+  OLED_CLS(Display);
+  HAL_Delay(10);
+
 
   while (1)
   {
@@ -184,6 +196,29 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+       uint8_t line = 0;
+       OLED_CLS(Display);
+       OLED_P8x16Str(Display, 0, 0, "I2C Devices:");
+
+       for (uint8_t addr = 1; addr < 128; addr++)
+       {
+           if (HAL_I2C_IsDeviceReady(&hi2c2, addr << 1, 1, 10) == HAL_OK)
+           {
+               char buf[16];
+               sprintf(buf, "0x%02X", addr); // convert address to the readable string
+               	   	   	   	   	   	   	   	// sprintf returns the number of characters written(exclude the null terminator)
+               if (line > 2){
+            	   line = 0;
+            	   OLED_P8x16Str(Display, 1, 2, " ");
+               }
+               OLED_P8x16Str(Display, 0, (line + 1) * 2, buf);  // each line spaced by 2 rows
+               line++;
+               HAL_Delay(200);  // short delay to make updates visible
+           }
+       }
+       HAL_Delay(2000);
+
+
   }
   /* USER CODE END 3 */
 }
