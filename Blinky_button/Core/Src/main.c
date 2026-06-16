@@ -74,8 +74,8 @@ int main(void)
 }
 
 
-// GPIO  configuration
-void GPIO_Config(void){
+// LED PB8 configuration
+void GPIO_led_Config(void){
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	GPIO_InitTypeDef GPIOB_Init = {};
 
@@ -85,6 +85,16 @@ void GPIO_Config(void){
 	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
 }
 
+// Button PA0 configuration
+void GPIO_button_Config(void){
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	GPIO_InitTypeDef GPIOA_Init = {};
+
+	GPIOA_Init.Pin = GPIO_PIN_0;
+	GPIOA_Init.Mode = GPIO_MODE_OUTPUT_PP;
+
+	HAL_GPIO_Init(GPIOA, &GPIOA_Init);
+}
 
 /**
   * @brief System Clock Configuration
