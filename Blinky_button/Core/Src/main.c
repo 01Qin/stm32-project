@@ -62,11 +62,19 @@ int main(void)
 //  BSP_LED_On(LED_GREEN);
 
 
-  GPIO_Config();
+  GPIO_led_Config();
+  GPIO_button_Config();
   while (1)
   {
-	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
-	  HAL_Delay(500);
+//	   read the bit status, read 0 -> toggle led
+//	  when the button is pressed, it reads 0
+	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 0){
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
+//		  add delay so we can see the led toggling
+		  HAL_Delay(500);
+	  } else{
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+	  }
 
   }
 
@@ -76,6 +84,7 @@ int main(void)
 
 // LED PB8 configuration
 void GPIO_led_Config(void){
+
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	GPIO_InitTypeDef GPIOB_Init = {};
 
@@ -87,11 +96,14 @@ void GPIO_led_Config(void){
 
 // Button PA0 configuration
 void GPIO_button_Config(void){
+
+//	enable clock for gpio a, rcc register
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	GPIO_InitTypeDef GPIOA_Init = {};
 
 	GPIOA_Init.Pin = GPIO_PIN_0;
-	GPIOA_Init.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIOA_Init.Mode = GPIO_MODE_INPUT;
+	GPIOA_Init.Pull = GPIO_NOPULL;
 
 	HAL_GPIO_Init(GPIOA, &GPIOA_Init);
 }

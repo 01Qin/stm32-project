@@ -6,7 +6,7 @@
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:322:13:HAL_IncTick	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:333:17:HAL_GetTick	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:342:10:HAL_GetTickPrio	1
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:351:19:HAL_SetTickFreq	3
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:351:19:HAL_SetTickFreq	6
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:384:10:HAL_GetTickFreq	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:400:13:HAL_Delay	3
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:426:13:HAL_SuspendTick	1
@@ -26,13 +26,13 @@
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:603:6:HAL_SYSCFG_CCMSRAMErase	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:622:6:HAL_SYSCFG_EnableMemorySwappingBank	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:637:6:HAL_SYSCFG_DisableMemorySwappingBank	1
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:655:6:HAL_SYSCFG_VREFBUF_VoltageScalingConfig	1
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:671:6:HAL_SYSCFG_VREFBUF_HighImpedanceConfig	1
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:685:6:HAL_SYSCFG_VREFBUF_TrimmingConfig	1
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:655:6:HAL_SYSCFG_VREFBUF_VoltageScalingConfig	4
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:671:6:HAL_SYSCFG_VREFBUF_HighImpedanceConfig	3
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:685:6:HAL_SYSCFG_VREFBUF_TrimmingConfig	3
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:697:19:HAL_SYSCFG_EnableVREFBUF	3
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:723:6:HAL_SYSCFG_DisableVREFBUF	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:734:6:HAL_SYSCFG_EnableIOSwitchBooster	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:744:6:HAL_SYSCFG_DisableIOSwitchBooster	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:754:6:HAL_SYSCFG_EnableIOSwitchVDD	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:764:6:HAL_SYSCFG_DisableIOSwitchVDD	1
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:774:6:HAL_SYSCFG_CCMSRAM_WriteProtectionEnable	1
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c:774:6:HAL_SYSCFG_CCMSRAM_WriteProtectionEnable	3

@@ -1,5 +1,0 @@
-../Core/Src/lis3dh_free_fall.c:129:6:lis3dh_freefall	40	static
-../Core/Src/lis3dh_free_fall.c:201:16:platform_write	40	static
-../Core/Src/lis3dh_free_fall.c:234:16:platform_read	40	static
-../Core/Src/lis3dh_free_fall.c:264:13:tx_com	16	static
-../Core/Src/lis3dh_free_fall.c:279:13:platform_delay	16	static

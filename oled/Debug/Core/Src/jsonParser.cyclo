@@ -1,0 +1,11 @@
+../Core/Inc/tiny-json.h:89:27:json_getValue	1
+../Core/Inc/tiny-json.h:96:26:json_getType	1
+../Core/Inc/tiny-json.h:142:23:json_getInteger	1
+../Core/Inc/json-maker.h:86:21:json_str	1
+../Core/Src/jsonParser.c:31:6:toLowercaseN	3
+../Core/Src/jsonParser.c:38:13:createResponse	10
+../Core/Src/jsonParser.c:90:14:addIntId	1
+../Core/Src/jsonParser.c:121:5:getHelp	1
+../Core/Src/jsonParser.c:145:15:jsonParse	9
+../Core/Src/jsonParser.c:222:5:getAll	1
+../Core/Src/jsonParser.c:269:5:setOne	28

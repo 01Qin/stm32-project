@@ -1,0 +1,2 @@
+../Core/Src/DAC7578.c:36:6:DAC7578_Write_SingleChannel	1
+../Core/Src/DAC7578.c:48:6:DAC7578_Write_AllChannel	1

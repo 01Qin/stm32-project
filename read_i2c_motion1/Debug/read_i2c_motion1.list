@@ -1494,7 +1494,7 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 
 
 	// INT1_THS: threshold ~0.28 mg (0x12)
-	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x3A); // ~1g
+	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x3A); //  58 * 16mg = 928 mg
  80010a0:	223a      	movs	r2, #58	@ 0x3a
  80010a2:	2132      	movs	r1, #50	@ 0x32
  80010a4:	6878      	ldr	r0, [r7, #4]

@@ -1,0 +1,3 @@
+../Core/Src/TCA9555.c:33:6:TCA9555_All_Output_Init	1
+../Core/Src/TCA9555.c:51:6:TCA9555_All_Input_Init	1
+../Core/Src/TCA9555.c:61:6:TCA9555_Write_AllOutput	1

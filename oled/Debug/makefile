@@ -35,34 +35,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := read_inter_temp
+BUILD_ARTIFACT_NAME := oled
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-read_inter_temp.elf \
+oled.elf \
 
 MAP_FILES += \
-read_inter_temp.map \
+oled.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-read_inter_temp.list \
+oled.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: read_inter_temp.elf secondary-outputs
+main-build: oled.elf secondary-outputs
 
 # Tool invocations
-read_inter_temp.elf read_inter_temp.map: $(OBJS) $(USER_OBJS) C:\ST\Projects\stm32-project\read_inter_temp\STM32G431KBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "read_inter_temp.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\ST\Projects\stm32-project\read_inter_temp\STM32G431KBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="read_inter_temp.map" -Wl,--cref -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+oled.elf oled.map: $(OBJS) $(USER_OBJS) C:\ST\Projects\stm32-project\oled\STM32G431KBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "oled.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\ST\Projects\stm32-project\oled\STM32G431KBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="oled.map" -Wl,--cref -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -71,14 +71,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-read_inter_temp.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "read_inter_temp.list"
+oled.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "oled.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout read_inter_temp.elf read_inter_temp.list read_inter_temp.map
+	-$(RM) default.size.stdout oled.elf oled.list oled.map
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
