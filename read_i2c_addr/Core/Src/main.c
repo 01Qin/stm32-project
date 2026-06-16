@@ -209,11 +209,11 @@ int main(void)
                	   	   	   	   	   	   	   	// sprintf returns the number of characters written(exclude the null terminator)
                if (line > 2){
             	   line = 0;
-            	   OLED_P8x16Str(Display, 1, 2, " ");
+            	   OLED_P8x16Str(Display, 0, 2, " ");
                }
                OLED_P8x16Str(Display, 0, (line + 1) * 2, buf);  // each line spaced by 2 rows
                line++;
-               HAL_Delay(200);  // short delay to make updates visible
+               HAL_Delay(2000);  // short delay to make updates visible
            }
        }
        HAL_Delay(2000);
