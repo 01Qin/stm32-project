@@ -64,16 +64,17 @@ int main(void)
 
   GPIO_led_Config();
   GPIO_button_Config();
+  int flag = 1;
   while (1)
+//	  toggle the led with button
   {
-//	   read the bit status, read 0 -> toggle led
-//	  when the button is pressed, it reads 0
-	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 0){
+
+	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1 && flag == 1){
 		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
-//		  add delay so we can see the led toggling
 		  HAL_Delay(500);
-	  } else{
-		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+		  flag = 0;
+	  } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 0){
+		  flag = 1;
 	  }
 
   }

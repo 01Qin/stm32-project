@@ -206,10 +206,11 @@ int main(void)
            {
                char buf[16];
                sprintf(buf, "0x%02X", addr); // convert address to the readable string
-               	   	   	   	   	   	   	   	// sprintf returns the number of characters written(exclude the null terminator)
+               	   	   	   	   	   	   	   	// sprintf returns the number of characters written (exclude the null terminator)
                if (line > 2){
             	   line = 0;
             	   OLED_P8x16Str(Display, 0, 2, " ");
+
                }
                OLED_P8x16Str(Display, 0, (line + 1) * 2, buf);  // each line spaced by 2 rows
                line++;

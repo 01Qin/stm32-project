@@ -2471,7 +2471,7 @@ int main(void)
  80016bc:	491f      	ldr	r1, [pc, #124]	@ (800173c <main+0x1bc>)
  80016be:	4618      	mov	r0, r3
  80016c0:	f006 ffea 	bl	8008698 <siprintf>
-               	   	   	   	   	   	   	   	// sprintf returns the number of characters written(exclude the null terminator)
+               	   	   	   	   	   	   	   	// sprintf returns the number of characters written (exclude the null terminator)
                if (line > 2){
  80016c4:	7dbb      	ldrb	r3, [r7, #22]
  80016c6:	2b02      	cmp	r3, #2
@@ -2487,6 +2487,7 @@ int main(void)
  80016d6:	2178      	movs	r1, #120	@ 0x78
  80016d8:	4814      	ldr	r0, [pc, #80]	@ (800172c <main+0x1ac>)
  80016da:	f7ff fee5 	bl	80014a8 <OLED_P8x16Str>
+
                }
                OLED_P8x16Str(Display, 0, (line + 1) * 2, buf);  // each line spaced by 2 rows
  80016de:	7dbb      	ldrb	r3, [r7, #22]
