@@ -52,14 +52,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_NVIC_Init(void);
-//static void MX_GPIO_Init(void);
-void GPIO_led_Config(void);
-void GPIO_button_Config(void);
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
-void Error_Handler();
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 

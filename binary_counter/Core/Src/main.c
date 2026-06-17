@@ -18,28 +18,87 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "i2c.h"
+#include "gpio.h"
 
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
 
 COM_InitTypeDef BspCOMInit;
 
+/* USER CODE BEGIN PV */
 
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_NVIC_Init(void);
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
 
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
+  /* USER CODE BEGIN Init */
 
+  /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
+  /* USER CODE BEGIN SysInit */
 
-//  MX_GPIO_Init();
-//  MX_I2C1_Init();
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_I2C1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
+  /* USER CODE BEGIN 2 */
 
+  /* USER CODE END 2 */
+
+  /* Initialize leds */
   BSP_LED_Init(LED_GREEN);
 
   /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
@@ -58,55 +117,37 @@ int main(void)
   /* -- Sample board code to send message over COM1 port ---- */
   printf("Welcome to STM32 world !\n\r");
 
+  /* -- Sample board code to switch on leds ---- */
+  BSP_LED_On(LED_GREEN);
 
-//  BSP_LED_On(LED_GREEN);
+  /* USER CODE END BSP */
 
-
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   GPIO_led_Config();
   GPIO_button_Config();
   int flag = 1;
+
   while (1)
-//	  toggle the led with button
   {
 
-	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1 && flag == 1){
-		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
-		  HAL_Delay(500);
-		  flag = 0;
-	  } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 0){
-		  flag = 1;
-	  }
+/* -- Sample board code to toggle leds ---- */
+       BSP_LED_Toggle(LED_GREEN);
+
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+
+ 	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1 && flag == 1){
+ 		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
+ 		  HAL_Delay(500);
+ 		  flag = 0;
+ 	  } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 0){
+ 		  flag = 1;
+ 	  }
 
   }
-
-
-}
-
-
-// LED PB8 configuration
-void GPIO_led_Config(void){
-
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitTypeDef GPIOB_Init = {};
-
-	GPIOB_Init.Pin = GPIO_PIN_8;
-	GPIOB_Init.Mode = GPIO_MODE_OUTPUT_PP;
-
-	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
-}
-
-// Button PA0 configuration
-void GPIO_button_Config(void){
-
-//	enable clock for gpio a, rcc register
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	GPIO_InitTypeDef GPIOA_Init = {};
-
-	GPIOA_Init.Pin = GPIO_PIN_0;
-	GPIOA_Init.Mode = GPIO_MODE_INPUT;
-	GPIOA_Init.Pull = GPIO_NOPULL;
-
-	HAL_GPIO_Init(GPIOA, &GPIOA_Init);
+  /* USER CODE END 3 */
 }
 
 /**
@@ -176,6 +217,32 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	} else {
 		__NOP();
 	}
+}
+
+// LED PB8 configuration
+void GPIO_led_Config(void){
+
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	GPIO_InitTypeDef GPIOB_Init = {};
+
+	GPIOB_Init.Pin = GPIO_PIN_8;
+	GPIOB_Init.Mode = GPIO_MODE_OUTPUT_PP;
+
+	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
+}
+
+// Button PA0 configuration
+void GPIO_button_Config(void){
+
+//	enable clock for gpio a, rcc register
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	GPIO_InitTypeDef GPIOA_Init = {};
+
+	GPIOA_Init.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+	GPIOA_Init.Mode = GPIO_MODE_INPUT;
+	GPIOA_Init.Pull = GPIO_PULLDOWN;
+
+	HAL_GPIO_Init(GPIOA, &GPIOA_Init);
 }
 
 /* USER CODE END 4 */
