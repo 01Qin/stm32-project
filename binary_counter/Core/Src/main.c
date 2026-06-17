@@ -49,7 +49,9 @@
 COM_InitTypeDef BspCOMInit;
 
 /* USER CODE BEGIN PV */
-
+unsigned int countUp = 0;
+unsigned int countDown = 0x1F;
+int j = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -140,7 +142,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+       if (!HAL_GPIO_ReadPin(GPIOA, BtnUp) && !HAL_GPIO_ReadPin(GPIOA, BtnDown)){
+//    	    flash led
+    	   while(j < 2){
+    		   HAL_GPIO_WritePin()
+    	   }
+       }
 
   }
   /* USER CODE END 3 */
