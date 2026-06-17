@@ -196,7 +196,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+       uint8_t counter = 0;
        uint8_t line = 0;
+       uint8_t col = 0;
        OLED_CLS(Display);
        OLED_P8x16Str(Display, 0, 0, "I2C Devices:");
 
@@ -207,13 +210,20 @@ int main(void)
                char buf[16];
                sprintf(buf, "0x%02X", addr); // convert address to the readable string
                	   	   	   	   	   	   	   	// sprintf returns the number of characters written (exclude the null terminator)
-               if (line > 2){
-            	   line = 0;
-            	   OLED_P8x16Str(Display, 0, 2, " ");
+               if (counter < 3){
+            	   col = 0;
+
+               } else {
+//            	   line = 0;
+            	   col = 40;
 
                }
-               OLED_P8x16Str(Display, 0, (line + 1) * 2, buf);  // each line spaced by 2 rows
+               OLED_P8x16Str(Display, col, (line + 1) * 2, buf);  // each line spaced by 2 rows
                line++;
+               if (line >= 3){
+            	   line = 0;
+               }
+               counter++;
                HAL_Delay(2000);  // short delay to make updates visible
            }
        }
