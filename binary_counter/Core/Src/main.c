@@ -33,7 +33,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define BtnUp GPIO_PIN_1
+#define BtnDown GPIO_PIN_0
+#define LOW GPIO_PIN_RESET
+#define HIGH GPIO_PIN_SET
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -138,13 +141,6 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
- 	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1 && flag == 1){
- 		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
- 		  HAL_Delay(500);
- 		  flag = 0;
- 	  } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 0){
- 		  flag = 1;
- 	  }
 
   }
   /* USER CODE END 3 */
