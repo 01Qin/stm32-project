@@ -73,23 +73,6 @@ static void MX_TIM15_Init(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
-/* Configuration for the BME280
-
- * @osrs is the oversampling to improve the accuracy
- *       if osrs is set to OSRS_OFF, the respective measurement will be skipped
- *       It can be set to OSRS_1, OSRS_2, OSRS_4, etc.
- *
- * @mode can be used to set the mode for the device
- *       MODE_SLEEP will put the device in sleep
- *       MODE_FORCED device goes back to sleep after one measurement.
- *       MODE_NORMAL device performs measurement in the normal mode.
- *
- * @t_sb is the standby time. The time sensor waits before performing another measurement
- *       It is used along with the normal mode.
- *
- * @filter is the IIR filter coefficients
- *         IIR is used to avoid the short term fluctuations
- */
 
 /* USER CODE END PFP */
 
