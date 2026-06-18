@@ -260,18 +260,15 @@ void GPIO_led_Config(void){
 	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
 }
 
-// Button PA0 configuration
+// Button PA0, PA1 configuration
 void GPIO_button_Config(void){
+// enable clock on gpio pins
+	RCC->AHB1ENR |= (1UL<<2);
+//	set pin mode as input
+	GPIOA->MODER = 0x00;
+//	 set pull down to avoid noise
+	GPIOA->PUPDR |= (1UL<<1) | (1UL<<3);
 
-//	enable clock for gpio a, rcc register
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	GPIO_InitTypeDef GPIOA_Init = {};
-
-	GPIOA_Init.Pin = GPIO_PIN_0 | GPIO_PIN_1;
-	GPIOA_Init.Mode = GPIO_MODE_INPUT;
-	GPIOA_Init.Pull = GPIO_PULLDOWN;
-
-	HAL_GPIO_Init(GPIOA, &GPIOA_Init);
 }
 
 /* USER CODE END 4 */
