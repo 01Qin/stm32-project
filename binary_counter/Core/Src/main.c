@@ -18,7 +18,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "i2c.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -51,13 +52,6 @@ COM_InitTypeDef BspCOMInit;
 unsigned int countUp = 0;
 unsigned int countDown = 0x1F;
 int j = 0;
-
-// static const uint8_t _ADDR = 0x45 << 1;
-// static const uint8_t MOTION_ADDR = 0x19 << 1;
-// static const uint8_t DISPLAY_ADDR = 0x3C << 1;
-// static const uint8_t TEMP_ADDR = 0x49 << 1;
-// static const uint8_t BMP280_ADDR 0x77 << 1
-// static const uint8_t TEMP_HUMIDITY_ADDR 0x38 << 1
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -148,8 +142,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
        if (!HAL_GPIO_ReadPin(GPIOA, BtnUp) && !HAL_GPIO_ReadPin(GPIOA, BtnDown)){
+
 //    	    flash led
-    	   while(j < 2){
+    	   while(j < 3){
     		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, HIGH);
     		   HAL_Delay(100);
     		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
@@ -157,9 +152,25 @@ int main(void)
     		   j++;
     	   }
     	   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+  }
+       if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 1 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 0){
+    	   if (countUp < 5){
+    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+    		   HAL_Delay(1000);
+    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, HIGH);
+    		   HAL_Delay(1000);
+
+    		   countUp++;
+    	   } else {
+    		   countUp = 0;
+    		   HAL_Delay(2000);
+
+    	   }
+    	   j = 0;
        }
 
-  }
+
+       }
   /* USER CODE END 3 */
 }
 
