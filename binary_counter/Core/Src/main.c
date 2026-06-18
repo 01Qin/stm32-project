@@ -18,8 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "i2c.h"
-#include "gpio.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -52,6 +51,13 @@ COM_InitTypeDef BspCOMInit;
 unsigned int countUp = 0;
 unsigned int countDown = 0x1F;
 int j = 0;
+
+// static const uint8_t _ADDR = 0x45 << 1;
+// static const uint8_t MOTION_ADDR = 0x19 << 1;
+// static const uint8_t DISPLAY_ADDR = 0x3C << 1;
+// static const uint8_t TEMP_ADDR = 0x49 << 1;
+// static const uint8_t BMP280_ADDR 0x77 << 1
+// static const uint8_t TEMP_HUMIDITY_ADDR 0x38 << 1
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
