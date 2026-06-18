@@ -131,7 +131,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   GPIO_led_Config();
   GPIO_button_Config();
-  int flag = 1;
 
   while (1)
   {
@@ -145,8 +144,13 @@ int main(void)
        if (!HAL_GPIO_ReadPin(GPIOA, BtnUp) && !HAL_GPIO_ReadPin(GPIOA, BtnDown)){
 //    	    flash led
     	   while(j < 2){
-    		   HAL_GPIO_WritePin()
+    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, HIGH);
+    		   HAL_Delay(100);
+    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+    		   HAL_Delay(100);
+    		   j++;
     	   }
+    	   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
        }
 
   }

@@ -30,7 +30,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  C:/Users/qin.wang_kuori/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
  C:/Users/qin.wang_kuori/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo.h \
  C:/Users/qin.wang_kuori/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo_errno.h \
- ../Core/Inc/stm32g4xx_nucleo_conf.h
+ ../Core/Inc/stm32g4xx_nucleo_conf.h ../Core/Inc/i2c.h ../Core/Inc/main.h \
+ ../Core/Inc/gpio.h
 ../Core/Inc/main.h:
 C:/Users/qin.wang_kuori/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
@@ -64,3 +65,6 @@ C:/Users/qin.wang_kuori/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/STM3
 C:/Users/qin.wang_kuori/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo.h:
 C:/Users/qin.wang_kuori/STM32Cube/Repository/STM32Cube_FW_G4_V1.6.2/Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo_errno.h:
 ../Core/Inc/stm32g4xx_nucleo_conf.h:
+../Core/Inc/i2c.h:
+../Core/Inc/main.h:
+../Core/Inc/gpio.h:
