@@ -251,18 +251,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 // LED PB8 configuration
 void GPIO_led_Config(void){
 
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitTypeDef GPIOB_Init = {};
-
-	GPIOB_Init.Pin = GPIO_PIN_8;
-	GPIOB_Init.Mode = GPIO_MODE_OUTPUT_PP;
-
-	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
+	RCC->AHB2ENR |= (1UL<<1);
+	//	set pin mode as output
+	GPIOB->MODER = 1UL<<16;
+	GPIOB->OTYPER = ~(0x100 << 8);
 }
 
 // Button PA0, PA1 configuration
 void GPIO_button_Config(void){
-// enable clock on gpio pins
+// enable clock on gpio pins (Bit 0 GPIOAEN: IO port A clock enable)
 	RCC->AHB2ENR |= (1UL<<0);
 //	set pin mode as input
 	GPIOA->MODER = 0x00;
