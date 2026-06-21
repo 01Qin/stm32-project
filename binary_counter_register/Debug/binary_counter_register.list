@@ -1249,17 +1249,17 @@ void GPIO_led_Config(void){
 
 08000ab0 <GPIO_button_Config>:
 
-// Button PA0 configuration
+// Button PA0, PA1 configuration
 void GPIO_button_Config(void){
  8000ab0:	b480      	push	{r7}
  8000ab2:	af00      	add	r7, sp, #0
-// enable clock on gpio pin
-	RCC->AHB1ENR |= (1UL<<2);
+// enable clock on gpio pins
+	RCC->AHB2ENR |= (1UL<<0);
  8000ab4:	4b0b      	ldr	r3, [pc, #44]	@ (8000ae4 <GPIO_button_Config+0x34>)
- 8000ab6:	6c9b      	ldr	r3, [r3, #72]	@ 0x48
+ 8000ab6:	6cdb      	ldr	r3, [r3, #76]	@ 0x4c
  8000ab8:	4a0a      	ldr	r2, [pc, #40]	@ (8000ae4 <GPIO_button_Config+0x34>)
- 8000aba:	f043 0304 	orr.w	r3, r3, #4
- 8000abe:	6493      	str	r3, [r2, #72]	@ 0x48
+ 8000aba:	f043 0301 	orr.w	r3, r3, #1
+ 8000abe:	64d3      	str	r3, [r2, #76]	@ 0x4c
 //	set pin mode as input
 	GPIOA->MODER = 0x00;
  8000ac0:	f04f 4390 	mov.w	r3, #1207959552	@ 0x48000000

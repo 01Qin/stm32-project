@@ -263,7 +263,7 @@ void GPIO_led_Config(void){
 // Button PA0, PA1 configuration
 void GPIO_button_Config(void){
 // enable clock on gpio pins
-	RCC->AHB1ENR |= (1UL<<2);
+	RCC->AHB2ENR |= (1UL<<0);
 //	set pin mode as input
 	GPIOA->MODER = 0x00;
 //	 set pull down to avoid noise
