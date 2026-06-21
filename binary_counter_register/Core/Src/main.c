@@ -254,6 +254,7 @@ void GPIO_led_Config(void){
 	RCC->AHB2ENR |= (1UL<<1);
 	//	set pin mode as output
 	GPIOB->MODER = 1UL<<16;
+//	output register configuration
 	GPIOB->OTYPER = ~(0x100 << 8);
 }
 
