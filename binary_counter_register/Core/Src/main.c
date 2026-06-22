@@ -156,11 +156,11 @@ int main(void)
     	   }
     	   GPIOB->BRR |= 31UL<<7;
   }
-       if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 1 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 0){
+       if (!(GPIOA->IDR & 1UL<<0) && (GPIOA->IDR & 1UL<<1)){
     	   if (countUp < 5){
-    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+    		   GPIOB->BRR |= 31UL<<8;
     		   HAL_Delay(1000);
-    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, HIGH);
+    		   GPIOB->BSRR |= 31UL<<8;
     		   HAL_Delay(1000);
 
     		   countUp++;
