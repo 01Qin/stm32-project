@@ -253,17 +253,19 @@ void GPIO_led_Config(void){
 
 	RCC->AHB2ENR |= (1UL<<1);
 	//	set pin mode as output
-	GPIOB->MODER = 1UL<<16;
+	GPIOB->MODER |= 1UL<<16;
 //	output register configuration
-	GPIOB->OTYPER = ~(0x100 << 8);
+	GPIOB->OTYPER &= ~(0x100 << 8);
 }
 
 // Button PA0, PA1 configuration
+
 void GPIO_button_Config(void){
 // enable clock on gpio pins (Bit 0 GPIOAEN: IO port A clock enable)
 	RCC->AHB2ENR |= (1UL<<0);
 //	set pin mode as input
 	GPIOA->MODER = 0x00;
+
 //	 set pull down to avoid noise
 	GPIOA->PUPDR |= (1UL<<1) | (1UL<<3);
 
