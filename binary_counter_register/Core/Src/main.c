@@ -129,15 +129,15 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-//  GPIO_led_Config();
-//  GPIO_button_Config();
+  GPIO_led_Config();
+  GPIO_button_Config();
 
   while (1)
   {
 
 /* -- Sample board code to toggle leds ---- */
        BSP_LED_Toggle(LED_GREEN);
-       HAL_Delay(2000);
+
 
     /* USER CODE END WHILE */
 
@@ -146,11 +146,11 @@ int main(void)
 
 //    	    flash led
     	   while(j < 3){
-//    		   bit set register
-    		   GPIOB->BSRR |= 31UL<<7;
+//    		   bit set register: write GPIO_PIN_8 high
+    		   GPIOB->BSRR |= 31UL<<8;
     		   HAL_Delay(100);
-//    		   bit reset register
-    		   GPIOB->BRR |= 31UL<<7;
+//    		   bit reset register: write GPIO_PIN_8 low
+    		   GPIOB->BRR |= 31UL<<8;
     		   HAL_Delay(100);
     		   j++;
     	   }
