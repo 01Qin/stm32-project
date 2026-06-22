@@ -129,29 +129,32 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  GPIO_led_Config();
-  GPIO_button_Config();
+//  GPIO_led_Config();
+//  GPIO_button_Config();
 
   while (1)
   {
 
 /* -- Sample board code to toggle leds ---- */
        BSP_LED_Toggle(LED_GREEN);
+       HAL_Delay(2000);
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       if (!HAL_GPIO_ReadPin(GPIOA, BtnUp) && !HAL_GPIO_ReadPin(GPIOA, BtnDown)){
+       if (!(GPIOA->IDR & 1UL<<0) && !(GPIOA->IDR & 1UL<<1)){
 
 //    	    flash led
     	   while(j < 3){
-    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, HIGH);
+//    		   bit set register
+    		   GPIOB->BSRR |= 31UL<<7;
     		   HAL_Delay(100);
-    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+//    		   bit reset register
+    		   GPIOB->BRR |= 31UL<<7;
     		   HAL_Delay(100);
     		   j++;
     	   }
-    	   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+    	   GPIOB->BRR |= 31UL<<7;
   }
        if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 1 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 0){
     	   if (countUp < 5){
@@ -262,6 +265,7 @@ void GPIO_led_Config(void){
 
 void GPIO_button_Config(void){
 // enable clock on gpio pins (Bit 0 GPIOAEN: IO port A clock enable)
+//	Todo: fix the bug that muc lost connection when enable ahb2enr
 	RCC->AHB2ENR |= (1UL<<0);
 //	set pin mode as input
 	GPIOA->MODER = 0x00;

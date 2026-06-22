@@ -18,7 +18,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "i2c.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -32,7 +33,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define BtnUp GPIO_PIN_1
+#define BtnDown GPIO_PIN_0
+#define LOW GPIO_PIN_RESET
+#define HIGH GPIO_PIN_SET
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,7 +49,9 @@
 COM_InitTypeDef BspCOMInit;
 
 /* USER CODE BEGIN PV */
-
+unsigned int countUp = 0;
+unsigned int countDown = 0x1F;
+int j = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -125,7 +131,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   GPIO_led_Config();
   GPIO_button_Config();
-  int flag = 1;
 
   while (1)
   {
@@ -136,16 +141,43 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+       if (!(GPIOA->IDR & 1UL<<0) && !(GPIOA->IDR & 1UL<<1)){
 
- 	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1 && flag == 1){
- 		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);
- 		  HAL_Delay(500);
- 		  flag = 0;
- 	  } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 0){
- 		  flag = 1;
- 	  }
-
+//    	    flash led
+    	   while(j < 3){
+//    		   bit set register
+    		   GPIOB->BSRR |= 31UL<<7;
+    		   HAL_Delay(100);
+//    		   bit reset register
+    		   GPIOB->BRR |= 31UL<<7;
+    		   HAL_Delay(100);
+    		   j++;
+    	   }
+    	   GPIOB->BRR |= 31UL<<7;
   }
+       if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 1 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 0){
+    	   if (countUp < 5){
+    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+    		   HAL_Delay(1000);
+    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, HIGH);
+    		   HAL_Delay(1000);
+
+    		   countUp++;
+    	   } else {
+    		   countUp = 0;
+    		   HAL_Delay(2000);
+
+    	   }
+    	   j = 0;
+       }
+       else {
+    	   countUp = 0;
+    	   countDown = 0x1F;
+
+       }
+
+
+       }
   /* USER CODE END 3 */
 }
 
@@ -221,27 +253,24 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 // LED PB8 configuration
 void GPIO_led_Config(void){
 
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitTypeDef GPIOB_Init = {};
-
-	GPIOB_Init.Pin = GPIO_PIN_8;
-	GPIOB_Init.Mode = GPIO_MODE_OUTPUT_PP;
-
-	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
+	RCC->AHB2ENR |= (1UL<<1);
+	//	set pin mode as output
+	GPIOB->MODER |= 1UL<<16;
+//	output register configuration
+	GPIOB->OTYPER &= ~(0x100 << 8);
 }
 
-// Button PA0 configuration
+// Button PA0, PA1 configuration
+
 void GPIO_button_Config(void){
+// enable clock on gpio pins (Bit 0 GPIOAEN: IO port A clock enable)
+	RCC->AHB2ENR |= (1UL<<0);
+//	set pin mode as input
+	GPIOA->MODER = 0x00;
 
-//	enable clock for gpio a, rcc register
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	GPIO_InitTypeDef GPIOA_Init = {};
+//	 set pull down to avoid noise
+	GPIOA->PUPDR |= (1UL<<1) | (1UL<<3);
 
-	GPIOA_Init.Pin = GPIO_PIN_0;
-	GPIOA_Init.Mode = GPIO_MODE_INPUT;
-	GPIOA_Init.Pull = GPIO_NOPULL;
-
-	HAL_GPIO_Init(GPIOA, &GPIOA_Init);
 }
 
 /* USER CODE END 4 */
