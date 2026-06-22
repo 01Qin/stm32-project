@@ -33,10 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define BtnUp GPIO_PIN_1
-#define BtnDown GPIO_PIN_0
-#define LOW GPIO_PIN_RESET
-#define HIGH GPIO_PIN_SET
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
