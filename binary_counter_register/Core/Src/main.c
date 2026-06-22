@@ -49,6 +49,8 @@ COM_InitTypeDef BspCOMInit;
 unsigned int countUp = 0;
 unsigned int countDown = 0x1F;
 int j = 0;
+unsigned long gpioVal, button_state;
+int sw = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -126,8 +128,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  GPIO_led_Config();
-  GPIO_button_Config();
+ GPIO_Config();
 
   while (1)
   {
@@ -139,43 +140,53 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       if (!(GPIOA->IDR & 1UL<<0) && !(GPIOA->IDR & 1UL<<1)){
+       gpioVal = GPIOB->IDR;
+       button_state = gpioVal & 3UL << 1;
+       sw = button_state >> 1;
 
-//    	    flash led
+       switch(sw){
+       case 0:
     	   while(j < 3){
 //    		   bit set register: write GPIO_PIN_8 high
-    		   GPIOB->BSRR |= 31UL<<8;
+    		   GPIOB->ODR = 31UL<<8;
     		   HAL_Delay(100);
 //    		   bit reset register: write GPIO_PIN_8 low
-    		   GPIOB->BRR |= 31UL<<8;
+    		   GPIOB->ODR = 0;
     		   HAL_Delay(100);
     		   j++;
     	   }
-    	   GPIOB->BRR |= 31UL<<7;
-  }
-       if (!(GPIOA->IDR & 1UL<<0) && (GPIOA->IDR & 1UL<<1)){
+    	   GPIOB->ODR = 0;
+    	   break;
+       case 1:
     	   if (countUp < 5){
-    		   GPIOB->BRR |= 31UL<<8;
-    		   HAL_Delay(1000);
-    		   GPIOB->BSRR |= 31UL<<8;
-    		   HAL_Delay(1000);
 
+    		   GPIOB->ODR = countDown<<8;
+    		   HAL_Delay(1000);
     		   countUp++;
     	   } else {
     		   countUp = 0;
     		   HAL_Delay(2000);
-
     	   }
     	   j = 0;
-       }
-       else {
-    	   countUp = 0;
-    	   countDown = 0x1F;
+    	   break;
+       case 2:
+    	   if (countDown > 0){
 
+    		   GPIOB->ODR |= countDown<<8;
+    		   HAL_Delay(1000);
+    		   countDown--;
+    	   } else {
+    		   countDown = 0x1F;
+    		   HAL_Delay(2000);
+    	   }
+    	   j = 0;
+    	   break;
+       case 3:
+    	   break;
+       default:
+    	   break;
        }
-
-
-       }
+  }
   /* USER CODE END 3 */
 }
 
@@ -248,29 +259,37 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	}
 }
 
-// LED PB8 configuration
-void GPIO_led_Config(void){
-
-	RCC->AHB2ENR |= (1UL<<1);
-	//	set pin mode as output
+void GPIO_Config(void){
+	RCC->AHB2ENR |= (1UL<<1) | (1UL<<0);
 	GPIOB->MODER |= 1UL<<16;
-//	output register configuration
 	GPIOB->OTYPER &= ~(0x100 << 8);
-}
-
-// Button PA0, PA1 configuration
-
-void GPIO_button_Config(void){
-// enable clock on gpio pins (Bit 0 GPIOAEN: IO port A clock enable)
-//	Todo: fix the bug that muc lost connection when enable ahb2enr
-	RCC->AHB2ENR |= (1UL<<0);
-//	set pin mode as input
 	GPIOA->MODER = 0x00;
-
-//	 set pull down to avoid noise
 	GPIOA->PUPDR |= (1UL<<1) | (1UL<<3);
-
 }
+
+//// LED PB8 configuration
+//void GPIO_led_Config(void){
+//
+//	RCC->AHB2ENR |= (1UL<<1);
+//	//	set pin mode as output
+//	GPIOB->MODER |= 1UL<<16;
+////	output register configuration
+//	GPIOB->OTYPER &= ~(0x100 << 8);
+//}
+
+//// Button PA0, PA1 configuration
+//
+//void GPIO_button_Config(void){
+//// enable clock on gpio pins (Bit 0 GPIOAEN: IO port A clock enable)
+////	Todo: fix the bug that mcu lost connection when enable ahb2enr
+//	RCC->AHB2ENR |= (1UL<<0);
+////	set pin mode as input
+//	GPIOA->MODER = 0x00;
+//
+////	 set pull down to avoid noise
+//	GPIOA->PUPDR |= (1UL<<1) | (1UL<<3);
+//
+//}
 
 /* USER CODE END 4 */
 

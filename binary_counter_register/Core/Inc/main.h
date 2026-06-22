@@ -56,8 +56,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-void GPIO_led_Config(void);
-void GPIO_button_Config(void);
+void GPIO_Config(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
