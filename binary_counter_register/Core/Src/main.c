@@ -49,7 +49,6 @@ COM_InitTypeDef BspCOMInit;
 unsigned int countUp = 0;
 unsigned int countDown = 0x1F;
 int j = 0;
-unsigned long gpioVal, button_state;
 int sw = 0;
 /* USER CODE END PV */
 
@@ -140,9 +139,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       gpioVal = GPIOB->IDR;
-       button_state = gpioVal & 3UL << 1;
-       sw = button_state >> 1;
+       sw = (GPIOB->IDR & (3UL << 1)) >> 1;
 
        switch(sw){
        case 0:
