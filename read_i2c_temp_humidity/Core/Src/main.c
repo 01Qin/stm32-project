@@ -201,9 +201,7 @@ HAL_Delay(10);
        line++;
        OLED_P8x16Str(Display, 0, (line+1) * 2, buf_h);
        line++;
-       if(line >= 4){
-    	   line = 0;
-       }
+
 
        HAL_Delay(2000);
 
