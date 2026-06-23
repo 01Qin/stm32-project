@@ -22,7 +22,7 @@
 #include <string.h>
 #include "i2c.h"
 #include "gpio.h"
-#include <math.h>
+#include "math.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -65,6 +65,8 @@ TIM_HandleTypeDef htim15;
 // static const uint8_t TEMP_ADDR = 0x49 << 1;
 // static const uint8_t BMP280_ADDR 0x77 << 1;
 // static const uint8_t TEMP_HUMIDITY_ADDR 0x38 << 1;
+
+float temp, humdity;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -499,7 +501,19 @@ void AHT20_Measure (void){
 //	 the next byte is the CRC check data
 	uint8_t RxData[7];
 	HAL_I2C_Master_Receive(&hi2c2, AHT20_ADDR, RxData, 7, DELAY_MAX);
+
+//	20 bytes for each humidity and temp data
+	uint32_t HUM_DATA = (RxData[1] <<16) |(RxData[2] <<8) | RxData[3]; // 24 bits, include 4 bit temp data
+	HUM_DATA = HUM_DATA>>4; // remove 4 bits temp data --> 20 bits humidty data
+
+	humidity = (float) (HUM_DATA/pow(2,20)) * 100;
+
+	uint32_t TEMP_DATA = (RxData[3] <<16) |(RxData[4] <<8) | RxData[5]; // 24 bits, include 4 bit humidity data
+	TEMP_DATA = TEMP_DATA&0xFFFFF; // remove 4 bits humidity data --> 20 bits temp data
+
+	temp = (float) (((TEMP_DATA/pow(2,20)) * 100) - 50);
 }
+
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header */
