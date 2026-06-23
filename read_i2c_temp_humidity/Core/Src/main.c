@@ -24,9 +24,10 @@
 #include "gpio.h"
 #include "math.h"
 
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "OLED.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -153,6 +154,17 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 AHT20_Init();
+
+//Display Initialisation
+HAL_Delay(100);
+OLED_Init(Display);
+HAL_Delay(10);
+OLED_CLS(Display);
+HAL_Delay(10);
+OLED_P8x16Str(Display, 0, 4, "MaKE sOme FuN!;)");
+HAL_Delay(2000);
+OLED_CLS(Display);
+HAL_Delay(10);
 
 
   while (1)
