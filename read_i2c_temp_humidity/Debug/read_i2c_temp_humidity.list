@@ -2522,30 +2522,30 @@ HAL_Delay(10);
        }
 
 
-       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_h);
+       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_t);
  800177c:	f897 3037 	ldrb.w	r3, [r7, #55]	@ 0x37
  8001780:	3301      	adds	r3, #1
  8001782:	b2db      	uxtb	r3, r3
  8001784:	005b      	lsls	r3, r3, #1
  8001786:	b2da      	uxtb	r2, r3
- 8001788:	f107 031c 	add.w	r3, r7, #28
- 800178c:	9300      	str	r3, [sp, #0]
- 800178e:	4613      	mov	r3, r2
- 8001790:	2200      	movs	r2, #0
- 8001792:	2178      	movs	r1, #120	@ 0x78
- 8001794:	4815      	ldr	r0, [pc, #84]	@ (80017ec <main+0x1cc>)
- 8001796:	f7ff fed7 	bl	8001548 <OLED_P8x16Str>
+ 8001788:	1d3b      	adds	r3, r7, #4
+ 800178a:	9300      	str	r3, [sp, #0]
+ 800178c:	4613      	mov	r3, r2
+ 800178e:	2200      	movs	r2, #0
+ 8001790:	2178      	movs	r1, #120	@ 0x78
+ 8001792:	4816      	ldr	r0, [pc, #88]	@ (80017ec <main+0x1cc>)
+ 8001794:	f7ff fed8 	bl	8001548 <OLED_P8x16Str>
        line++;
- 800179a:	f897 3037 	ldrb.w	r3, [r7, #55]	@ 0x37
- 800179e:	3301      	adds	r3, #1
- 80017a0:	f887 3037 	strb.w	r3, [r7, #55]	@ 0x37
-       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_t);
- 80017a4:	f897 3037 	ldrb.w	r3, [r7, #55]	@ 0x37
- 80017a8:	3301      	adds	r3, #1
- 80017aa:	b2db      	uxtb	r3, r3
- 80017ac:	005b      	lsls	r3, r3, #1
- 80017ae:	b2da      	uxtb	r2, r3
- 80017b0:	1d3b      	adds	r3, r7, #4
+ 8001798:	f897 3037 	ldrb.w	r3, [r7, #55]	@ 0x37
+ 800179c:	3301      	adds	r3, #1
+ 800179e:	f887 3037 	strb.w	r3, [r7, #55]	@ 0x37
+       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_h);
+ 80017a2:	f897 3037 	ldrb.w	r3, [r7, #55]	@ 0x37
+ 80017a6:	3301      	adds	r3, #1
+ 80017a8:	b2db      	uxtb	r3, r3
+ 80017aa:	005b      	lsls	r3, r3, #1
+ 80017ac:	b2da      	uxtb	r2, r3
+ 80017ae:	f107 031c 	add.w	r3, r7, #28
  80017b2:	9300      	str	r3, [sp, #0]
  80017b4:	4613      	mov	r3, r2
  80017b6:	2200      	movs	r2, #0
