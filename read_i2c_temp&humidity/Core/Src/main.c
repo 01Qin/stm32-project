@@ -66,12 +66,12 @@ TIM_HandleTypeDef htim15;
 // static const uint8_t BMP280_ADDR 0x77 << 1;
 // static const uint8_t TEMP_HUMIDITY_ADDR 0x38 << 1;
 
-float temp, humdity;
+float temp, humidity;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
+static void MX_GPIO_Init();
 static void MX_I2C2_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_RTC_Init(void);
@@ -152,7 +152,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
+AHT20_Init();
 
   while (1)
   {
@@ -163,7 +163,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+       AHT20_Measure();
+       HAL_Delay(2000);
   }
   /* USER CODE END 3 */
 }
@@ -511,7 +512,7 @@ void AHT20_Measure (void){
 	uint32_t TEMP_DATA = (RxData[3] <<16) |(RxData[4] <<8) | RxData[5]; // 24 bits, include 4 bit humidity data
 	TEMP_DATA = TEMP_DATA&0xFFFFF; // remove 4 bits humidity data --> 20 bits temp data
 
-	temp = (float) (((TEMP_DATA/pow(2,20)) * 100) - 50);
+	temp = (float) (((TEMP_DATA/pow(2,20)) * 200) - 50);
 }
 
 /* USER CODE END 4 */
