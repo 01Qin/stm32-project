@@ -22,6 +22,7 @@
 #include <string.h>
 #include "i2c.h"
 #include "gpio.h"
+#include <math.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -469,11 +470,36 @@ void AHT20_Init(void){
 //		 If not 1, need to send 0xBE command (for initialization),
 //		this command parameter has two bytes, the first byte is 0x08, the second byte is 0x00
 		uint8_t init_cmd[3] = {0xBE, 0x08, 0x00};
+//		transmit these commands to the slave
 		HAL_I2C_Master_Transmit(&hi2c2, AHT20_ADDR, init_cmd, 3, DELAY_MAX);
 		HAL_Delay(10);
 	}
 }
 
+void AHT20_Measure (void){
+//	Send the 0xAC command directly (trigger measurement).
+//	The parameter of this command has two bytes, the first byte
+//	is 0x33 and the second byte is 0x00.
+	uint8_t measure_cmd[3] = {0xAC, 0x33, 0x00};
+	HAL_I2C_Master_Transmit(&hi2c2, AHT20_ADDR, measure_cmd, 3, DELAY_MAX);
+//	 Wait for 80ms to wait for the measurement to be completed.
+	HAL_Delay(80);
+
+//	If the read status word Bit [7] is 0, it indicates that the
+//	measurement is completed, and then six bytes can be read
+//	in a row; otherwise, continue to wait.
+
+	uint8_t status;
+	do {
+		HAL_I2C_Mem_Read(&hi2c2, AHT20_ADDR, 0x71, 1, &status, 1, DELAY_MAX);
+		HAL_Delay(100);
+	}
+	while((status >>7 & 0x01) == 1);
+
+//	 the next byte is the CRC check data
+	uint8_t RxData[7];
+	HAL_I2C_Master_Receive(&hi2c2, AHT20_ADDR, RxData, 7, DELAY_MAX);
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header */

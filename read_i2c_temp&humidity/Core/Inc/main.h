@@ -28,9 +28,8 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32g4xx_hal.h"
-
 #include "stm32g4xx_nucleo.h"
-#include <stdio.h>
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -56,7 +55,8 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void AHT20_Init(void);
+void AHT20_Measure (void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
