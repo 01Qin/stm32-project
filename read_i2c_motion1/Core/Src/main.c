@@ -7,11 +7,12 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "lis3dh.h"
-#include <stdbool.h>
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "lis3dh.h"
+#include <stdbool.h>
+#include "OLED.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -138,6 +139,17 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  //Display Initialisation
+  HAL_Delay(100);
+  OLED_Init(Display);
+  HAL_Delay(10);
+  OLED_CLS(Display);
+  HAL_Delay(10);
+  OLED_P8x16Str(Display, 0, 4, "MaKE sOme FuN!;)");
+  HAL_Delay(2000);
+  OLED_CLS(Display);
+  HAL_Delay(10);
+
     uint8_t xyz_buf[6] = {0};
     lis3dh_t lis3dh;
    	HAL_StatusTypeDef status;
@@ -202,9 +214,30 @@ int main(void)
      		  float z_mg = lis3dh.z / 16.0f;
      		  printf("\n");
      		  printf("X = %.2f, Y = %.2f, Z = %.2f\r\n", x_mg, y_mg, z_mg);
+
+     	       uint8_t line = 0;
+     	       char buf_x[16];
+     	       char buf_y[16];
+     	       char buf_z[16];
+
+     	       sprintf(buf_x, "X: %.2f", x_mg);
+     	       sprintf(buf_y, "Y: %.2f", y_mg);
+     	       sprintf(buf_z, "Z: %.2f", z_mg);
+
+     	       OLED_P8x16Str(Display, 0, 0, "Sensor values:");
+     	       if (line == 0){
+     	    	   OLED_P8x16Str(Display, 0, (line+1) * 2, " ");
+     	       }
+     	       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_x);
+     	       line++;
+     	       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_y);
+     	       line++;
+     	       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_z);
+     	       line++;
+
      	  }
 
-     	  HAL_Delay(50);
+     	  HAL_Delay(2000);
        	}
 //
 //       if (lis3dh_freefall_detected(&lis3dh)){

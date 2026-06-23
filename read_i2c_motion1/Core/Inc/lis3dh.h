@@ -10,7 +10,8 @@
 
 #include <stdbool.h>
 #include "stm32g4xx_hal.h"
-#include "stm32g4xx_hal_i2c.h"
+#include "i2c.h"
+#include "gpio.h"
 
 typedef struct lis3dh {
 	/* The HAL I2C_HandleTypeDef. */

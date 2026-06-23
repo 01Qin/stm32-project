@@ -2556,9 +2556,7 @@ HAL_Delay(10);
  80017c0:	f897 3037 	ldrb.w	r3, [r7, #55]	@ 0x37
  80017c4:	3301      	adds	r3, #1
  80017c6:	f887 3037 	strb.w	r3, [r7, #55]	@ 0x37
-//       if(line >= 4){
-//    	   line = 0;
-//       }
+
 
        HAL_Delay(2000);
  80017ca:	f44f 60fa 	mov.w	r0, #2000	@ 0x7d0

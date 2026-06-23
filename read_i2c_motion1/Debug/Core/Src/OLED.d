@@ -1,4 +1,4 @@
-Core/Src/lis3dh.o: ../Core/Src/lis3dh.c ../Core/Inc/lis3dh.h \
+Core/Src/OLED.o: ../Core/Src/OLED.c ../Core/Inc/OLED.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
@@ -34,12 +34,8 @@ Core/Src/lis3dh.o: ../Core/Src/lis3dh.c ../Core/Inc/lis3dh.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../Core/Inc/i2c.h ../Core/Inc/main.h \
- ../Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo.h \
- ../Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo_errno.h \
- ../Core/Inc/stm32g4xx_nucleo_conf.h ../Core/Inc/gpio.h
-../Core/Inc/lis3dh.h:
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
+../Core/Inc/OLED.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h:
@@ -76,9 +72,3 @@ Core/Src/lis3dh.o: ../Core/Src/lis3dh.c ../Core/Inc/lis3dh.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
-../Core/Inc/i2c.h:
-../Core/Inc/main.h:
-../Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo.h:
-../Drivers/BSP/STM32G4xx_Nucleo/stm32g4xx_nucleo_errno.h:
-../Core/Inc/stm32g4xx_nucleo_conf.h:
-../Core/Inc/gpio.h:
