@@ -179,8 +179,34 @@ HAL_Delay(10);
        AHT20_Measure();
        printf("\n\r");
        printf("Temperature is: %.2f C\n\r", temp);
-       printf("Humidity is: %.2f \n\r", humidity);
+       printf("Humidity is: %.2f%% \n\r", humidity);
        HAL_Delay(2000);
+
+       uint8_t line = 0;
+       char buf_h[24];
+       char buf_t[24];
+
+       sprintf(buf_h, "Hum: %.2f%%", humidity);
+       sprintf(buf_t, "Temp: %.2fC", temp);
+
+//       OLED_CLS(Display);
+       OLED_P8x16Str(Display, 0, 0, "Sensor values:");
+       if (line == 0){
+    	   OLED_P8x16Str(Display, 0, (line+1) * 2, " ");
+
+       }
+
+
+       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_h);
+       line++;
+       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_t);
+       line++;
+       if(line >= 4){
+    	   line = 0;
+       }
+
+       HAL_Delay(2000);
+
   }
   /* USER CODE END 3 */
 }
