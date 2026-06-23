@@ -20,6 +20,8 @@
 #include "main.h"
 #include <stdio.h>
 #include <string.h>
+#include "i2c.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -34,7 +36,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define AHT20_ADDR 0x38 << 1
+#define DELAY_MAX 1000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -59,8 +62,8 @@ TIM_HandleTypeDef htim15;
 // static const uint8_t MOTION_ADDR = 0x19 << 1;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
 // static const uint8_t TEMP_ADDR = 0x49 << 1;
-// static const uint8_t BMP280_ADDR 0x77 << 1
-// static const uint8_t TEMP_HUMIDITY_ADDR 0x38 << 1
+// static const uint8_t BMP280_ADDR 0x77 << 1;
+// static const uint8_t TEMP_HUMIDITY_ADDR 0x38 << 1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -453,6 +456,23 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void AHT20_Init(void){
+//	Wait 40ms after power-on
+	HAL_Delay(40);
+	uint8_t status;
+//	 first check whether the calibration enable bit Bit [3] of the status word is 1
+//	(you can get a byte of status word by sending 0x71)
+	HAL_I2C_Mem_Read(&hi2c2, AHT20_ADDR, 0x71, 1, &status, 1, DELAY_MAX);
+//	check if Bit [3] of the status is 0 --> calibration is done
+	if ((status >>3 & 0x01) == 0){
+//		 If not 1, need to send 0xBE command (for initialization),
+//		this command parameter has two bytes, the first byte is 0x08, the second byte is 0x00
+		uint8_t init_cmd[3] = {0xBE, 0x08, 0x00};
+		HAL_I2C_Master_Transmit(&hi2c2, AHT20_ADDR, init_cmd, 3, DELAY_MAX);
+		HAL_Delay(10);
+	}
+}
 
 /* USER CODE END 4 */
 
