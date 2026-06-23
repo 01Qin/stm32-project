@@ -13,6 +13,8 @@
 #include "lis3dh.h"
 #include <stdbool.h>
 #include "OLED.h"
+#include "i2c.h"
+#include "gpio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

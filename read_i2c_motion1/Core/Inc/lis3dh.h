@@ -34,7 +34,7 @@ typedef struct lis3dh {
 /**
  * Boot procedure is complete "about 5ms after power up." Doubling that number.
  */
-#define LID3DH_POWER_UP_MS      10
+#define DELAY_MS      10
 
 #define LIS3DH_ADDR             0x18 << 1  // 7-bit I2C address. If SA0 is pulled high, address is 0x19.
 
