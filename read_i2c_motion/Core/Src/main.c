@@ -25,6 +25,7 @@
 #include <string.h>
 #include "i2c.h"
 #include "gpio.h"
+#include "OLED.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -35,7 +36,16 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define LIS3DH_ADDR             0x18<<1  // 7-bit I2C address. If SA0 is pulled high, address is 0x19.
+#define LIS3DH_DEVICE_ID        0x33  // Contents of WHO_AM_I register.
+#define WHO_AM_I	0x0F
+#define CTRL_REG1	0x20
+#define CTRL_REG4	0x23
+#define CTRL_REG5	0x24
+#define OUT_X_L		0x28
 
+#define TEMP_CFG_REG	0x1F
+#define OUT_ADC1_L		0x08	// ADC channel 1 conversion or temperature sensor data output.
 
 /* USER CODE END PD */
 
@@ -64,7 +74,13 @@ TIM_HandleTypeDef htim15;
 // static const uint8_t BMP280_ADDR 0x77 << 1
 // static const uint8_t MOTION_ADDR 0x38 << 1
 
+uint8_t check, data[2], accel_data[6], temp_data[2];
 
+int16_t X_RAW, Y_RAW, Z_RAW, TEMP_RAW;
+
+float Ax, Ay, Az, temperature;
+
+char tx[100];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,36 +92,23 @@ static void MX_RTC_Init(void);
 static void MX_TIM15_Init(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
-
-
-
+void LIS3DH_write(uint8_t reg_addr, uint8_t value);
+void LIS3DH_read_accel(uint8_t reg_addr);
+void LIS3DH_init(uint8_t reg_addr);
+void LIS3DH_read_temp(uint8_t reg_addr);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* USER CODE END 0 */
 
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
+
 int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	lis3dh_reg_t data;
-	int16_t x_raw, y_raw, z_raw;
-	float x_mg, y_mg, z_mg;
-
-	/* Read raw acceleration data */
-	lis3dh_acceleration_raw_get(&dev_ctx, data.byte);
 
 
-
-	/* Convert to mg */
-	lis3dh_from_fs2_hr_to_mg(x_raw);
-	lis3dh_from_fs2_hr_to_mg(y_raw);
-	lis3dh_from_fs2_hr_to_mg(z_raw);
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -158,12 +161,21 @@ int main(void)
 
   /* -- Sample board code to switch on leds ---- */
   BSP_LED_On(LED_GREEN);
-  lis3dh_wake_up();
   /* USER CODE END BSP */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
+	LIS3DH_init(0x0F);		//WHO_AM_I (0Fh)
+  //Display Initialisation
+  HAL_Delay(100);
+  OLED_Init(Display);
+  HAL_Delay(10);
+  OLED_CLS(Display);
+  HAL_Delay(10);
+  OLED_P8x16Str(Display, 0, 4, "MaKE sOme FuN!;)");
+  HAL_Delay(2000);
+  OLED_CLS(Display);
+  HAL_Delay(10);
 
   while (1)
   {
@@ -174,10 +186,50 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		LIS3DH_read_accel(0x28);		//X-axis acceleration data output. OUT_X_L: 0x28
+		LIS3DH_read_temp(0x08);			//temperature sensor data output. OUT_ADC1_L: 0x08
 
-       printf("Accel: X=%.2f mg, Y=%.2f mg, Z=%.2f mg\r\n", x_mg, y_mg, z_mg);
+		X_RAW = (accel_data[1]<<8|accel_data[0]);
+		Y_RAW = (accel_data[3]<<8|accel_data[2]);
+		Z_RAW = (accel_data[5]<<8|accel_data[4]);
 
-       HAL_Delay(30000); // print every 30sec
+		// Convert into 'mg'
+		Ax = ( (float)X_RAW / 64.0f ) *  4.0f;
+		Ay = ( (float)Y_RAW / 64.0f ) *  4.0f;
+		Az = ( (float)Z_RAW / 64.0f ) *  4.0f;
+
+//		// Convert into 'g'
+//		Ax = Ax / 1000.0f;
+//		Ay = Ay / 1000.0f;
+//		Az = Az / 1000.0f;
+
+
+		TEMP_RAW = (temp_data[1]<<8|temp_data[0]);
+		// Convert into 'celsius',
+		temperature = ( ( (float)TEMP_RAW / 64.0f ) / 4.0f ) + 25.0f;
+
+		 printf("\n");
+		 printf("X = %.2f, Y = %.2f, Z = %.2f, temperature = %.2f\r\n", Ax, Ay, Az, temperature);
+
+		 uint8_t line = 0;
+		 char buf_x[16];
+		 char buf_y[16];
+		 char buf_z[16];
+
+		 sprintf(buf_x, "X: %.2f  ", Ax);
+		 sprintf(buf_y, "Y: %.2f  ", Ay);
+		 sprintf(buf_z, "Z: %.2f  ", Az);
+
+//		 OLED_CLS(Display);
+		 OLED_P8x16Str(Display, 0, 0, "Sensor values:");
+
+		 OLED_P8x16Str(Display, 0, (line+1) * 2, buf_x);
+		 line++;
+		 OLED_P8x16Str(Display, 0, (line+1) * 2, buf_y);
+		 line++;
+		 OLED_P8x16Str(Display, 0, (line+1) * 2, buf_z);
+		 line++;
+		HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
@@ -473,15 +525,93 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-//void BMP280_CheckID(void)
-//{
-//    uint8_t id = 0;
-//
-//    if (HAL_I2C_Mem_Read(&hi2c2, BMP280_ADDR, 0xD0, 1, &id, 1, HAL_MAX_DELAY) == HAL_OK)
-//        printf("BMP280 ID register = 0x%02X\r\n", id);
-//    else
-//        printf("I2C read failed at address 0x%02X\r\n", BMP280_ADDR);
-//}
+
+void LIS3DH_write(uint8_t reg_addr, uint8_t value)
+{
+	data[0] = reg_addr;
+	data[1] = value;
+
+	while(HAL_I2C_Master_Transmit(&hi2c2, LIS3DH_ADDR, data, 2, 1000)!= HAL_OK)
+	{
+		if(HAL_I2C_GetError(&hi2c2) != HAL_I2C_ERROR_AF)		//Acknowledge
+		{
+			Error_Handler();
+		}
+	}
+}
+
+void LIS3DH_read_accel(uint8_t reg_addr)
+{
+	reg_addr |= 0x80;		//multibyte read enabled
+
+	while(HAL_I2C_Master_Transmit(&hi2c2, LIS3DH_ADDR, &reg_addr, 1, 1000) != HAL_OK)
+	{
+		if(HAL_I2C_GetError(&hi2c2) != HAL_I2C_ERROR_AF)		//Acknowledge
+		{
+			Error_Handler();
+		}
+	}
+	while(HAL_I2C_Master_Receive(&hi2c2, LIS3DH_ADDR, accel_data, 6, 1000) != HAL_OK)
+	{
+		if(HAL_I2C_GetError(&hi2c2) != HAL_I2C_ERROR_AF)		//Acknowledge
+		{
+			Error_Handler();
+		}
+	}
+}
+
+void LIS3DH_init(uint8_t reg_addr)
+{
+	while(HAL_I2C_Master_Transmit(&hi2c2, LIS3DH_ADDR, &reg_addr, 1, 1000) != HAL_OK)
+	{
+		if(HAL_I2C_GetError(&hi2c2) != HAL_I2C_ERROR_AF)		//Acknowledge
+		{
+			Error_Handler();
+		}
+	}
+	while(HAL_I2C_Master_Receive(&hi2c2, LIS3DH_ADDR, &check, 1, 1000) != HAL_OK)
+	{
+		if(HAL_I2C_GetError(&hi2c2) != HAL_I2C_ERROR_AF)		//Acknowledge
+		{
+			Error_Handler();
+		}
+	}
+	if(check == LIS3DH_DEVICE_ID)
+	{
+
+		LIS3DH_write(0x24, 0x80);		//Reboot memory content. CTRL_REG5: 0x24
+		HAL_Delay(100);
+		LIS3DH_write(0x20, 0x00);		//Power-down. CTRL_REG1: 0x20
+		HAL_Delay(100);
+		LIS3DH_write(0x20, 0x77);		//Power-up normal mode, 400Hz, XYZ-axis enabled
+		HAL_Delay(100);
+		LIS3DH_write(0x23, 0x80);		//0x00-> 2g, 0x10-> 4g, 0x20-> 8g, 0x30-> 16g and high-resolution disabled. CTRL_REG4: 0x23
+		HAL_Delay(100);
+		LIS3DH_write(0x1F, 0x08);		//Temperature sensor and ADC enabled. TEMP_CFG_REG: 0x1F
+		HAL_Delay(100);
+	}
+}
+
+
+void LIS3DH_read_temp(uint8_t reg_addr)
+{
+	reg_addr |= 0x80;		//multibyte read enabled
+
+	while(HAL_I2C_Master_Transmit(&hi2c2, LIS3DH_ADDR, &reg_addr, 1, 1000) != HAL_OK)
+	{
+		if(HAL_I2C_GetError(&hi2c2) != HAL_I2C_ERROR_AF)		//Acknowledge
+		{
+			Error_Handler();
+		}
+	}
+	while(HAL_I2C_Master_Receive(&hi2c2, LIS3DH_ADDR, temp_data, 2, 1000) != HAL_OK)
+	{
+		if(HAL_I2C_GetError(&hi2c2) != HAL_I2C_ERROR_AF)		//Acknowledge
+		{
+			Error_Handler();
+		}
+	}
+}
 
 /* USER CODE END 4 */
 

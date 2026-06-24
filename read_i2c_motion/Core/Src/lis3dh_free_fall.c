@@ -1,4 +1,4 @@
-aZ/*
+/*
  ******************************************************************************
  * @file    free_fall.c
  * @author  Sensors Software Solution Team
@@ -6,8 +6,8 @@ aZ/*
  *          from sensor.
  *
  ******************************************************************************
-/* STMicroelectronics evaluation boards definition
- *
+/* STMicroelectronics evaluation boards definition */
+ /*
  * Please uncomment ONLY the evaluation boards in use.
  * If a different hardware is used please comment all
  * following target board and redefine yours.
