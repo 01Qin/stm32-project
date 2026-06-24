@@ -212,9 +212,9 @@ int main(void)
      	       char buf_y[16];
      	       char buf_z[16];
 
-     	       sprintf(buf_x, "X: %.2f", x_mg);
-     	       sprintf(buf_y, "Y: %.2f", y_mg);
-     	       sprintf(buf_z, "Z: %.2f", z_mg);
+     	       sprintf(buf_x, "X: %.2f  ", x_mg);
+     	       sprintf(buf_y, "Y: %.2f  ", y_mg);
+     	       sprintf(buf_z, "Z: %.2f  ", z_mg);
 
      	       OLED_CLS(Display);
      	       OLED_P8x16Str(Display, 0, 0, "Sensor values:");
