@@ -60,19 +60,19 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 		return status;
 	}
 
-	status = lis3dh_write(lis3dh, REG_CTRL_REG2, 0x07);
+	status = lis3dh_write(lis3dh, REG_CTRL_REG2, 0x0F);
 	if (status != HAL_OK) {
-	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	    printf("ERROR: Failed to write REG_CTRL_REG2 (0x%02X), status=%d, I2C error=0x%08lX\n",
+	           0x0F,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
 	}
 
-	status = lis3dh_write(lis3dh, REG_CTRL_REG3, 0x07);
+	status = lis3dh_write(lis3dh, REG_CTRL_REG3, 0x60);
 	if (status != HAL_OK) {
 	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	           0x60,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
@@ -88,10 +88,10 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 		return status;
 	}
 
-	status = lis3dh_write(lis3dh, REG_CTRL_REG5, 0x07);
+	status = lis3dh_write(lis3dh, REG_CTRL_REG5, 0x0A);
 	if (status != HAL_OK) {
 	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	    		0x0A,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
@@ -100,7 +100,7 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 	status = lis3dh_write(lis3dh, REG_CTRL_REG6, 0x07);
 	if (status != HAL_OK) {
 	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	           0x07,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
@@ -109,43 +109,43 @@ HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t 
 	status = lis3dh_write(lis3dh, REG_REFERENCE, 0x07);
 	if (status != HAL_OK) {
 	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	    		0x07,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
 	}
 
-	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x07);
+	status = lis3dh_write(lis3dh, REG_INT1_THS, 0x10);
 	if (status != HAL_OK) {
 	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	    		0x10,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
 	}
 
-	status = lis3dh_write(lis3dh, REG_INT1_DUR, 0x07);
+	status = lis3dh_write(lis3dh, REG_INT1_DUR, 0x03);
 	if (status != HAL_OK) {
 	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	    		0x03,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
 	}
 
-	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x07);
+	status = lis3dh_write(lis3dh, REG_INT1_CFG, 0x2A);
 	if (status != HAL_OK) {
 	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	    		0x2A,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
 	}
 
-	status = lis3dh_write(lis3dh, REG_CTRL_REG5, 0x07);
+	status = lis3dh_write(lis3dh, REG_CTRL_REG5, 0x08);
 	if (status != HAL_OK) {
 	    printf("ERROR: Failed to write REG_CTRL_REG1 (0x%02X), status=%d, I2C error=0x%08lX\n",
-	           DATA_RATE_NORM_1kHz344 | 0x07,
+	    		0x08,
 	           status,
 	           lis3dh->i2c->ErrorCode);
 		return status;
@@ -186,7 +186,7 @@ HAL_StatusTypeDef lis3dh_hit(lis3dh_t *lis3dh){
 
 	// TIME_LIMIT: ~120 ms (0x33)
 
-	status = lis3dh_write(lis3dh, REG_INT1_DURATION, 0x05);
+	status = lis3dh_write(lis3dh, REG_INT1_DUR, 0x05);
 	if (status != HAL_OK) return status;
 
 //	lis3dh_write(lis3dh, REG_TIME_LATENCY, 0x20);

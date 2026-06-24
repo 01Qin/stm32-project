@@ -70,11 +70,11 @@ typedef struct lis3dh {
 #define REG_INT1_CFG            0x30  // rw
 #define REG_INT1_SRC            0x31  // r
 #define REG_INT1_THS            0x32  // rw
-#define REG_INT1_DURATION       0x33  // rw
+#define REG_INT1_DUR            0x33  // rw
 #define REG_INT2_CFG            0x34  // rw
 #define REG_INT2_SRC            0x35  // r
 #define REG_INT2_THS            0x36  // rw
-#define REG_INT2_DURATION       0x37  // rw
+#define REG_INT2_DUR            0x37  // rw
 #define REG_CLICK_CFG           0x38  // rw
 #define REG_CLICK_SRC           0x39  // r
 #define REG_CLICK_THS           0x3A  // rw

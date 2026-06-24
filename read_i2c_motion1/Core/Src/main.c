@@ -193,22 +193,12 @@ int main(void)
 		   printf("Alarm: hit detected! SRC=0x%02X\r\n", src);
 		   printf("\n");
 		   printf("Hit XYZ: X=%.2f, Y=%.2f, Z=%.2f\r\n", x_mg, y_mg, z_mg);
-//
-//       		// Clear click interrupt
-//       		lis3dh_read(&lis3dh, REG_CLICK_SRC, 1);
-       		// Clear int1 interrupt
-//       		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
-//
-//
-//       		// Re-enable measurement after event
-//       		lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
+
        	} else {
 
        if (lis3dh_xyz_available(&lis3dh)){
 
      	  status = lis3dh_get_xyz(&lis3dh);
-//
-//     	 printf("%d\r\n", status);
 
 
      		  float x_mg = lis3dh.x / 16.0f;
@@ -226,9 +216,12 @@ int main(void)
      	       sprintf(buf_y, "Y: %.2f", y_mg);
      	       sprintf(buf_z, "Z: %.2f", z_mg);
 
+     	       OLED_CLS(Display);
      	       OLED_P8x16Str(Display, 0, 0, "Sensor values:");
+
      	       if (line == 0){
-     	    	   OLED_P8x16Str(Display, 0, (line+1) * 2, " ");
+     	    	   OLED_P8x16Str(Display, 0, (line+1) * 2, "");
+
      	       }
      	       OLED_P8x16Str(Display, 0, (line+1) * 2, buf_x);
      	       line++;
@@ -239,35 +232,15 @@ int main(void)
 
      	  }
 
-     	  HAL_Delay(2000);
+     	  HAL_Delay(1000);
        	}
-//
-//       if (lis3dh_freefall_detected(&lis3dh)){
-//
-//           	printf("Alarm: free-fall detected\r\n");
-//
-//       		// Clear latched interrupt
-//       		lis3dh_read(&lis3dh, REG_INT1_SRC, 1);
-//
-//       		// Re-enable measurement after event
-//           	lis3dh_write(&lis3dh, REG_CTRL_REG1, DATA_RATE_NORM_1kHz344 | 0x07);
-//           	}
-
-
-
-
 
 
     HAL_Delay(500); // print every 3sec
   }
-}
-
-
-
 
   /* USER CODE END 3 */
-
-
+}
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -319,7 +292,7 @@ void SystemClock_Config(void)
   * @brief NVIC Configuration.
   * @retval None
   */
-void MX_NVIC_Init(void)
+static void MX_NVIC_Init(void)
 {
   /* EXTI0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
@@ -544,7 +517,6 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -572,7 +544,6 @@ static void MX_GPIO_Init(void)
   * @file           : main.c
   * @brief          : Main program body
   *******************************************************************************/
-
 /* USER CODE END Header */
 
 /**

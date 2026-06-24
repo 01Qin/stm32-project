@@ -10,7 +10,8 @@
 
 #include <stdbool.h>
 #include "stm32g4xx_hal.h"
-#include "stm32g4xx_hal_i2c.h"
+#include "i2c.h"
+#include "gpio.h"
 
 typedef struct lis3dh {
 	/* The HAL I2C_HandleTypeDef. */
@@ -33,7 +34,7 @@ typedef struct lis3dh {
 /**
  * Boot procedure is complete "about 5ms after power up." Doubling that number.
  */
-#define LID3DH_POWER_UP_MS      10
+#define DELAY_MS      10
 
 #define LIS3DH_ADDR             0x18 << 1  // 7-bit I2C address. If SA0 is pulled high, address is 0x19.
 
@@ -126,6 +127,7 @@ typedef struct lis3dh {
 
 
 HAL_StatusTypeDef lis3dh_init(lis3dh_t *lis3dh, I2C_HandleTypeDef *i2c, uint8_t *buf, uint16_t bufsize);
+void MX_I2C2_Init(void);
 
 //HAL_StatusTypeDef lis3dh_enable_tap(lis3dh_t *lis3dh);
 
