@@ -629,30 +629,30 @@ void LIS3DH_init(uint8_t reg_addr)
 
 //		Startup sequence
 		// 1. Reboot memory content to ensure a clean slate
-		LIS3DH_write(0x24, 0x80);        // CTRL_REG5 = 0x80
+		LIS3DH_write(CTRL_REG5, 0x80);
 		HAL_Delay(20);
 
 		// 2. Set Full Scale to ±2g and enable Block Data Update (BDU)
-		LIS3DH_write(0x23, 0x80);        // CTRL_REG4 = 0x80 (1 LSB threshold = 16mg)
+		LIS3DH_write(CTRL_REG4, 0x80);        // CTRL_REG4 = 0x80 (1 LSB threshold = 16mg)
 
 		// 3. Route the INT1 IA1 (Interrupt Activity 1) signal to the physical INT1 pin
-		LIS3DH_write(0x22, 0x40);        // CTRL_REG3 = 0x40 (Enables I1_IA1)
+		LIS3DH_write(CTRL_REG3, 0x40);        // CTRL_REG3 = 0x40 (Enables I1_IA1)
 
 		// 4. Set the threshold (250mg / 16mg = 16 = 0x10)
-		LIS3DH_write(0x32, 0x10);        // INT1_THS = 0x10
+		LIS3DH_write(INT1_THS, 0x10);        // INT1_THS = 0x10
 
 		// 5. Set the minimum duration the event must last to trigger (0 = triggers instantly)
-		LIS3DH_write(0x33, 0x00);        // INT1_DURATION = 0x00
+		LIS3DH_write(INT1_DUR, 0x00);        // INT1_DURATION = 0x00
 
 		// 6. Configure the event condition: High event (OR combination) on X, Y, or Z axes
-		LIS3DH_write(0x30, 0x2A);        // INT1_CFG = 0x2A (00101010b -> ZHIE, YHIE, XHIE enabled)
+		LIS3DH_write(INT1_CFG, 0x2A);        // INT1_CFG = 0x2A (00101010b -> ZHIE, YHIE, XHIE enabled)
 
 		// 7. Latch the interrupt on the INT1 pin until read INT1_SRC
-		 LIS3DH_write(0x24, 0x08);     // CTRL_REG5 = 0x08 (LIR1 = 1)
+		 LIS3DH_write(CTRL_REG5, 0x08);     // CTRL_REG5 = 0x08 (LIR1 = 1)
 
-		 LIS3DH_write(0x21, 0x01);  // High-pass filter enabled for INT1
+		 LIS3DH_write(CTRL_REG2, 0x01);  // High-pass filter enabled for INT1
 		// 8. Turn the sensor on. (Power-up normal mode, 400Hz, XYZ enabled)
-		LIS3DH_write(0x20, 0x77);        // CTRL_REG1 = 0x77
+		LIS3DH_write(CTRL_REG1, 0x77);        // CTRL_REG1 = 0x77
 		HAL_Delay(20);
 	}
 }

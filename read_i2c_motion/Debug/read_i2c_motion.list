@@ -2509,10 +2509,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		LIS3DH_read_accel(0x28);		//X-axis acceleration data output. OUT_X_L: 0x28
+		LIS3DH_read_accel(OUT_X_L);		//X-axis acceleration data output.
  8001708:	2028      	movs	r0, #40	@ 0x28
  800170a:	f000 fb8b 	bl	8001e24 <LIS3DH_read_accel>
-		LIS3DH_read_temp(0x08);			//temperature sensor data output. OUT_ADC1_L: 0x08
+		LIS3DH_read_temp(OUT_ADC1_L);			//temperature sensor data output.
  800170e:	2008      	movs	r0, #8
  8001710:	f000 fc2c 	bl	8001f6c <LIS3DH_read_temp>
 
@@ -3736,12 +3736,12 @@ void LIS3DH_init(uint8_t reg_addr)
  8001f00:	781b      	ldrb	r3, [r3, #0]
  8001f02:	2b33      	cmp	r3, #51	@ 0x33
  8001f04:	d129      	bne.n	8001f5a <LIS3DH_init+0xba>
-//		HAL_Delay(100);
 //		LIS3DH_write(TEMP_CFG_REG, 0x08);		//Temperature sensor and ADC enabled.
 //		HAL_Delay(100);
 
+//		Startup sequence
 		// 1. Reboot memory content to ensure a clean slate
-		LIS3DH_write(0x24, 0x80);        // CTRL_REG5 = 0x80
+		LIS3DH_write(CTRL_REG5, 0x80);
  8001f06:	2180      	movs	r1, #128	@ 0x80
  8001f08:	2024      	movs	r0, #36	@ 0x24
  8001f0a:	f7ff ff5f 	bl	8001dcc <LIS3DH_write>
@@ -3750,47 +3750,47 @@ void LIS3DH_init(uint8_t reg_addr)
  8001f10:	f000 fc8e 	bl	8002830 <HAL_Delay>
 
 		// 2. Set Full Scale to ±2g and enable Block Data Update (BDU)
-		LIS3DH_write(0x23, 0x80);        // CTRL_REG4 = 0x80 (1 LSB threshold = 16mg)
+		LIS3DH_write(CTRL_REG4, 0x80);        // CTRL_REG4 = 0x80 (1 LSB threshold = 16mg)
  8001f14:	2180      	movs	r1, #128	@ 0x80
  8001f16:	2023      	movs	r0, #35	@ 0x23
  8001f18:	f7ff ff58 	bl	8001dcc <LIS3DH_write>
 
 		// 3. Route the INT1 IA1 (Interrupt Activity 1) signal to the physical INT1 pin
-		LIS3DH_write(0x22, 0x40);        // CTRL_REG3 = 0x40 (Enables I1_IA1)
+		LIS3DH_write(CTRL_REG3, 0x40);        // CTRL_REG3 = 0x40 (Enables I1_IA1)
  8001f1c:	2140      	movs	r1, #64	@ 0x40
  8001f1e:	2022      	movs	r0, #34	@ 0x22
  8001f20:	f7ff ff54 	bl	8001dcc <LIS3DH_write>
 
-		// 4. Set your threshold (250mg / 16mg = 16 = 0x10)
-		LIS3DH_write(0x32, 0x10);        // INT1_THS = 0x10
+		// 4. Set the threshold (250mg / 16mg = 16 = 0x10)
+		LIS3DH_write(INT1_THS, 0x10);        // INT1_THS = 0x10
  8001f24:	2110      	movs	r1, #16
  8001f26:	2032      	movs	r0, #50	@ 0x32
  8001f28:	f7ff ff50 	bl	8001dcc <LIS3DH_write>
 
 		// 5. Set the minimum duration the event must last to trigger (0 = triggers instantly)
-		LIS3DH_write(0x33, 0x00);        // INT1_DURATION = 0x00
+		LIS3DH_write(INT1_DUR, 0x00);        // INT1_DURATION = 0x00
  8001f2c:	2100      	movs	r1, #0
  8001f2e:	2033      	movs	r0, #51	@ 0x33
  8001f30:	f7ff ff4c 	bl	8001dcc <LIS3DH_write>
 
 		// 6. Configure the event condition: High event (OR combination) on X, Y, or Z axes
-		LIS3DH_write(0x30, 0x2A);        // INT1_CFG = 0x2A (00101010b -> ZHIE, YHIE, XHIE enabled)
+		LIS3DH_write(INT1_CFG, 0x2A);        // INT1_CFG = 0x2A (00101010b -> ZHIE, YHIE, XHIE enabled)
  8001f34:	212a      	movs	r1, #42	@ 0x2a
  8001f36:	2030      	movs	r0, #48	@ 0x30
  8001f38:	f7ff ff48 	bl	8001dcc <LIS3DH_write>
 
-		// 7. Optional: Latch the interrupt on the INT1 pin until you read INT1_SRC
-		 LIS3DH_write(0x24, 0x08);     // CTRL_REG5 = 0x08 (LIR1 = 1)
+		// 7. Latch the interrupt on the INT1 pin until read INT1_SRC
+		 LIS3DH_write(CTRL_REG5, 0x08);     // CTRL_REG5 = 0x08 (LIR1 = 1)
  8001f3c:	2108      	movs	r1, #8
  8001f3e:	2024      	movs	r0, #36	@ 0x24
  8001f40:	f7ff ff44 	bl	8001dcc <LIS3DH_write>
 
-		 LIS3DH_write(0x21, 0x01);  // High-pass filter enabled for INT1
+		 LIS3DH_write(CTRL_REG2, 0x01);  // High-pass filter enabled for INT1
  8001f44:	2101      	movs	r1, #1
  8001f46:	2021      	movs	r0, #33	@ 0x21
  8001f48:	f7ff ff40 	bl	8001dcc <LIS3DH_write>
-		// 8. FINALLY, turn the sensor on. (Power-up normal mode, 400Hz, XYZ enabled)
-		LIS3DH_write(0x20, 0x77);        // CTRL_REG1 = 0x77
+		// 8. Turn the sensor on. (Power-up normal mode, 400Hz, XYZ enabled)
+		LIS3DH_write(CTRL_REG1, 0x77);        // CTRL_REG1 = 0x77
  8001f4c:	2177      	movs	r1, #119	@ 0x77
  8001f4e:	2020      	movs	r0, #32
  8001f50:	f7ff ff3c 	bl	8001dcc <LIS3DH_write>
