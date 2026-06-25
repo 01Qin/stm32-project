@@ -40,9 +40,10 @@
 #define LIS3DH_DEVICE_ID        0x33  // Contents of WHO_AM_I register.
 #define WHO_AM_I	0x0F
 #define OUT_X_L		0x28
-#define OUT_ADC1_L		0x08	// ADC channel 1 conversion or temperature sensor data output.
+#define OUT_ADC1_L	0x08	// ADC channel 1 conversion or temperature sensor data output.
 
 #define CTRL_REG1	0x20
+#define CTRL_REG2	0x21
 #define CTRL_REG3	0x22
 #define CTRL_REG4	0x23
 #define CTRL_REG5	0x24
@@ -184,6 +185,9 @@ int main(void)
   OLED_CLS(Display);
   HAL_Delay(10);
 
+  uint8_t int1_status = 0;
+  uint8_t alarm_triggered = 0;
+
   while (1)
   {
 
@@ -217,6 +221,21 @@ int main(void)
 
 		 printf("\n");
 		 printf("X = %.2f, Y = %.2f, Z = %.2f, temperature = %.2f\r\n", Ax, Ay, Az, temperature);
+
+		 uint8_t reg_addr = 0x31;
+		     HAL_I2C_Master_Transmit(&hi2c2, LIS3DH_ADDR, &reg_addr, 1, 1000);
+		     HAL_I2C_Master_Receive(&hi2c2, LIS3DH_ADDR, &int1_status, 1, 1000);
+
+		     // Bit 6 (0x40) of INT1_SRC goes HIGH if any configured threshold event happened
+		     if (int1_status & 0x40)
+		     {
+		         alarm_triggered = 1;
+		         printf("!!! ALARM TRIGGERED !!! Threshold exceeded!\r\n");
+		     }
+		     else
+		     {
+		         alarm_triggered = 0;
+		     }
 
 		 uint8_t line = 0;
 		 char buf_x[16];
@@ -584,17 +603,43 @@ void LIS3DH_init(uint8_t reg_addr)
 	}
 	if(check == LIS3DH_DEVICE_ID)
 	{
+//
+//		LIS3DH_write(CTRL_REG5, 0x80);		//Reboot memory content.
+//		HAL_Delay(100);
+//		LIS3DH_write(CTRL_REG1, 0x00);		//Power-down.
+//		HAL_Delay(100);
+//		LIS3DH_write(CTRL_REG1, 0x77);		//Power-up normal mode, 400Hz, XYZ-axis enabled
+//		HAL_Delay(100);
+//		LIS3DH_write(CTRL_REG4, 0x80);		//0x00-> 2g, 0x10-> 4g, 0x20-> 8g, 0x30-> 16g and high-resolution disabled.
+//		HAL_Delay(100);
+//		LIS3DH_write(TEMP_CFG_REG, 0x08);		//Temperature sensor and ADC enabled.
+//		HAL_Delay(100);
 
-		LIS3DH_write(CTRL_REG5, 0x80);		//Reboot memory content.
-		HAL_Delay(100);
-		LIS3DH_write(CTRL_REG1, 0x00);		//Power-down.
-		HAL_Delay(100);
-		LIS3DH_write(CTRL_REG1, 0x77);		//Power-up normal mode, 400Hz, XYZ-axis enabled
-		HAL_Delay(100);
-		LIS3DH_write(CTRL_REG4, 0x80);		//0x00-> 2g, 0x10-> 4g, 0x20-> 8g, 0x30-> 16g and high-resolution disabled.
-		HAL_Delay(100);
-		LIS3DH_write(TEMP_CFG_REG, 0x08);		//Temperature sensor and ADC enabled.
-		HAL_Delay(100);
+		// 1. Reboot memory content to ensure a clean slate
+		LIS3DH_write(0x24, 0x80);        // CTRL_REG5 = 0x80
+		HAL_Delay(20);
+
+		// 2. Set Full Scale to ±2g and enable Block Data Update (BDU)
+		LIS3DH_write(0x23, 0x80);        // CTRL_REG4 = 0x80 (1 LSB threshold = 16mg)
+
+		// 3. Route the INT1 IA1 (Interrupt Activity 1) signal to the physical INT1 pin
+		LIS3DH_write(0x22, 0x40);        // CTRL_REG3 = 0x40 (Enables I1_IA1)
+
+		// 4. Set your threshold (250mg / 16mg = 16 = 0x10)
+		LIS3DH_write(0x32, 0x10);        // INT1_THS = 0x10
+
+		// 5. Set the minimum duration the event must last to trigger (0 = triggers instantly)
+		LIS3DH_write(0x33, 0x00);        // INT1_DURATION = 0x00
+
+		// 6. Configure the event condition: High event (OR combination) on X, Y, or Z axes
+		LIS3DH_write(0x30, 0x2A);        // INT1_CFG = 0x2A (00101010b -> ZHIE, YHIE, XHIE enabled)
+
+		// 7. Optional: Latch the interrupt on the INT1 pin until you read INT1_SRC
+		 LIS3DH_write(0x24, 0x08);     // CTRL_REG5 = 0x08 (LIR1 = 1)
+
+		// 8. FINALLY, turn the sensor on. (Power-up normal mode, 400Hz, XYZ enabled)
+		LIS3DH_write(0x20, 0x77);        // CTRL_REG1 = 0x77
+		HAL_Delay(20);
 	}
 }
 
