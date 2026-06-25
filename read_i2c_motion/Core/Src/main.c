@@ -39,13 +39,20 @@
 #define LIS3DH_ADDR             0x18<<1  // 7-bit I2C address. If SA0 is pulled high, address is 0x19.
 #define LIS3DH_DEVICE_ID        0x33  // Contents of WHO_AM_I register.
 #define WHO_AM_I	0x0F
+#define OUT_X_L		0x28
+#define OUT_ADC1_L		0x08	// ADC channel 1 conversion or temperature sensor data output.
+
 #define CTRL_REG1	0x20
+#define CTRL_REG3	0x22
 #define CTRL_REG4	0x23
 #define CTRL_REG5	0x24
-#define OUT_X_L		0x28
+
+#define INT1_CFG    0x30
+#define INT1_SRC    0x31  // r
+#define INT1_THS    0x32  // rw
+#define INT1_DUR    0x33
 
 #define TEMP_CFG_REG	0x1F
-#define OUT_ADC1_L		0x08	// ADC channel 1 conversion or temperature sensor data output.
 
 /* USER CODE END PD */
 
