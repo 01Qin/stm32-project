@@ -197,8 +197,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		LIS3DH_read_accel(0x28);		//X-axis acceleration data output. OUT_X_L: 0x28
-		LIS3DH_read_temp(0x08);			//temperature sensor data output. OUT_ADC1_L: 0x08
+		LIS3DH_read_accel(OUT_X_L);		//X-axis acceleration data output.
+		LIS3DH_read_temp(OUT_ADC1_L);			//temperature sensor data output.
 
 		X_RAW = (accel_data[1]<<8|accel_data[0]);
 		Y_RAW = (accel_data[3]<<8|accel_data[2]);
@@ -246,14 +246,26 @@ int main(void)
 		 sprintf(buf_y, "Y: %.2f  ", Ay);
 		 sprintf(buf_z, "Z: %.2f  ", Az);
 
-		 OLED_P8x16Str(Display, 0, 0, "Sensor values:");
+		 OLED_P6x8Str(Display, 0, 0, "Sensor values:");
+		 line++;
+		 OLED_P6x8Str(Display, 0, line, buf_x);
+		 line++;
+		 OLED_P6x8Str(Display, 0, line, buf_y);
+		 line++;
+		 OLED_P6x8Str(Display, 0, line, buf_z);
+		 line++;
 
-		 OLED_P8x16Str(Display, 0, (line+1) * 2, buf_x);
-		 line++;
-		 OLED_P8x16Str(Display, 0, (line+1) * 2, buf_y);
-		 line++;
-		 OLED_P8x16Str(Display, 0, (line+1) * 2, buf_z);
-		 line++;
+		 if (alarm_triggered)
+		     {
+		         // Highlight an active warning at the bottom of the screen
+			 	 OLED_P6x8Str(Display, 0, line, "!! HIT DETECTED !!");
+//		         line++;
+		     }
+		     else
+		     {
+		         // Overwrite old alarm text with blank spaces to clear it
+		    	 OLED_P6x8Str(Display, 0, line, "                  ");
+		     }
 		HAL_Delay(1000);
   }
   /* USER CODE END 3 */
@@ -615,6 +627,7 @@ void LIS3DH_init(uint8_t reg_addr)
 //		LIS3DH_write(TEMP_CFG_REG, 0x08);		//Temperature sensor and ADC enabled.
 //		HAL_Delay(100);
 
+//		Startup sequence
 		// 1. Reboot memory content to ensure a clean slate
 		LIS3DH_write(0x24, 0x80);        // CTRL_REG5 = 0x80
 		HAL_Delay(20);
@@ -625,7 +638,7 @@ void LIS3DH_init(uint8_t reg_addr)
 		// 3. Route the INT1 IA1 (Interrupt Activity 1) signal to the physical INT1 pin
 		LIS3DH_write(0x22, 0x40);        // CTRL_REG3 = 0x40 (Enables I1_IA1)
 
-		// 4. Set your threshold (250mg / 16mg = 16 = 0x10)
+		// 4. Set the threshold (250mg / 16mg = 16 = 0x10)
 		LIS3DH_write(0x32, 0x10);        // INT1_THS = 0x10
 
 		// 5. Set the minimum duration the event must last to trigger (0 = triggers instantly)
@@ -634,10 +647,11 @@ void LIS3DH_init(uint8_t reg_addr)
 		// 6. Configure the event condition: High event (OR combination) on X, Y, or Z axes
 		LIS3DH_write(0x30, 0x2A);        // INT1_CFG = 0x2A (00101010b -> ZHIE, YHIE, XHIE enabled)
 
-		// 7. Optional: Latch the interrupt on the INT1 pin until you read INT1_SRC
+		// 7. Latch the interrupt on the INT1 pin until read INT1_SRC
 		 LIS3DH_write(0x24, 0x08);     // CTRL_REG5 = 0x08 (LIR1 = 1)
 
-		// 8. FINALLY, turn the sensor on. (Power-up normal mode, 400Hz, XYZ enabled)
+		 LIS3DH_write(0x21, 0x01);  // High-pass filter enabled for INT1
+		// 8. Turn the sensor on. (Power-up normal mode, 400Hz, XYZ enabled)
 		LIS3DH_write(0x20, 0x77);        // CTRL_REG1 = 0x77
 		HAL_Delay(20);
 	}
