@@ -220,7 +220,6 @@ int main(void)
 		 sprintf(buf_y, "Y: %.2f  ", Ay);
 		 sprintf(buf_z, "Z: %.2f  ", Az);
 
-//		 OLED_CLS(Display);
 		 OLED_P8x16Str(Display, 0, 0, "Sensor values:");
 
 		 OLED_P8x16Str(Display, 0, (line+1) * 2, buf_x);
@@ -579,15 +578,15 @@ void LIS3DH_init(uint8_t reg_addr)
 	if(check == LIS3DH_DEVICE_ID)
 	{
 
-		LIS3DH_write(0x24, 0x80);		//Reboot memory content. CTRL_REG5: 0x24
+		LIS3DH_write(CTRL_REG5, 0x80);		//Reboot memory content.
 		HAL_Delay(100);
-		LIS3DH_write(0x20, 0x00);		//Power-down. CTRL_REG1: 0x20
+		LIS3DH_write(CTRL_REG1, 0x00);		//Power-down.
 		HAL_Delay(100);
-		LIS3DH_write(0x20, 0x77);		//Power-up normal mode, 400Hz, XYZ-axis enabled
+		LIS3DH_write(CTRL_REG1, 0x77);		//Power-up normal mode, 400Hz, XYZ-axis enabled
 		HAL_Delay(100);
-		LIS3DH_write(0x23, 0x80);		//0x00-> 2g, 0x10-> 4g, 0x20-> 8g, 0x30-> 16g and high-resolution disabled. CTRL_REG4: 0x23
+		LIS3DH_write(CTRL_REG4, 0x80);		//0x00-> 2g, 0x10-> 4g, 0x20-> 8g, 0x30-> 16g and high-resolution disabled.
 		HAL_Delay(100);
-		LIS3DH_write(0x1F, 0x08);		//Temperature sensor and ADC enabled. TEMP_CFG_REG: 0x1F
+		LIS3DH_write(TEMP_CFG_REG, 0x08);		//Temperature sensor and ADC enabled.
 		HAL_Delay(100);
 	}
 }

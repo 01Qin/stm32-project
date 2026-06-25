@@ -2577,7 +2577,6 @@ int main(void)
  80017de:	4938      	ldr	r1, [pc, #224]	@ (80018c0 <main+0x340>)
  80017e0:	f007 f966 	bl	8008ab0 <siprintf>
 
-//		 OLED_CLS(Display);
 		 OLED_P8x16Str(Display, 0, 0, "Sensor values:");
  80017e4:	4b37      	ldr	r3, [pc, #220]	@ (80018c4 <main+0x344>)
  80017e6:	9300      	str	r3, [sp, #0]
