@@ -218,7 +218,7 @@ int main(void)
 		TEMP_RAW = (temp_data[1]<<8|temp_data[0]);
 		// Convert into 'celsius',
 		temperature = ( ( (float)TEMP_RAW / 64.0f ) / 4.0f ) + 25.0f;
-
+// todo: use aht20 sensor
 		 printf("\n");
 		 printf("X = %.2f, Y = %.2f, Z = %.2f, temperature = %.2f\r\n", Ax, Ay, Az, temperature);
 
