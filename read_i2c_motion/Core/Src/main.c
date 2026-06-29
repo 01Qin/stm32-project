@@ -255,7 +255,7 @@ int main(void)
 		 OLED_P6x8Str(Display, 0, (line + 1) * 2, buf_z);
 
 
-//		 OLED_P6x8Str(Display, 0, (line + 1) * 2, "                ");
+
 		 if (alarm_triggered)
 		     {
 		         // Highlight an active warning at the bottom of the screen
@@ -263,7 +263,7 @@ int main(void)
 			 	 OLED_P6x8Str(Display, 0, (line + 1) * 2, "HIT DETECTED !!");
 			 	 HAL_Delay(1000);
 		    	 OLED_P6x8Str(Display, 0, (line + 1) * 2, "                ");
-//		         line++;
+
 		     }
 
 		HAL_Delay(1000);
