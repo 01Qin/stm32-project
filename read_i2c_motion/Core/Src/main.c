@@ -230,7 +230,7 @@ int main(void)
 		     if (int1_status & 0x40)
 		     {
 		         alarm_triggered = 1;
-		         printf("!!! ALARM TRIGGERED !!! Threshold exceeded!\r\n");
+		         printf("ALARM TRIGGERED !!! Threshold exceeded!\r\n");
 		     }
 		     else
 		     {
@@ -247,25 +247,25 @@ int main(void)
 		 sprintf(buf_z, "Z: %.2f  ", Az);
 
 		 OLED_P6x8Str(Display, 0, 0, "Sensor values:");
-		 line++;
-		 OLED_P6x8Str(Display, 0, (line+1)*2, buf_x);
-		 line++;
-		 OLED_P6x8Str(Display, 0, line, buf_y);
-		 line++;
-		 OLED_P6x8Str(Display, 0, line, buf_z);
-		 line++;
 
+		 OLED_P6x8Str(Display, 0, (line + 1) * 2, buf_x);
+		 line++;
+		 OLED_P6x8Str(Display, 0, (line + 1) * 2, buf_y);
+		 line++;
+		 OLED_P6x8Str(Display, 0, (line + 1) * 2, buf_z);
+
+
+//		 OLED_P6x8Str(Display, 0, (line + 1) * 2, "                ");
 		 if (alarm_triggered)
 		     {
 		         // Highlight an active warning at the bottom of the screen
-			 	 OLED_P6x8Str(Display, 0, line, "!! HIT DETECTED !!");
+
+			 	 OLED_P6x8Str(Display, 0, (line + 1) * 2, "HIT DETECTED !!");
+			 	 HAL_Delay(1000);
+		    	 OLED_P6x8Str(Display, 0, (line + 1) * 2, "                ");
 //		         line++;
 		     }
-		     else
-		     {
-		         // Overwrite old alarm text with blank spaces to clear it
-		    	 OLED_P6x8Str(Display, 0, line, "                  ");
-		     }
+
 		HAL_Delay(1000);
   }
   /* USER CODE END 3 */
