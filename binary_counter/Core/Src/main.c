@@ -58,6 +58,7 @@ COM_InitTypeDef BspCOMInit;
 unsigned int countUp = 0;
 unsigned int countDown = 0x1F; // dec 31
 int j = 0;
+unsigned int sq = 4;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -187,6 +188,21 @@ int main(void)
 
     	   }
     	   j = 0;
+       }
+       else {
+    	   countUp = 0;
+    	   countDown = 0x1F;
+    	   if (sq < 9){
+    		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
+
+    		   HAL_GPIO_WritePin(GPIOA, 1UL <<sq, HIGH);
+    		   HAL_Delay(1000);
+    		   sq++;
+    	   }
+    	   else {
+    		   sq =4;
+    	   }
+    	   j=0;
        }
 
 
