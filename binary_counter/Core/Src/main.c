@@ -15,6 +15,12 @@
   *
   ******************************************************************************
   */
+
+/**
+A program to do a binary counter that will count up to deceimal 31,
+which is  11111 in binary and count down to zero.
+  */
+
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -145,7 +151,7 @@ int main(void)
 
 //    	    flash led
     	   while(j < 3){
-    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, HIGH);
+    		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, HIGH);
     		   HAL_Delay(100);
     		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
     		   HAL_Delay(100);
@@ -248,19 +254,19 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	}
 }
 
-// LED PB8 configuration
+// LED pin PA4, PA5, PA6, PA7, PA8 configuration
 void GPIO_led_Config(void){
 
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitTypeDef GPIOB_Init = {};
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	GPIO_InitTypeDef GPIOA_Init = {};
 
-	GPIOB_Init.Pin = GPIO_PIN_8;
-	GPIOB_Init.Mode = GPIO_MODE_OUTPUT_PP;
-
-	HAL_GPIO_Init(GPIOB, &GPIOB_Init);
+	GPIOA_Init.Pin = GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 |GPIO_PIN_8;
+	GPIOA_Init.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIOA_Init.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOA, &GPIOA_Init);
 }
 
-// Button PA0 configuration
+// Button PA0, PA1 configuration
 void GPIO_button_Config(void){
 
 //	enable clock for gpio a, rcc register
@@ -293,6 +299,12 @@ void GPIO_button_Config(void){
   *
   ******************************************************************************
   */
+
+/**
+A program to do a binary counter that will count up to deceimal 31,
+which is  11111 in binary and count down to zero.
+  */
+
 /* USER CODE END Header */
 
 /**
