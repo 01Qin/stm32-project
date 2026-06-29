@@ -1,5 +1,0 @@
-../Core/Src/lis3dh_orientation.c:126:6:lis3dh_orientation	8
-../Core/Src/lis3dh_orientation.c:240:16:platform_write	1
-../Core/Src/lis3dh_orientation.c:273:16:platform_read	1
-../Core/Src/lis3dh_orientation.c:303:13:tx_com	1
-../Core/Src/lis3dh_orientation.c:320:13:platform_delay	1

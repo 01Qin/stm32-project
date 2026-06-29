@@ -1,5 +1,0 @@
-../Core/Src/lis3dh_wake_up.c:127:6:lis3dh_wake_up	48	static
-../Core/Src/lis3dh_wake_up.c:209:16:platform_write	40	static
-../Core/Src/lis3dh_wake_up.c:241:16:platform_read	40	static
-../Core/Src/lis3dh_wake_up.c:271:13:tx_com	16	static
-../Core/Src/lis3dh_wake_up.c:288:13:platform_delay	16	static

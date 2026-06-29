@@ -1,5 +1,0 @@
-../Core/Src/lis3dh_self_test.c:137:6:lis3dh_self_test	88	static
-../Core/Src/lis3dh_self_test.c:279:16:platform_write	40	static
-../Core/Src/lis3dh_self_test.c:312:16:platform_read	40	static
-../Core/Src/lis3dh_self_test.c:342:13:tx_com	16	static
-../Core/Src/lis3dh_self_test.c:359:13:platform_delay	16	static

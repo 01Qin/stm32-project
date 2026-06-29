@@ -248,7 +248,7 @@ int main(void)
 
 		 OLED_P6x8Str(Display, 0, 0, "Sensor values:");
 		 line++;
-		 OLED_P6x8Str(Display, 0, line, buf_x);
+		 OLED_P6x8Str(Display, 0, (line+1)*2, buf_x);
 		 line++;
 		 OLED_P6x8Str(Display, 0, line, buf_y);
 		 line++;

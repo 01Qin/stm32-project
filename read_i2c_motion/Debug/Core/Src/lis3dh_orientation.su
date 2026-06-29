@@ -1,5 +1,0 @@
-../Core/Src/lis3dh_orientation.c:126:6:lis3dh_orientation	40	static
-../Core/Src/lis3dh_orientation.c:240:16:platform_write	40	static
-../Core/Src/lis3dh_orientation.c:273:16:platform_read	40	static
-../Core/Src/lis3dh_orientation.c:303:13:tx_com	16	static
-../Core/Src/lis3dh_orientation.c:320:13:platform_delay	16	static
