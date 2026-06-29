@@ -56,7 +56,7 @@ COM_InitTypeDef BspCOMInit;
 
 /* USER CODE BEGIN PV */
 unsigned int countUp = 0;
-unsigned int countDown = 0x1F;
+unsigned int countDown = 0x1F; // dec 31
 int j = 0;
 /* USER CODE END PV */
 
@@ -142,30 +142,30 @@ int main(void)
   {
 
 /* -- Sample board code to toggle leds ---- */
-       BSP_LED_Toggle(LED_GREEN);
+//       BSP_LED_Toggle(LED_GREEN);
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+//       two button are pressed
        if (!HAL_GPIO_ReadPin(GPIOA, BtnUp) && !HAL_GPIO_ReadPin(GPIOA, BtnDown)){
 
-//    	    flash led
-    	   while(j < 3){
-    		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, HIGH);
+//    	    flash leds
+    	   while(j < 2){
+    		   HAL_GPIO_WritePin(GPIOA, 0x1F8, HIGH);
     		   HAL_Delay(100);
-    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+    		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
     		   HAL_Delay(100);
     		   j++;
     	   }
-    	   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+    	   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
   }
-       if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 1 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 0){
-    	   if (countUp < 5){
-    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, LOW);
+       else if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 1 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 0){
+    	   if (countUp < 32){
+    		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
     		   HAL_Delay(1000);
-    		   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, HIGH);
+    		   HAL_GPIO_WritePin(GPIOA, countUp <<4, HIGH);
     		   HAL_Delay(1000);
-
     		   countUp++;
     	   } else {
     		   countUp = 0;
@@ -174,16 +174,26 @@ int main(void)
     	   }
     	   j = 0;
        }
-       else {
-    	   countUp = 0;
-    	   countDown = 0x1F;
+       else if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 0 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 1){
+    	   if (countDown > 0){
+    		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
+    		   HAL_Delay(1000);
+    		   HAL_GPIO_WritePin(GPIOA, countDown <<4, HIGH);
+    		   HAL_Delay(1000);
+    		   countDown--;
+    	   } else {
+    		   countDown = 0x1F;
+    		   HAL_Delay(2000);
 
+    	   }
+    	   j = 0;
        }
 
 
        }
   /* USER CODE END 3 */
 }
+
 
 /**
   * @brief System Clock Configuration
