@@ -164,7 +164,7 @@ int main(void)
        else if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 1 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 0){
     	   if (countUp < 32){
     		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
-    		   HAL_Delay(1000);
+//    		   HAL_Delay(1000);
     		   HAL_GPIO_WritePin(GPIOA, countUp <<4, HIGH);
     		   HAL_Delay(1000);
     		   countUp++;
@@ -178,7 +178,7 @@ int main(void)
        else if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 0 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 1){
     	   if (countDown > 0){
     		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
-    		   HAL_Delay(1000);
+//    		   HAL_Delay(1000);
     		   HAL_GPIO_WritePin(GPIOA, countDown <<4, HIGH);
     		   HAL_Delay(1000);
     		   countDown--;
