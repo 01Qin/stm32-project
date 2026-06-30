@@ -258,8 +258,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 
 void GPIO_Config(void){
 	RCC->AHB2ENR |= (1UL<<1) | (1UL<<1) | (1UL<<2) | (1UL<<3) | (1UL<<4);
-	GPIOB->MODER |= 1UL<<16;
-	GPIOB->OTYPER &= ~(0x100 << 8);
+	GPIOA->MODER |= 1UL<<16;
+	GPIOA->OTYPER &= ~(0x100 << 8);
 	GPIOA->MODER = 0x00;
 	GPIOA->PUPDR |= (1UL<<1) | (1UL<<3);
 }
@@ -269,9 +269,9 @@ void GPIO_led_Config(void){
 
 	RCC->AHB2ENR |= (1UL<<1);
 	//	set pin mode as output
-	GPIOB->MODER |= 1UL<<16;
+	GPIOA->MODER |= 1UL<<16;
 //	output register configuration
-	GPIOB->OTYPER &= ~(0x100 << 8);
+	GPIOA->OTYPER &= ~(0x100 << 8);
 }
 
 // Button PA0, PA1 configuration
