@@ -35,34 +35,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := read_i2c_addr
+BUILD_ARTIFACT_NAME := encoder
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-read_i2c_addr.elf \
+encoder.elf \
 
 MAP_FILES += \
-read_i2c_addr.map \
+encoder.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-read_i2c_addr.list \
+encoder.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: read_i2c_addr.elf secondary-outputs
+main-build: encoder.elf secondary-outputs
 
 # Tool invocations
-read_i2c_addr.elf read_i2c_addr.map: $(OBJS) $(USER_OBJS) C:\ST\Projects\stm32-project\read_i2c_addr\STM32G431KBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "read_i2c_addr.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\ST\Projects\stm32-project\read_i2c_addr\STM32G431KBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="read_i2c_addr.map" -Wl,--cref -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+encoder.elf encoder.map: $(OBJS) $(USER_OBJS) C:\ST\Projects\stm32-project\encoder\STM32G431KBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "encoder.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\ST\Projects\stm32-project\encoder\STM32G431KBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="encoder.map" -Wl,--cref -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -71,14 +71,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-read_i2c_addr.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "read_i2c_addr.list"
+encoder.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "encoder.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout read_i2c_addr.elf read_i2c_addr.list read_i2c_addr.map
+	-$(RM) default.size.stdout encoder.elf encoder.list encoder.map
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
