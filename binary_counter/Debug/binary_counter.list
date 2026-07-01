@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  0001ed4c  00000000  00000000  0001a66d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00013d8c  00000000  00000000  000393b9  2**0
+ 17 .debug_line   00013d8d  00000000  00000000  000393b9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000bbd49  00000000  00000000  0004d145  2**0
+ 18 .debug_str    000bbd49  00000000  00000000  0004d146  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  00108e8e  2**0
+ 19 .comment      00000043  00000000  00000000  00108e8f  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00003b58  00000000  00000000  00108ed4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -918,7 +918,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//       two button are pressed
+//       two buttons are pressed
        if (!HAL_GPIO_ReadPin(GPIOA, BtnUp) && !HAL_GPIO_ReadPin(GPIOA, BtnDown)){
  80008ac:	2102      	movs	r1, #2
  80008ae:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
@@ -969,7 +969,7 @@ int main(void)
  800090a:	f44f 71fc 	mov.w	r1, #504	@ 0x1f8
  800090e:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  8000912:	f001 f82b 	bl	800196c <HAL_GPIO_WritePin>
- 8000916:	e0a2      	b.n	8000a5e <main+0x216>
+ 8000916:	e0a1      	b.n	8000a5c <main+0x214>
   }
        else if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 1 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 0){
  8000918:	2102      	movs	r1, #2
@@ -977,173 +977,172 @@ int main(void)
  800091e:	f001 f805 	bl	800192c <HAL_GPIO_ReadPin>
  8000922:	4603      	mov	r3, r0
  8000924:	2b01      	cmp	r3, #1
- 8000926:	d132      	bne.n	800098e <main+0x146>
+ 8000926:	d135      	bne.n	8000994 <main+0x14c>
  8000928:	2101      	movs	r1, #1
  800092a:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  800092e:	f000 fffd 	bl	800192c <HAL_GPIO_ReadPin>
  8000932:	4603      	mov	r3, r0
  8000934:	2b00      	cmp	r3, #0
- 8000936:	d12a      	bne.n	800098e <main+0x146>
+ 8000936:	d12d      	bne.n	8000994 <main+0x14c>
     	   if (countUp < 32){
  8000938:	4b4c      	ldr	r3, [pc, #304]	@ (8000a6c <main+0x224>)
  800093a:	681b      	ldr	r3, [r3, #0]
  800093c:	2b1f      	cmp	r3, #31
- 800093e:	d81b      	bhi.n	8000978 <main+0x130>
+ 800093e:	d81e      	bhi.n	800097e <main+0x136>
     		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
  8000940:	2200      	movs	r2, #0
  8000942:	f44f 71fc 	mov.w	r1, #504	@ 0x1f8
  8000946:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  800094a:	f001 f80f 	bl	800196c <HAL_GPIO_WritePin>
-//    		   HAL_Delay(1000);
+    		   HAL_Delay(100);
+ 800094e:	2064      	movs	r0, #100	@ 0x64
+ 8000950:	f000 fc2e 	bl	80011b0 <HAL_Delay>
     		   HAL_GPIO_WritePin(GPIOA, countUp <<4, HIGH);
- 800094e:	4b47      	ldr	r3, [pc, #284]	@ (8000a6c <main+0x224>)
- 8000950:	681b      	ldr	r3, [r3, #0]
- 8000952:	b29b      	uxth	r3, r3
- 8000954:	011b      	lsls	r3, r3, #4
- 8000956:	b29b      	uxth	r3, r3
- 8000958:	2201      	movs	r2, #1
- 800095a:	4619      	mov	r1, r3
- 800095c:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
- 8000960:	f001 f804 	bl	800196c <HAL_GPIO_WritePin>
+ 8000954:	4b45      	ldr	r3, [pc, #276]	@ (8000a6c <main+0x224>)
+ 8000956:	681b      	ldr	r3, [r3, #0]
+ 8000958:	b29b      	uxth	r3, r3
+ 800095a:	011b      	lsls	r3, r3, #4
+ 800095c:	b29b      	uxth	r3, r3
+ 800095e:	2201      	movs	r2, #1
+ 8000960:	4619      	mov	r1, r3
+ 8000962:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
+ 8000966:	f001 f801 	bl	800196c <HAL_GPIO_WritePin>
     		   HAL_Delay(1000);
- 8000964:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
- 8000968:	f000 fc22 	bl	80011b0 <HAL_Delay>
+ 800096a:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
+ 800096e:	f000 fc1f 	bl	80011b0 <HAL_Delay>
     		   countUp++;
- 800096c:	4b3f      	ldr	r3, [pc, #252]	@ (8000a6c <main+0x224>)
- 800096e:	681b      	ldr	r3, [r3, #0]
- 8000970:	3301      	adds	r3, #1
- 8000972:	4a3e      	ldr	r2, [pc, #248]	@ (8000a6c <main+0x224>)
- 8000974:	6013      	str	r3, [r2, #0]
- 8000976:	e006      	b.n	8000986 <main+0x13e>
+ 8000972:	4b3e      	ldr	r3, [pc, #248]	@ (8000a6c <main+0x224>)
+ 8000974:	681b      	ldr	r3, [r3, #0]
+ 8000976:	3301      	adds	r3, #1
+ 8000978:	4a3c      	ldr	r2, [pc, #240]	@ (8000a6c <main+0x224>)
+ 800097a:	6013      	str	r3, [r2, #0]
+ 800097c:	e006      	b.n	800098c <main+0x144>
     	   } else {
     		   countUp = 0;
- 8000978:	4b3c      	ldr	r3, [pc, #240]	@ (8000a6c <main+0x224>)
- 800097a:	2200      	movs	r2, #0
- 800097c:	601a      	str	r2, [r3, #0]
+ 800097e:	4b3b      	ldr	r3, [pc, #236]	@ (8000a6c <main+0x224>)
+ 8000980:	2200      	movs	r2, #0
+ 8000982:	601a      	str	r2, [r3, #0]
     		   HAL_Delay(2000);
- 800097e:	f44f 60fa 	mov.w	r0, #2000	@ 0x7d0
- 8000982:	f000 fc15 	bl	80011b0 <HAL_Delay>
+ 8000984:	f44f 60fa 	mov.w	r0, #2000	@ 0x7d0
+ 8000988:	f000 fc12 	bl	80011b0 <HAL_Delay>
 
     	   }
     	   j = 0;
- 8000986:	4b38      	ldr	r3, [pc, #224]	@ (8000a68 <main+0x220>)
- 8000988:	2200      	movs	r2, #0
- 800098a:	601a      	str	r2, [r3, #0]
- 800098c:	e067      	b.n	8000a5e <main+0x216>
+ 800098c:	4b36      	ldr	r3, [pc, #216]	@ (8000a68 <main+0x220>)
+ 800098e:	2200      	movs	r2, #0
+ 8000990:	601a      	str	r2, [r3, #0]
+ 8000992:	e063      	b.n	8000a5c <main+0x214>
        }
        else if (HAL_GPIO_ReadPin(GPIOA, BtnUp) == 0 && HAL_GPIO_ReadPin(GPIOA, BtnDown) == 1){
- 800098e:	2102      	movs	r1, #2
- 8000990:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
- 8000994:	f000 ffca 	bl	800192c <HAL_GPIO_ReadPin>
- 8000998:	4603      	mov	r3, r0
- 800099a:	2b00      	cmp	r3, #0
- 800099c:	d132      	bne.n	8000a04 <main+0x1bc>
- 800099e:	2101      	movs	r1, #1
- 80009a0:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
- 80009a4:	f000 ffc2 	bl	800192c <HAL_GPIO_ReadPin>
- 80009a8:	4603      	mov	r3, r0
- 80009aa:	2b01      	cmp	r3, #1
- 80009ac:	d12a      	bne.n	8000a04 <main+0x1bc>
+ 8000994:	2102      	movs	r1, #2
+ 8000996:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
+ 800099a:	f000 ffc7 	bl	800192c <HAL_GPIO_ReadPin>
+ 800099e:	4603      	mov	r3, r0
+ 80009a0:	2b00      	cmp	r3, #0
+ 80009a2:	d12b      	bne.n	80009fc <main+0x1b4>
+ 80009a4:	2101      	movs	r1, #1
+ 80009a6:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
+ 80009aa:	f000 ffbf 	bl	800192c <HAL_GPIO_ReadPin>
+ 80009ae:	4603      	mov	r3, r0
+ 80009b0:	2b01      	cmp	r3, #1
+ 80009b2:	d123      	bne.n	80009fc <main+0x1b4>
     	   if (countDown > 0){
- 80009ae:	4b30      	ldr	r3, [pc, #192]	@ (8000a70 <main+0x228>)
- 80009b0:	681b      	ldr	r3, [r3, #0]
- 80009b2:	2b00      	cmp	r3, #0
- 80009b4:	d01b      	beq.n	80009ee <main+0x1a6>
-    		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
- 80009b6:	2200      	movs	r2, #0
- 80009b8:	f44f 71fc 	mov.w	r1, #504	@ 0x1f8
- 80009bc:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
- 80009c0:	f000 ffd4 	bl	800196c <HAL_GPIO_WritePin>
-//    		   HAL_Delay(1000);
+ 80009b4:	4b2e      	ldr	r3, [pc, #184]	@ (8000a70 <main+0x228>)
+ 80009b6:	681b      	ldr	r3, [r3, #0]
+ 80009b8:	2b00      	cmp	r3, #0
+ 80009ba:	d014      	beq.n	80009e6 <main+0x19e>
     		   HAL_GPIO_WritePin(GPIOA, countDown <<4, HIGH);
- 80009c4:	4b2a      	ldr	r3, [pc, #168]	@ (8000a70 <main+0x228>)
- 80009c6:	681b      	ldr	r3, [r3, #0]
- 80009c8:	b29b      	uxth	r3, r3
- 80009ca:	011b      	lsls	r3, r3, #4
- 80009cc:	b29b      	uxth	r3, r3
- 80009ce:	2201      	movs	r2, #1
- 80009d0:	4619      	mov	r1, r3
- 80009d2:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
- 80009d6:	f000 ffc9 	bl	800196c <HAL_GPIO_WritePin>
+ 80009bc:	4b2c      	ldr	r3, [pc, #176]	@ (8000a70 <main+0x228>)
+ 80009be:	681b      	ldr	r3, [r3, #0]
+ 80009c0:	b29b      	uxth	r3, r3
+ 80009c2:	011b      	lsls	r3, r3, #4
+ 80009c4:	b29b      	uxth	r3, r3
+ 80009c6:	2201      	movs	r2, #1
+ 80009c8:	4619      	mov	r1, r3
+ 80009ca:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
+ 80009ce:	f000 ffcd 	bl	800196c <HAL_GPIO_WritePin>
     		   HAL_Delay(1000);
- 80009da:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
- 80009de:	f000 fbe7 	bl	80011b0 <HAL_Delay>
+ 80009d2:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
+ 80009d6:	f000 fbeb 	bl	80011b0 <HAL_Delay>
     		   countDown--;
- 80009e2:	4b23      	ldr	r3, [pc, #140]	@ (8000a70 <main+0x228>)
- 80009e4:	681b      	ldr	r3, [r3, #0]
- 80009e6:	3b01      	subs	r3, #1
- 80009e8:	4a21      	ldr	r2, [pc, #132]	@ (8000a70 <main+0x228>)
- 80009ea:	6013      	str	r3, [r2, #0]
- 80009ec:	e006      	b.n	80009fc <main+0x1b4>
+ 80009da:	4b25      	ldr	r3, [pc, #148]	@ (8000a70 <main+0x228>)
+ 80009dc:	681b      	ldr	r3, [r3, #0]
+ 80009de:	3b01      	subs	r3, #1
+ 80009e0:	4a23      	ldr	r2, [pc, #140]	@ (8000a70 <main+0x228>)
+ 80009e2:	6013      	str	r3, [r2, #0]
+ 80009e4:	e006      	b.n	80009f4 <main+0x1ac>
     	   } else {
     		   countDown = 0x1F;
- 80009ee:	4b20      	ldr	r3, [pc, #128]	@ (8000a70 <main+0x228>)
- 80009f0:	221f      	movs	r2, #31
- 80009f2:	601a      	str	r2, [r3, #0]
+ 80009e6:	4b22      	ldr	r3, [pc, #136]	@ (8000a70 <main+0x228>)
+ 80009e8:	221f      	movs	r2, #31
+ 80009ea:	601a      	str	r2, [r3, #0]
     		   HAL_Delay(2000);
- 80009f4:	f44f 60fa 	mov.w	r0, #2000	@ 0x7d0
- 80009f8:	f000 fbda 	bl	80011b0 <HAL_Delay>
+ 80009ec:	f44f 60fa 	mov.w	r0, #2000	@ 0x7d0
+ 80009f0:	f000 fbde 	bl	80011b0 <HAL_Delay>
 
     	   }
     	   j = 0;
- 80009fc:	4b1a      	ldr	r3, [pc, #104]	@ (8000a68 <main+0x220>)
- 80009fe:	2200      	movs	r2, #0
- 8000a00:	601a      	str	r2, [r3, #0]
- 8000a02:	e02c      	b.n	8000a5e <main+0x216>
+ 80009f4:	4b1c      	ldr	r3, [pc, #112]	@ (8000a68 <main+0x220>)
+ 80009f6:	2200      	movs	r2, #0
+ 80009f8:	601a      	str	r2, [r3, #0]
+ 80009fa:	e02f      	b.n	8000a5c <main+0x214>
        }
        else {
     	   countUp = 0;
- 8000a04:	4b19      	ldr	r3, [pc, #100]	@ (8000a6c <main+0x224>)
- 8000a06:	2200      	movs	r2, #0
- 8000a08:	601a      	str	r2, [r3, #0]
+ 80009fc:	4b1b      	ldr	r3, [pc, #108]	@ (8000a6c <main+0x224>)
+ 80009fe:	2200      	movs	r2, #0
+ 8000a00:	601a      	str	r2, [r3, #0]
     	   countDown = 0x1F;
- 8000a0a:	4b19      	ldr	r3, [pc, #100]	@ (8000a70 <main+0x228>)
- 8000a0c:	221f      	movs	r2, #31
- 8000a0e:	601a      	str	r2, [r3, #0]
+ 8000a02:	4b1b      	ldr	r3, [pc, #108]	@ (8000a70 <main+0x228>)
+ 8000a04:	221f      	movs	r2, #31
+ 8000a06:	601a      	str	r2, [r3, #0]
     	   if (sq < 9){
- 8000a10:	4b18      	ldr	r3, [pc, #96]	@ (8000a74 <main+0x22c>)
- 8000a12:	681b      	ldr	r3, [r3, #0]
- 8000a14:	2b08      	cmp	r3, #8
- 8000a16:	d81c      	bhi.n	8000a52 <main+0x20a>
+ 8000a08:	4b1a      	ldr	r3, [pc, #104]	@ (8000a74 <main+0x22c>)
+ 8000a0a:	681b      	ldr	r3, [r3, #0]
+ 8000a0c:	2b08      	cmp	r3, #8
+ 8000a0e:	d81f      	bhi.n	8000a50 <main+0x208>
     		   HAL_GPIO_WritePin(GPIOA, 0x1F8, LOW);
- 8000a18:	2200      	movs	r2, #0
- 8000a1a:	f44f 71fc 	mov.w	r1, #504	@ 0x1f8
- 8000a1e:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
- 8000a22:	f000 ffa3 	bl	800196c <HAL_GPIO_WritePin>
-
+ 8000a10:	2200      	movs	r2, #0
+ 8000a12:	f44f 71fc 	mov.w	r1, #504	@ 0x1f8
+ 8000a16:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
+ 8000a1a:	f000 ffa7 	bl	800196c <HAL_GPIO_WritePin>
+    		   HAL_Delay(100);
+ 8000a1e:	2064      	movs	r0, #100	@ 0x64
+ 8000a20:	f000 fbc6 	bl	80011b0 <HAL_Delay>
     		   HAL_GPIO_WritePin(GPIOA, 1UL <<sq, HIGH);
- 8000a26:	4b13      	ldr	r3, [pc, #76]	@ (8000a74 <main+0x22c>)
- 8000a28:	681b      	ldr	r3, [r3, #0]
- 8000a2a:	2201      	movs	r2, #1
- 8000a2c:	fa02 f303 	lsl.w	r3, r2, r3
- 8000a30:	b29b      	uxth	r3, r3
- 8000a32:	2201      	movs	r2, #1
- 8000a34:	4619      	mov	r1, r3
- 8000a36:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
- 8000a3a:	f000 ff97 	bl	800196c <HAL_GPIO_WritePin>
+ 8000a24:	4b13      	ldr	r3, [pc, #76]	@ (8000a74 <main+0x22c>)
+ 8000a26:	681b      	ldr	r3, [r3, #0]
+ 8000a28:	2201      	movs	r2, #1
+ 8000a2a:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000a2e:	b29b      	uxth	r3, r3
+ 8000a30:	2201      	movs	r2, #1
+ 8000a32:	4619      	mov	r1, r3
+ 8000a34:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
+ 8000a38:	f000 ff98 	bl	800196c <HAL_GPIO_WritePin>
     		   HAL_Delay(1000);
- 8000a3e:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
- 8000a42:	f000 fbb5 	bl	80011b0 <HAL_Delay>
+ 8000a3c:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
+ 8000a40:	f000 fbb6 	bl	80011b0 <HAL_Delay>
     		   sq++;
- 8000a46:	4b0b      	ldr	r3, [pc, #44]	@ (8000a74 <main+0x22c>)
- 8000a48:	681b      	ldr	r3, [r3, #0]
- 8000a4a:	3301      	adds	r3, #1
- 8000a4c:	4a09      	ldr	r2, [pc, #36]	@ (8000a74 <main+0x22c>)
- 8000a4e:	6013      	str	r3, [r2, #0]
- 8000a50:	e002      	b.n	8000a58 <main+0x210>
+ 8000a44:	4b0b      	ldr	r3, [pc, #44]	@ (8000a74 <main+0x22c>)
+ 8000a46:	681b      	ldr	r3, [r3, #0]
+ 8000a48:	3301      	adds	r3, #1
+ 8000a4a:	4a0a      	ldr	r2, [pc, #40]	@ (8000a74 <main+0x22c>)
+ 8000a4c:	6013      	str	r3, [r2, #0]
+ 8000a4e:	e002      	b.n	8000a56 <main+0x20e>
     	   }
     	   else {
     		   sq =4;
- 8000a52:	4b08      	ldr	r3, [pc, #32]	@ (8000a74 <main+0x22c>)
- 8000a54:	2204      	movs	r2, #4
- 8000a56:	601a      	str	r2, [r3, #0]
+ 8000a50:	4b08      	ldr	r3, [pc, #32]	@ (8000a74 <main+0x22c>)
+ 8000a52:	2204      	movs	r2, #4
+ 8000a54:	601a      	str	r2, [r3, #0]
     	   }
     	   j=0;
- 8000a58:	4b03      	ldr	r3, [pc, #12]	@ (8000a68 <main+0x220>)
- 8000a5a:	2200      	movs	r2, #0
- 8000a5c:	601a      	str	r2, [r3, #0]
+ 8000a56:	4b04      	ldr	r3, [pc, #16]	@ (8000a68 <main+0x220>)
+ 8000a58:	2200      	movs	r2, #0
+ 8000a5a:	601a      	str	r2, [r3, #0]
        if (!HAL_GPIO_ReadPin(GPIOA, BtnUp) && !HAL_GPIO_ReadPin(GPIOA, BtnDown)){
- 8000a5e:	e725      	b.n	80008ac <main+0x64>
+ 8000a5c:	e726      	b.n	80008ac <main+0x64>
+ 8000a5e:	bf00      	nop
  8000a60:	200000e8 	.word	0x200000e8
  8000a64:	08005390 	.word	0x08005390
  8000a68:	200000fc 	.word	0x200000fc
