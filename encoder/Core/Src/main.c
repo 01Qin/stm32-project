@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "OLED.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -126,7 +127,7 @@ int main(void)
   float angle = 0.0;
   char print_msg[200] = {'\0'};
 
-  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNL_ALL);
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
   /* USER CODE END 2 */
 
   /* Initialize leds */
@@ -155,17 +156,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  printf("Scanning I2C bus...\r\n");
-
-  uint8_t dummy = 0;
-
-  for (uint8_t addr = 1; addr < 128; addr++)
-  {
-      if (HAL_I2C_Master_Transmit(&hi2c2, addr << 1, &dummy, 1, 10) == HAL_OK)
-      {
-          printf("Found device at 0x%02X\r\n", addr);
-      }
-  }
 
   //Display Initialisation
   HAL_Delay(100);
@@ -188,39 +178,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+       counter_value = TIM3->CNT; // current counter
+       if (counter_value != past_counter_value) {
+    	   angle = (360.0/2400.0)*((float)counter_value);
+    	   sprintf(print_msg, "Current angle is: %f\r\n", angle);
+    	   printf(print_msg);
 
-       uint8_t counter = 0;
-       uint8_t line = 0;
-       uint8_t col = 0;
-       OLED_CLS(Display);
-       OLED_P8x16Str(Display, 0, 0, "I2C Devices:");
-
-       for (uint8_t addr = 1; addr < 128; addr++)
-       {
-           if (HAL_I2C_IsDeviceReady(&hi2c2, addr << 1, 1, 10) == HAL_OK)
-           {
-               char buf[16];
-               sprintf(buf, "0x%02X", addr); // convert address to the readable string
-               	   	   	   	   	   	   	   	// sprintf returns the number of characters written (exclude the null terminator)
-               if (counter < 3){
-            	   col = 0;
-
-               } else {
-//            	   line = 0;
-            	   col = 40;
-
-               }
-               OLED_P8x16Str(Display, col, (line + 1) * 2, buf);  // each line spaced by 2 rows
-               line++;
-               if (line >= 3){
-            	   line = 0;
-               }
-               counter++;
-               HAL_Delay(2000);  // short delay to make updates visible
-           }
        }
-       HAL_Delay(2000);
-
+       past_counter_value = counter_value;
 
   }
   /* USER CODE END 3 */
