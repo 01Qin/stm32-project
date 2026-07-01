@@ -178,11 +178,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+       uint8_t line = 0;
        counter_value = TIM3->CNT; // current counter
        if (counter_value != past_counter_value) {
     	   angle = (360.0/2400.0)*((float)counter_value);
-    	   sprintf(print_msg, "Current angle is: %f\r\n", angle);
-    	   printf(print_msg);
+    	   sprintf(print_msg, "Current angle is: %.2f\r\n", angle);
+    	   printf("Current angle is: %.2f\r\n", angle);
+    	   OLED_P8x16Str(Display, 0, (line + 1) * 2, print_msg);
+
+
 
        }
        past_counter_value = counter_value;
