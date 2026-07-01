@@ -121,6 +121,12 @@ int main(void)
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
 
+  int counter_value = 0;
+  int past_counter_value = 0;
+  float angle = 0.0;
+  char print_msg[200] = {'\0'};
+
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNL_ALL);
   /* USER CODE END 2 */
 
   /* Initialize leds */
