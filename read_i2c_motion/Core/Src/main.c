@@ -75,12 +75,12 @@ RTC_HandleTypeDef hrtc;
 TIM_HandleTypeDef htim15;
 
 /* USER CODE BEGIN PV */
-// static const uint8_t HUM_ADDR = 0x45 << 1;
-// static const uint8_t PRESS_ADDR = 0x19 << 1;
+// static const uint8_t HUM_ADDR = 0x44 << 1;
+// static const uint8_t LIS3DH_ADDR = 0x18 << 1;
 // static const uint8_t DISPLAY_ADDR = 0x3C << 1;
-// static const uint8_t TEMP_ADDR = 0x49 << 1;
+// static const uint8_t TEMP_ADDR = 0x48 << 1;
 // static const uint8_t BMP280_ADDR 0x77 << 1
-// static const uint8_t MOTION_ADDR 0x38 << 1
+// static const uint8_t AHT20_ADDR 0x38 << 1
 
 uint8_t check, data[2], accel_data[6], temp_data[2];
 
