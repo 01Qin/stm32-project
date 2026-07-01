@@ -7,4 +7,4 @@
 ../Core/Src/main.c:420:13:MX_TIM3_Init	3
 ../Core/Src/main.c:469:13:MX_TIM15_Init	4
 ../Core/Src/main.c:515:13:MX_GPIO_Init	1
-../Core/Src/main.c:583:6:Error_Handler	1
+../Core/Src/main.c:593:6:Error_Handler	1
