@@ -46,6 +46,13 @@
 COM_InitTypeDef BspCOMInit;
 
 /* USER CODE BEGIN PV */
+// static const uint8_t HUM_ADDR = 0x44 << 1;
+// static const uint8_t LIS3DH_ADDR = 0x18 << 1;
+// static const uint8_t DISPLAY_ADDR = 0x3C << 1;
+// static const uint8_t TEMP_ADDR = 0x48 << 1;
+// static const uint8_t BMP280_ADDR 0x77 << 1
+// static const uint8_t AHT20_ADDR 0x38 << 1
+
 unsigned int countUp = 0;
 unsigned int countDown = 0x1F;
 int j = 0;
