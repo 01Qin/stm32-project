@@ -7,4 +7,5 @@
 ../Core/Src/main.c:419:13:MX_TIM3_Init	3
 ../Core/Src/main.c:468:13:MX_TIM15_Init	4
 ../Core/Src/main.c:514:13:MX_GPIO_Init	1
-../Core/Src/main.c:592:6:Error_Handler	1
+../Core/Src/main.c:558:6:HAL_TIM_IC_CaptureCallback	1
+../Core/Src/main.c:594:6:Error_Handler	1
