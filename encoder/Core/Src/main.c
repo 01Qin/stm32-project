@@ -65,6 +65,7 @@ TIM_HandleTypeDef htim15;
 uint32_t counter = 0;
 uint16_t count = 0;
 uint16_t pos = 0;
+int speed = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,10 +125,11 @@ int main(void)
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
 
-  int counter_value = 0;
+  int encoder_value = 0;
   int past_counter_value = 0;
   float angle = 0.0;
   char print_msg[200] = {'\0'};
+
 
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
   /* USER CODE END 2 */
@@ -180,17 +182,19 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       counter_value = TIM3->CNT; // current counter
-       if (counter_value != past_counter_value) {
-    	   angle = (360.0/2400.0)*((float)counter_value);
+
+       encoder_value = TIM3->CNT; // current counter
+       if (encoder_value != past_counter_value) {
+    	   angle = (360.0f/2400.0f)*((float)encoder_value);
     	   sprintf(print_msg, "Angle: %.2f  ", angle);
     	   printf("Current angle is: %.2f\r\n", angle);
     	   OLED_P8x16Str(Display, 0, 2, print_msg);
+    	   HAL_Delay(50);
 
 
 
        }
-       past_counter_value = counter_value;
+       past_counter_value = encoder_value;
 
   }
   /* USER CODE END 3 */
@@ -438,14 +442,14 @@ static void MX_TIM3_Init(void)
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
-  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 5;
-  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Filter = 15;
+  sConfig.IC2Polarity = TIM_ICPOLARITY_FALLING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 5;
+  sConfig.IC2Filter = 15;
   if (HAL_TIM_Encoder_Init(&htim3, &sConfig) != HAL_OK)
   {
     Error_Handler();
